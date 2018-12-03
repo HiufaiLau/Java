@@ -5,10 +5,8 @@ buildscript {
 	repositories {
 		mavenCentral()
 	}
+
 	
-	bootRun{
-		addResources = true
-	}
 	
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -27,6 +25,9 @@ repositories {
 	mavenCentral()
 }
 
+bootRun {
+	sourceResources sourceSets.main
+}
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
