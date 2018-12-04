@@ -1,4 +1,7 @@
 package com.codeoftheweb.salvo;
 
-public class GamePlayerRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface GamePlayerRepository extends JpaRepository<GamePlayer, Long> {
+
 }
