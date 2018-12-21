@@ -1,11 +1,15 @@
 package com.codeoftheweb.salvo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Game {
@@ -15,17 +19,26 @@ public class Game {
     private Long id;
     private Date date;
 
+
+    @OneToMany(mappedBy="game", fetch= FetchType.EAGER)
+    @OrderBy("id asc")
+    Set<GamePlayer> gamePlayers = new HashSet<>();
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private Set<Score> scores = new HashSet<>();
+
     public Game() {}
 
-    public Game(Date date) {
+    public Game(Date date){
         this.date = date;
     }
 
-    public Long getId() {
+    @JsonIgnore
+    public Long getGameId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setGameId(Long id) {
         this.id = id;
     }
 
@@ -38,4 +51,31 @@ public class Game {
     }
 
 
+    @JsonIgnore
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void addGamePlayer(GamePlayer gamePlayer){
+        gamePlayer.setGame(this);
+        gamePlayers.add(gamePlayer);
+    }
+
+    @JsonIgnore
+    public List<Player> getPlayers() {
+        return gamePlayers.stream().map(gamePlayer -> gamePlayer.getPlayer()).collect(toList());
+    }
+
+    public void addScore(Score score){
+        score.setGame(this);
+        scores.add(score);
+    }
+
+    public Set<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
 }

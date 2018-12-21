@@ -26,7 +26,7 @@ repositories {
 }
 
 bootRun {
-	sourceResources sourceSets.main
+	addResources = true
 }
 
 dependencies {

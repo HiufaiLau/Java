@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ship Locations!</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <div v-if="isLoading"></div>
+    <div v-else id="eachGame">
+        <h1>Let's battle!</h1>
+        <h3>{{localPlayer}}(YOU!!!) vs. {{opponentPlayer}}</h3>
+        <h5>{{gameViewData.created}}</h5>
+
+
+       
+       <h3>My ships Table</h3>
+        <table id="shipTable">
+        </table>
+
+         <h3>My salvos Table</h3>
+        <table id="salvoTable">
+        </table>
+        
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="game.js"></script>
+</body>
+
+</html>
