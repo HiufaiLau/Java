@@ -28,7 +28,6 @@ public class SalvoApplication {
             Player player3 = new Player("namie@gmail.com");
             Player player4 = new Player("ottavia@gmail.com");
 
-
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
             Date date2 = Date.from(date.toInstant().plusSeconds(7200));
