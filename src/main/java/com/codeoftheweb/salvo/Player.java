@@ -18,6 +18,8 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
     private String email;
+    private String userName;
+    private String password;
 
     @OneToMany(mappedBy="player", fetch= FetchType.EAGER)
     @OrderBy("id asc")
@@ -27,11 +29,12 @@ public class Player {
     private Set<Score> scores = new HashSet<>();
 
 
-    public Player() {
-    }
+    public Player() {}
 
-    public Player(String email) {
+    public Player(String userName, String email, String password){
+        this.userName = userName;
         this.email = email;
+        this.password = password;
     }
 
     @JsonIgnore
@@ -56,6 +59,14 @@ public class Player {
         gamePlayers.add(gamePlayer);
     }
 
+    public String getUserName() {return userName; }
+
+    public void setUserName(String userName) { this.userName = userName; }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
+
     @JsonIgnore
     public List<Game> getGames() {
         return gamePlayers.stream().map(gamePlayer -> gamePlayer.getGame()).collect(toList());
@@ -74,6 +85,15 @@ public class Player {
         this.scores = scores;
     }
 
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + userName + '\'' +
+                ", userName='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
 
 

@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -23,11 +24,11 @@ public class SalvoApplication {
                                       SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
-            Player player1 = new Player("jake@gmail.com");
-            Player player2 = new Player("micheal@gmail.com");
-            Player player3 = new Player("namie@gmail.com");
-            Player player4 = new Player("ottavia@gmail.com");
-            Player player5 = new Player("yuri@gmail.com");
+            Player player1 = new Player("jake","jake@gmail.com","jake");
+            Player player2 = new Player("micheal","micheal@gmail.com","micheal");
+            Player player3 = new Player("namie","namie@gmail.com","namie");
+            Player player4 = new Player("ottavia","ottavia@gmail.com","ottavia");
+            Player player5 = new Player("yuri","yuri@gmail.com","yuri");
 
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
@@ -221,5 +222,25 @@ public class SalvoApplication {
 //            scoreRepository.save(score10);
 
         };
+    }
+}
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(inputName -> {
+            Player player = playerRepository.findByEmail(inputName);
+            if (player != null) {
+                return new User(player.getEmail(), player.getPassword(),
+                        AuthorityUtils.createAuthorityList("USER"));
+            } else {
+                throw new UsernameNotFoundException("Unknown user: " + inputName);
+            }
+        });
     }
 }
