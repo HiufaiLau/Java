@@ -33,6 +33,8 @@ var allData = new Vue({
             .then(response => response.json())
             .then(data => {
                 this.isLoading = false;
+                this.login();
+                this.logout();
                 this.gameScoreData = data;
                 console.log(this.gameScoreData)
                 this.calculateTotalScore();
@@ -44,36 +46,36 @@ var allData = new Vue({
                 console.log(error);
             });
 
-//               fetch('http://localhost:8080/api/games', {
-//                    method: 'GET',
-//                })
-//                .then(response => response.json())
-//                .then(data => {
-//                    this.isLoading = false;
-//                    this.gameData = data;
-//                    console.log(this.gameData)
-//                    allData.dateConvert();
-//                })
-//                .catch(function (error) {
-//                    console.log(error);
-//                });
-//               
-//               fetch('http://localhost:8080/api/leaderBoard', {
-//                    method: 'GET',
-//                })
-//                .then(response => response.json())
-//                .then(data => {
-//                    this.isLoading = false;
-//                    this.gameScoreData = data;
-//                    console.log(this.gameScoreData)
-//                    this.calculateTotalScore();
-//                    console.log(this.gameScoreData);
-//                    this.calculateScores();
-//                    console.log(this.gameScoreData);
-//                })
-//                .catch(function (error) {
-//                    console.log(error);
-//               });
+        //               fetch('http://localhost:8080/api/games', {
+        //                    method: 'GET',
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameData = data;
+        //                    console.log(this.gameData)
+        //                    allData.dateConvert();
+        //                })
+        //                .catch(function (error) {
+        //                    console.log(error);
+        //                });
+        //               
+        //               fetch('http://localhost:8080/api/leaderBoard', {
+        //                    method: 'GET',
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameScoreData = data;
+        //                    console.log(this.gameScoreData)
+        //                    this.calculateTotalScore();
+        //                    console.log(this.gameScoreData);
+        //                    this.calculateScores();
+        //                    console.log(this.gameScoreData);
+        //                })
+        //                .catch(function (error) {
+        //                    console.log(error);
+        //               });
 
 
 
@@ -111,6 +113,19 @@ var allData = new Vue({
         //
         //        });
 
+
+        login(evt) {
+            evt.preventDefault();
+            var form = evt.target.form;
+         
+               $.post("/api/login", { username: "j.bauer@ctu.gov", password: "123" }).done(function() { console.log("logged in!"); })
+        }
+
+        logout(evt) {
+            evt.preventDefault();
+            
+               $.post("/api/logout").done(function() { console.log("logged out"); })
+        }
 
         dateConvert() {
             this.gameData.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
