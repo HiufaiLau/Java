@@ -1,8 +1,7 @@
 package com.codeoftheweb.salvo;
 
-//import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +45,7 @@ public class SalvoController {
                 .map(game -> new LinkedHashMap<String, Object>() {{
                     put("GameID", game.getGameId());
                     put("CreationDate", game.getDate());
-                    put("finsihed date",getFinishDate(game));
+                    put("finsihed date", getFinishDate(game));
                     put("GamePlayers", game.getGamePlayers().stream()
                             .map(gp -> new LinkedHashMap<String, Object>() {{
                                 put("GamePlayerID", gp.getGamePlayerId());
@@ -59,10 +58,10 @@ public class SalvoController {
     }
 
     @RequestMapping("/leaderBoard")
-    public List<HashMap<String, Object>> getPlayersScore(){
+    public List<HashMap<String, Object>> getPlayersScore() {
         return playerRepository.findAll()
                 .stream()
-                .map(player -> new LinkedHashMap<String, Object>(){{
+                .map(player -> new LinkedHashMap<String, Object>() {{
                     put("player", player.getEmail());
                     put("scores", player.getScores()
                             .stream()
@@ -104,8 +103,8 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
-//    @RequestMapping("/salvos")
-    private List<Map<String, Object>> getAllSalvos(Set<GamePlayer> gps){
+    //    @RequestMapping("/salvos")
+    private List<Map<String, Object>> getAllSalvos(Set<GamePlayer> gps) {
         return gps.stream()
                 .flatMap(gp -> gp.getSalvoes().stream()
                         .map(salvo -> new LinkedHashMap<String, Object>() {{
@@ -116,7 +115,7 @@ public class SalvoController {
                 ).collect(Collectors.toList());
     }
 
-    private Map<String, Object> getScores(GamePlayer gp){
+    private Map<String, Object> getScores(GamePlayer gp) {
         List<Score> scores = scoreRepository.findAll()
                 .stream()
                 .filter(score -> score.getPlayer().equals(gp.getPlayer()))
@@ -127,7 +126,7 @@ public class SalvoController {
         Double TIE_SCORE = 0.5;
         Double LOST_SCORE = 0.0;
 
-        return new LinkedHashMap<String, Object>(){{
+        return new LinkedHashMap<String, Object>() {{
             put("name", gp.getPlayer().getEmail());
             put("total", getTotalScore(scores));
             put("won", countScore(scores, WON_SCORE));
@@ -136,14 +135,14 @@ public class SalvoController {
         }};
     }
 
-    private Long countScore(List<Score> allScores, Double scores){
+    private Long countScore(List<Score> allScores, Double scores) {
         return allScores
                 .stream()
                 .filter(score -> scores.equals(score.getScore()))
                 .count();
     }
 
-    private Double getTotalScore(List<Score> scores){
+    private Double getTotalScore(List<Score> scores) {
         return scores
                 .stream()
                 .mapToDouble(Score::getScore)
@@ -151,8 +150,8 @@ public class SalvoController {
     }
 
 
-    private Map<String, Object> showAllScores (Player p){
-        return new LinkedHashMap<String, Object>(){{
+    private Map<String, Object> showAllScores(Player p) {
+        return new LinkedHashMap<String, Object>() {{
             put("id", p.getPlayerId());
             put("player", p.getEmail());
 //            put("finsihed date",p.getScores());
@@ -160,11 +159,11 @@ public class SalvoController {
         }};
     }
 
-        public Date getFinishDate(Game game){
+    public Date getFinishDate(Game game) {
         return game.getScores()
                 .stream()
                 .findFirst()
-                .map(score-> score.getFinishDate())
+                .map(score -> score.getFinishDate())
                 .orElse(null);
     }
 
@@ -182,8 +181,23 @@ public class SalvoController {
                     }});
                 }});
                 put("ships", getAllships(gp.getShips()));
-                put("salvos",getAllSalvos(gp.getGame().getGamePlayers()));
+                put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
             }
         };
+    }
+
+    public Player currentUser(Authentication authentication) {
+        if (usedIsLogged(authentication)) {
+            return playerRepository.findByEmail(authentication.getName());
+        }
+        return null;
+    }
+
+    public Boolean usedIsLogged (Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
