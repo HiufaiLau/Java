@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Battle Ship</title>
+    <link rel="stylesheet" href="allGames.css">
+    <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+</head>
+
+<body>
+    <h1>Battle Ship</h1>
+    <form id="login-form" onsubmit="return false">
+<label>Name: <input type="text" name="username"></label>
+<label>Password: <input type="text" name="password"></label>
+</form>
+
+<form id="logout-form" onsubmit="return false">
+<button>Log out</button>
+</form>
+<!--
+     <div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form th:action="@{/login}" method="post">
+            <div><label> User Name : <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+        
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+-->
+    
+
+
+
+
+
+    <div id="game">
+        <div v-if="isLoading">!!!!!!</div>
+        <div v-else>
+            <div v-for="(game, index) in gameData" :key="index">
+                <div v-for="(gameP, index) in game.GamePlayers" :key="index">
+                    Game{{game.GameID}}:
+                    <ol>
+                        <li>gameID: {{game.GameID}}</li>
+                        <li>CreationDate: {{game.CreationDate}}</li>
+
+                        <ul>
+                            <li>GamePlayers:
+                                <ol>
+                                    <li>
+                                        GameplayerID: {{gameP.GamePlayerID}}
+                                    </li>
+                                    <li>
+                                        Player:
+                                        <br> Email:{{gameP.Player.email}}
+                                        <br>
+                                        PlayerID: {{gameP.Player.playerID}}
+                                    </li>
+                                </ol>
+                            </li>
+                        </ul>
+                    </ol>
+                </div>
+            </div>
+            <hr>
+            <table id="scoresTable">
+                <thead>
+                    <th>Name</th>
+                    <th>Total</th>
+                    <th>Won</th>
+                    <th>Lost</th>
+                    <th>Tied</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(gameScoreData, index) in gameScoreData" :key="index">
+                        <td>{{gameScoreData.player}}</td>
+                        <td>{{gameScoreData.totalScore}}</td>
+                        <td>{{gameScoreData.won}}</td>
+                        <td>{{gameScoreData.lost}}</td>
+                        <td>{{gameScoreData.tied}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+    <script src="allGames.js"></script>
+
+</body>
+
+</html>
