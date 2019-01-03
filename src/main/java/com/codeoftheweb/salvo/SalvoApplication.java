@@ -38,11 +38,11 @@ public class SalvoApplication {
                                       SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
-            Player player1 = new Player("jake","jake@gmail.com","jake");
-            Player player2 = new Player("micheal","micheal@gmail.com","micheal");
-            Player player3 = new Player("namie","namie@gmail.com","namie");
-            Player player4 = new Player("ottavia","ottavia@gmail.com","ottavia");
-            Player player5 = new Player("yuri","yuri@gmail.com","yuri");
+            Player player1 = new Player("jake", "jake@gmail.com", "jake");
+            Player player2 = new Player("micheal", "micheal@gmail.com", "micheal");
+            Player player3 = new Player("namie", "namie@gmail.com", "namie");
+            Player player4 = new Player("ottavia", "ottavia@gmail.com", "ottavia");
+            Player player5 = new Player("yuri", "yuri@gmail.com", "yuri");
 
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
@@ -100,8 +100,8 @@ public class SalvoApplication {
             GamePlayer gamePlayer5 = new GamePlayer(creationDate1);
             player1.addGamePlayer(gamePlayer);
             game1.addGamePlayer(gamePlayer);
-			player1.addGamePlayer(gamePlayer5);
-			game3.addGamePlayer(gamePlayer5);
+            player1.addGamePlayer(gamePlayer5);
+            game3.addGamePlayer(gamePlayer5);
 
             GamePlayer gamePlayer2 = new GamePlayer(creationDate2);
             GamePlayer gamePlayer6 = new GamePlayer(creationDate2);
@@ -112,11 +112,11 @@ public class SalvoApplication {
 
 
             GamePlayer gamePlayer3 = new GamePlayer(creationDate3);
-            GamePlayer gamePlayer7= new GamePlayer(creationDate3);
+            GamePlayer gamePlayer7 = new GamePlayer(creationDate3);
             player3.addGamePlayer(gamePlayer3);
             game2.addGamePlayer(gamePlayer3);
-			player3.addGamePlayer(gamePlayer7);
-			game3.addGamePlayer(gamePlayer7);
+            player3.addGamePlayer(gamePlayer7);
+            game3.addGamePlayer(gamePlayer7);
 
             GamePlayer gamePlayer4 = new GamePlayer(creationDate3);
             GamePlayer gamePlayer8 = new GamePlayer(creationDate3);
@@ -199,10 +199,10 @@ public class SalvoApplication {
             gamePlayerRepository.save(gamePlayer2);
             gamePlayerRepository.save(gamePlayer3);
             gamePlayerRepository.save(gamePlayer4);
-			gamePlayerRepository.save(gamePlayer5);
-			gamePlayerRepository.save(gamePlayer6);
-			gamePlayerRepository.save(gamePlayer7);
-			gamePlayerRepository.save(gamePlayer8);
+            gamePlayerRepository.save(gamePlayer5);
+            gamePlayerRepository.save(gamePlayer6);
+            gamePlayerRepository.save(gamePlayer7);
+            gamePlayerRepository.save(gamePlayer8);
 //			gamePlayerRepository.save(gamePlayer9);
 //			gamePlayerRepository.save(gamePlayer10);
 
@@ -247,7 +247,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(inputName-> {
+        auth.userDetailsService(inputName -> {
             Player player = playerRepository.findByEmail(inputName);
             if (player != null) {
                 return new User(player.getEmail(), player.getPassword(),
@@ -258,29 +258,30 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
         });
     }
 }
+
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/**").permitAll()
-//                .antMatchers("/web/allGames.html").permitAll()
-//                .antMatchers("/web/game.html").permitAll()
-//                .antMatchers("/web/styles/allGames.css").permitAll()
-//                .antMatchers("/web/scripts/allGames.js").permitAll()
+                .antMatchers("/api/game_view/*").hasAnyAuthority("USER")
+//                .antMatchers("/**").permitAll()
+                .antMatchers("/web/allGames.html").permitAll()
+                .antMatchers("/web/game.html").permitAll()
+                .antMatchers("/web/styles/allGames.css").permitAll()
+                .antMatchers("/web/scripts/allGames.js").permitAll()
 //                .antMatchers("/web/scripts/login.js").permitAll()
 //                .antMatchers("/api/games").permitAll()
-//                .antMatchers("/api/leaderBoard").permitAll()
-//                .antMatchers("/api/players").permitAll()
+                .antMatchers("/api/leaderBoard").permitAll()
+                .antMatchers("/api/players").permitAll()
                 .and()
-            .formLogin()
+                .formLogin()
                 .usernameParameter("name")
                 .passwordParameter("password")
-                .loginPage("/app/login");
+                .loginPage("/api/login");
 
-        http.logout().logoutUrl("/app/logout");
+        http.logout().logoutUrl("/api/logout");
 
         // turn off checking for CSRF tokens
         http.csrf().disable();
