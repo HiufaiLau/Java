@@ -1,14 +1,24 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
 @SpringBootApplication
@@ -233,14 +243,43 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(inputName -> {
-            Player player = playerRepository.findByEmail(inputName);
-            if (player != null) {
-                return new User(player.getEmail(), player.getPassword(),
+        auth.userDetailsService(inputName-> {
+            Person person = personRepository.findByEmail(inputName);
+            if (person != null) {
+                return new SecurityProperties.User(person.getEmail(), person.getPassword(),
                         AuthorityUtils.createAuthorityList("USER"));
             } else {
                 throw new UsernameNotFoundException("Unknown user: " + inputName);
             }
         });
+    }
+}
+@Configuration
+@EnableWebSecurity
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/web/allGames.html").permitAll()
+                .antMatchers("/web/styles/allGames.css").permitAll()
+                .antMatchers("/web/scripts/allGames.js").permitAll()
+//                .antMatchers("/web/scripts/login.js").permitAll()
+                .antMatchers("/api/games").permitAll()
+                .antMatchers("/api/leaderBoard").permitAll()
+                .antMatchers("/api/players").permitAll()
+                .formLogin();
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        UserDetails user =
+                User.withDefaultPasswordEncoder()
+                        .username("user")
+                        .password("password")
+                        .roles("USER")
+                        .build();
+
+        return new InMemoryUserDetailsManager(user);
     }
 }
