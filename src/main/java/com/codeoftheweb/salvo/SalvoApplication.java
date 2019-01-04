@@ -38,11 +38,11 @@ public class SalvoApplication {
                                       SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
-            Player player1 = new Player("jake", "jake@gmail.com", "jake");
-            Player player2 = new Player("micheal", "micheal@gmail.com", "micheal");
-            Player player3 = new Player("namie", "namie@gmail.com", "namie");
-            Player player4 = new Player("ottavia", "ottavia@gmail.com", "ottavia");
-            Player player5 = new Player("yuri", "yuri@gmail.com", "yuri");
+            Player player1 = new Player("jake@gmail.com", "jake");
+            Player player2 = new Player("micheal@gmail.com", "micheal");
+            Player player3 = new Player("namie@gmail.com", "namie");
+            Player player4 = new Player("ottavia@gmail.com", "ottavia");
+            Player player5 = new Player("yuri@gmail.com", "yuri");
 
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
@@ -248,7 +248,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(inputName -> {
-            Player player = playerRepository.findByEmail(inputName);
+            Player player = playerRepository.findByUserName(inputName);
             if (player != null) {
                 return new User(player.getEmail(), player.getPassword(),
                         AuthorityUtils.createAuthorityList("USER"));
@@ -268,16 +268,14 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/game_view/*").hasAnyAuthority("USER")
 //                .antMatchers("/**").permitAll()
                 .antMatchers("/web/allGames.html").permitAll()
+                .antMatchers("/web/allGames.css").permitAll()
+                .antMatchers("/web/allGames.js").permitAll()
                 .antMatchers("/web/game.html").permitAll()
-                .antMatchers("/web/styles/allGames.css").permitAll()
-                .antMatchers("/web/scripts/allGames.js").permitAll()
-//                .antMatchers("/web/scripts/login.js").permitAll()
-//                .antMatchers("/api/games").permitAll()
                 .antMatchers("/api/leaderBoard").permitAll()
                 .antMatchers("/api/players").permitAll()
                 .and()
                 .formLogin()
-                .usernameParameter("name")
+                .usernameParameter("email")
                 .passwordParameter("password")
                 .loginPage("/api/login");
 

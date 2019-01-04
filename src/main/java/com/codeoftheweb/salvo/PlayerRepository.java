@@ -5,8 +5,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface PlayerRepository extends JpaRepository<Player, Long>  {
-    Player findByEmail(@Param("name") String name);
-    Player findByUserName(@Param("userName") String userName);
+//    Player findByEmail(@Param("name") String name);
+    Player findByUserName( @Param("email") String email);
     Player findById(@Param("id") long id);
 }
 

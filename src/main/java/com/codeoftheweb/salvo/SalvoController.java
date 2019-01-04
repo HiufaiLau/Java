@@ -1,7 +1,6 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.OrderBy;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api")
@@ -24,7 +25,6 @@ public class SalvoController {
     private ShipRepository shipRepository;
     @Autowired
     private SalvoRepository salvoRepository;
-
     @Autowired
     private ScoreRepository scoreRepository;
 
@@ -40,6 +40,15 @@ public class SalvoController {
 //        new HashMap<String, Object>(){{
 ////            put("id", 2);
 ////        }};
+//        Map<String, Object> newGames = new LinkedHashMap<>();
+//        if (!userIsLogged(authentication)) {
+//            newGames.put("current", null);
+//        } else {
+//            newGames.put("current", getPlayerInfo(currentUser(authentication)));
+//        }
+//        newGames.put("games", gameRepository.findAll().stream().map(games->getAllGameplayers(games)).collect(toList()));
+//        return newGames;
+
         return gameRepository.findAll()
                 .stream()
                 .map(game -> new LinkedHashMap<String, Object>() {{
@@ -65,8 +74,8 @@ public class SalvoController {
                     put("player", player.getEmail());
                     put("scores", player.getScores()
                             .stream()
-                            .map(score -> score.getScore()).collect(Collectors.toList()));
-                }}).collect(Collectors.toList());
+                            .map(score -> score.getScore()).collect(toList()));
+                }}).collect(toList());
     }
 
 
@@ -91,7 +100,7 @@ public class SalvoController {
                     put("gamePlayerID", gamePlayer.getGamePlayerId());
                     put("player", getPlayerInfo(gamePlayer.getPlayer()));
 
-                }}).collect(Collectors.toList());
+                }}).collect(toList());
     }
 
     private List<Map<String, Object>> getAllships(Set<Ship> ships) {
@@ -100,7 +109,7 @@ public class SalvoController {
                     put("type", ship.getType());
                     put("locations", ship.getLocations());
                 }})
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     //    @RequestMapping("/salvos")
@@ -112,14 +121,14 @@ public class SalvoController {
                             put("turn", salvo.getTurn());
                             put("locations", salvo.getSalvoLocations());
                         }})
-                ).collect(Collectors.toList());
+                ).collect(toList());
     }
 
     private Map<String, Object> getScores(GamePlayer gp) {
         List<Score> scores = scoreRepository.findAll()
                 .stream()
                 .filter(score -> score.getPlayer().equals(gp.getPlayer()))
-                .collect(Collectors.toList());
+                .collect(toList());
 
         if (scores.size() == 0) return null;
         Double WON_SCORE = 1.0;
@@ -186,18 +195,18 @@ public class SalvoController {
         };
     }
 
-    public Player currentUser(Authentication authentication) {
-        if (usedIsLogged(authentication)) {
-            return playerRepository.findByEmail(authentication.getName());
-        }
-        return null;
-    }
-
-    public Boolean usedIsLogged (Authentication authentication) {
-        if (authentication == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    public Player currentUser(Authentication authentication) {
+//        if (userIsLogged(authentication)) {
+//            return playerRepository.findByUserName(authentication.getName());
+//        }
+//        return null;
+//    }
+//
+//    public Boolean userIsLogged (Authentication authentication) {
+//        if (authentication == null) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 }

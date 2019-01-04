@@ -17,7 +17,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
-    private String email;
+//    private String email;
     private String userName;
     private String password;
 
@@ -31,9 +31,9 @@ public class Player {
 
     public Player() {}
 
-    public Player(String userName, String email, String password){
-        this.userName = userName;
-        this.email = email;
+    public Player( String email, String password){
+        this.userName = email;
+//        this.email = email;
         this.password = password;
     }
 
@@ -46,22 +46,30 @@ public class Player {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public void addGamePlayer(GamePlayer gamePlayer){
         gamePlayer.setPlayer(this);
         gamePlayers.add(gamePlayer);
     }
 
-    public String getUserName() {return userName; }
+    public String getEmail() {
+        return userName;
+    }
 
-    public void setUserName(String userName) { this.userName = userName; }
+    public void setEmail(String email) {
+        this.userName = email;
+    }
+
+    public String toString() {
+        return userName;
+    }
 
     public String getPassword() { return password; }
 
