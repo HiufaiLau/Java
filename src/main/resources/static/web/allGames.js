@@ -33,8 +33,8 @@ var allData = new Vue({
             .then(response => response.json())
             .then(data => {
                 this.isLoading = false;
-                this.login();
-                this.logout();
+//                this.login();
+//                this.logout();
                 this.gameScoreData = data;
                 console.log(this.gameScoreData)
                 this.calculateTotalScore();
@@ -114,19 +114,22 @@ var allData = new Vue({
         //        });
 
 
-        login(evt) {
-            evt.preventDefault();
-            var form = evt.target.form;
-         
-               $.post("/api/login", { username: "j.bauer@ctu.gov", password: "123" }).done(function() { console.log("logged in!"); })
-        }
+//        login(evt) {
+//            evt.preventDefault();
+//            var form = evt.target.form;
+//         
+//               $.post("/api/login", { username: "j.bauer@ctu.gov", password: "123" }).done(function() { console.log("logged in!"); })
+//        }
+//
+//        logout(evt) {
+//            evt.preventDefault();
+//            
+//               $.post("/api/logout").done(function() { console.log("logged out"); })
+//        }
 
-        logout(evt) {
-            evt.preventDefault();
-            
-               $.post("/api/logout").done(function() { console.log("logged out"); })
-        }
-
+        
+        
+        
         dateConvert() {
             this.gameData.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
         },

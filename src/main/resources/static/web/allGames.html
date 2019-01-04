@@ -10,15 +10,28 @@
 
 <body>
     <h1>Battle Ship</h1>
-    <form id="login-form" onsubmit="return false">
-        <label>Name: <input type="text" name="username"></label>
-        <label>Password: <input type="text" name="password"></label>
-        <button>Log out</button>
-    </form>
-
+    <div id="signUp">
+        <div id="form">
+            <form id="registerForm" onsubmit="return false">
+                <!--        <label>Name: <input type="text" name="username"></label>-->
+                <label>Email: <input type="text" name="email"></label>
+                <label>Password: <input type="text" name="password"></label>
+                <button>Create</button>
+                <p class="message">Already Registered?</p>
+            </form>
+            <form id="login">
+                <label>Email: <input type="text" name="email"></label>
+                <label>Password: <input type="text" name="password/"></label>
+                <button>Login</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <!--
     <form id="logout-form" onsubmit="return false">
         <button>Log out</button>
     </form>
+-->
     <!--
      <div th:if="${param.error}">
             Invalid username and password.
@@ -94,7 +107,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
     <script src="allGames.js"></script>
-
+    <!--    <script src="login.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 </body>
 
 </html>
