@@ -1,6 +1,7 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,14 +41,7 @@ public class SalvoController {
 //        new HashMap<String, Object>(){{
 ////            put("id", 2);
 ////        }};
-//        Map<String, Object> newGames = new LinkedHashMap<>();
-//        if (!userIsLogged(authentication)) {
-//            newGames.put("current", null);
-//        } else {
-//            newGames.put("current", getPlayerInfo(currentUser(authentication)));
-//        }
-//        newGames.put("games", gameRepository.findAll().stream().map(games->getAllGameplayers(games)).collect(toList()));
-//        return newGames;
+
 
         return gameRepository.findAll()
                 .stream()
@@ -195,18 +189,18 @@ public class SalvoController {
         };
     }
 
-//    public Player currentUser(Authentication authentication) {
-//        if (userIsLogged(authentication)) {
-//            return playerRepository.findByUserName(authentication.getName());
-//        }
-//        return null;
-//    }
-//
-//    public Boolean userIsLogged (Authentication authentication) {
-//        if (authentication == null) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
+    public Player currentUser(Authentication authentication) {
+        if (userIsLogged(authentication)) {
+            return playerRepository.findByUserName(authentication.getName());
+        }
+        return null;
+    }
+
+    public Boolean userIsLogged (Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
