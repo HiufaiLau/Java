@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
@@ -38,11 +39,11 @@ public class SalvoApplication {
                                       SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
-            Player player1 = new Player("jake@gmail.com", "jake");
-            Player player2 = new Player("micheal@gmail.com", "micheal");
-            Player player3 = new Player("namie@gmail.com", "namie");
-            Player player4 = new Player("ottavia@gmail.com", "ottavia");
-            Player player5 = new Player("yuri@gmail.com", "yuri");
+            Player player1 = new Player("jake@gmail.com","j");
+            Player player2 = new Player("micheal@gmail.com","m");
+            Player player3 = new Player("namie@gmail.com", "n");
+            Player player4 = new Player("ottavia@gmail.com", "o");
+            Player player5 = new Player("yuri@gmail.com", "y");
 
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
@@ -273,6 +274,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/web/game.html").permitAll()
                 .antMatchers("/api/leaderBoard").permitAll()
                 .antMatchers("/api/players").permitAll()
+                .antMatchers("/rest/*").denyAll()
+                .anyRequest().fullyAuthenticated()
                 .and()
                 .formLogin()
                 .usernameParameter("email")

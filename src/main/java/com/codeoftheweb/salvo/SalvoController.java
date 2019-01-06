@@ -41,8 +41,6 @@ public class SalvoController {
 //        new HashMap<String, Object>(){{
 ////            put("id", 2);
 ////        }};
-
-
         return gameRepository.findAll()
                 .stream()
                 .map(game -> new LinkedHashMap<String, Object>() {{
@@ -56,9 +54,18 @@ public class SalvoController {
                                 put("score", gp.getScore(game));
                             }}).collect(Collectors.toSet()));
                 }}).collect(Collectors.toSet());
-
-
     }
+    //or use this structure
+//    return new LinkedHashMap<String, Object>() {
+//        {
+//            put("gameId", gp.getGame().getGameId());
+//            put("created", gp.getGame().getDate());
+//            put("gamePlayers",getAllGameplayers(gp.getGame()));
+//            put("ships", getAllships(gp.getShips()));
+//            put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
+//        }
+//    };
+
 
     @RequestMapping("/leaderBoard")
     public List<HashMap<String, Object>> getPlayersScore() {
@@ -83,6 +90,7 @@ public class SalvoController {
     private Map<String, Object> getPlayerInfo(Player player) {
         return new LinkedHashMap<String, Object>() {{
             put("playerID", player.getPlayerId());
+//            put("name",player.getName());
             put("email", player.getEmail());
         }};
     }
