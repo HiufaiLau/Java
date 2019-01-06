@@ -93,6 +93,7 @@ var eachGameData = new Vue({
                 })
             })
             console.log("shipsLocation:" + shipLocations)
+
             shipLocations.forEach(loc => {
                 let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
                     .classList.add('ships')
