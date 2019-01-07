@@ -1,6 +1,7 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,24 +38,63 @@ public class SalvoController {
     }
 
     @RequestMapping("/games")
-    public Set<LinkedHashMap<String, Object>> Games() {
-//        new HashMap<String, Object>(){{
-////            put("id", 2);
-////        }};
-        return gameRepository.findAll()
+    public Map<String, Object> Games(Authentication authentication) {
+        Map<String, Object> game = new HashMap<>();
+        if (isGuest(authentication)) {
+            game.put("isLogin", null);
+        } else {
+            Player loginPlayer = getLoginPlayer(authentication);
+            game.put("isLogin",  getPlayerInfo(loginPlayer));
+        }
+        List<Object> listOfGames = new ArrayList<>();
+        gameRepository.findAll()
                 .stream()
-                .map(game -> new LinkedHashMap<String, Object>() {{
-                    put("GameID", game.getGameId());
-                    put("CreationDate", game.getDate());
-                    put("finsihed date", getFinishDate(game));
-                    put("GamePlayers", game.getGamePlayers().stream()
+                .forEach(oneGame -> listOfGames.add(new LinkedHashMap<String, Object>() {{
+                    put("gameId", oneGame.getGameId());
+                    put("CreationDate", oneGame.getDate());
+//                    put("finsihedDate", getFinishDate(oneGame));
+                    put("GamePlayers", oneGame.getGamePlayers().stream()
                             .map(gp -> new LinkedHashMap<String, Object>() {{
                                 put("GamePlayerID", gp.getGamePlayerId());
                                 put("Player", getPlayerInfo(gp.getPlayer()));
-                                put("score", gp.getScore(game));
+                                put("score", gp.getScore(oneGame));
                             }}).collect(Collectors.toSet()));
-                }}).collect(Collectors.toSet());
+                }}));
+        game.put("listOfGames",listOfGames);
+        return game;
+
+
     }
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
+
+    private Player getLoginPlayer(Authentication authentication){
+        return !isGuest(authentication)
+                ? playerRepository.findByUserName(authentication.getName())
+                : null;
+    }
+//    public Set<LinkedHashMap<String, Object>> Games() {
+////        new HashMap<String, Object>(){{
+//////            put("id", 2);
+//////        }};
+//        return gameRepository.findAll()
+//                .stream()
+//                .map(game -> new LinkedHashMap<String, Object>() {{
+//                    put("GameID", game.getGameId());
+//                    put("CreationDate", game.getDate());
+//                    put("finsihed date", getFinishDate(game));
+//                    put("GamePlayers", game.getGamePlayers().stream()
+//                            .map(gp -> new LinkedHashMap<String, Object>() {{
+//                                put("GamePlayerID", gp.getGamePlayerId());
+//                                put("Player", getPlayerInfo(gp.getPlayer()));
+//                                put("score", gp.getScore(game));
+//                            }}).collect(Collectors.toSet()));
+//                }}).collect(Collectors.toSet());
+//    }
+
+
     //or use this structure
 //    return new LinkedHashMap<String, Object>() {
 //        {
@@ -179,7 +219,7 @@ public class SalvoController {
     }
 
     @RequestMapping("/game_view/{gamePlayerId}")
-    private Map<String, Object> getOneGame(@PathVariable long gamePlayerId) {
+    private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
         GamePlayer gp = gamePlayerRepository.findOne(gamePlayerId);
         return new LinkedHashMap<String, Object>() {
             {
@@ -197,18 +237,18 @@ public class SalvoController {
         };
     }
 
-    public Player currentUser(Authentication authentication) {
-        if (userIsLogged(authentication)) {
-            return playerRepository.findByUserName(authentication.getName());
-        }
-        return null;
-    }
-
-    public Boolean userIsLogged (Authentication authentication) {
-        if (authentication == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    public Player currentUser(Authentication authentication) {
+//        if (userIsLogged(authentication)) {
+//            return playerRepository.findByUserName(authentication.getName());
+//        }
+//        return null;
+//    }
+//
+//    public Boolean userIsLogged (Authentication authentication) {
+//        if (authentication == null) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 }
