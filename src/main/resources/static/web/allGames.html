@@ -10,10 +10,12 @@
 
 <body>
     <h1>Battle Ship</h1>
+
+    <!--
     <div id="signUp">
         <div id="form">
             <form id="registerForm" onsubmit="return false">
-                <!--        <label>Name: <input type="text" name="username"></label>-->
+                        <label>Name: <input type="text" name="username"></label>
                 <label>Email: <input type="text" name="email"></label>
                 <label>Password: <input type="text" name="password"></label>
                 <button>Create</button>
@@ -26,7 +28,9 @@
             </form>
         </div>
     </div>
-    <hr>
+-->
+    <!--    <hr>-->
+
     <!--
     <form id="logout-form" onsubmit="return false">
         <button>Log out</button>
@@ -58,11 +62,45 @@
     <div id="game">
         <div v-if="isLoading">!!!!!!</div>
         <div v-else>
-            <div v-for="(game, index) in gameData" :key="index">
+            <!--           <div id="logInAndOut"></div>-->
+            <!--
+            <div id="signUp">
+                <div id="form">
+                    <form id="registerForm" onsubmit="return false">
+                        <label>Name: <input type="text" name="username"></label>
+                        <label>Email: <input type="text" name="email"></label>
+                        <label>Password: <input type="text" name="password"></label>
+                        <button>Create</button>
+                        <p class="message">Already Registered?</p>
+                    </form>
+                    <form id="login">
+                        <label>Email: <input type="text" name="email"></label>
+                        <label>Password: <input type="text" name="password/"></label>
+                        <button>Login</button>
+                    </form>
+                </div>
+            </div>
+-->
+            <form onsubmit="return false">
+                <label for="email-login">Username</label>
+                <input id="email-login" type="email" required="username" placeholder="email...@" v-model="email">
+                <label for="pass-login">Password</label>
+                <input id="pass-login" type="password" required="current-password" placeholder="password..." v-model="password">
+                <button type="submit" value="Login" v-on:click="loginForm">Login</button> 
+                <button type="submit" value="Login" v-on:click="logOut">Logout</button>
+                <!--                <input type="button" value="Signup" onclick="signup()">-->
+            </form>
+            <p>{{email}}</p>
+            <p>{{password}}</p>
+            <hr>
+
+
+            <div v-for="(game, index) in gameData.listOfGames" :key="index">
+<!--                 Game{{game.gameId}}: -->
                 <div v-for="(gameP, index) in game.GamePlayers" :key="index">
-                    Game{{game.GameID}}:
+                    Game{{game.gameId}}:
                     <ol>
-                        <li>gameID: {{game.GameID}}</li>
+                        <li>gameID: {{game.gameId}}</li>
                         <li>CreationDate: {{game.CreationDate}}</li>
 
                         <ul>
