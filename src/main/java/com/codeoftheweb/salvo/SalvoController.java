@@ -1,13 +1,15 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.OrderBy;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,11 +33,27 @@ public class SalvoController {
     private ScoreRepository scoreRepository;
 
 
-    @RequestMapping("/players")
-    @OrderBy("Id asc")
-    public List<Player> getPlayerId() {
-        return playerRepository.findAll();
-    }
+    @RequestMapping(path ="/players", method = RequestMethod.POST)
+//    @OrderBy("Id asc")
+    public ResponseEntity <String> createPlayer( String email, String password) {
+
+        if(email.isEmpty() || password.isEmpty()){
+            return new ResponseEntity<>(("error, please fill in all information"), HttpStatus.FORBIDDEN);
+        }
+
+        Player player = playerRepository.findByUserName(email);
+        if(player != null) {
+            return new ResponseEntity<>(("error, username is already exists"), HttpStatus.FORBIDDEN);
+        }
+
+        Player newPlayer = playerRepository.save(new Player( email, password));
+        return new ResponseEntity<>( "user added", HttpStatus.CREATED);
+
+        }
+
+//    public List<Player> getPlayerId() {
+//        return playerRepository.findAll();
+//    }
 
     @RequestMapping("/games")
     public Map<String, Object> Games(Authentication authentication) {
