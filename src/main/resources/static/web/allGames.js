@@ -9,8 +9,11 @@ var allData = new Vue({
         date: [],
         email: "",
         password: "",
-//        loginOrSignUp: true,
-//        loginOrBody: true,
+        createEmail: "",
+        createPassword: "",
+        signIn: true,
+        //        loginOrSignUp: true,
+        //        loginOrBody: true,
         top25score: [],
         won: 0,
         lost: 0,
@@ -86,18 +89,7 @@ var allData = new Vue({
     },
     methods: {
 
-//         loginChange() {
-//                if (this.loginOrSignUp == true) {
-//                    this.loginOrSignUp = false;
-//                } else {
-//                    this.loginOrSignUp = true;
-//                }
-//            },
-//        
-//         getLogin() {
-//                this.loginBody = false;
-//            },
-        
+
         loginForm() {
             //            let email = () => document.getElementById("email-login").value
             //            let password = () => document.getElementById("pass-login").value
@@ -122,7 +114,7 @@ var allData = new Vue({
             }).catch(error => console.log("An error has ocurred: ", error))
 
         },
-        
+
         getPlayer() {
             fetch('http://localhost:8080/api/players', {
                 method: 'POST',
@@ -131,22 +123,29 @@ var allData = new Vue({
                     'Accept': 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: "email=" + this.email + "&password=" + this.password
+                body: "email=" + this.createEmail + "&password=" + this.createPassword
             }).then(response => {
                 if (response.status === 200) {
                     window.location.reload();
-//                    this.logOut();
+                    gameData.userEmail = gameData.addEmail;
+                    gameData.userPassword = gameData.addPassword;
+                    this.loginForm();
                     console.log(response)
                 } else if (response.status === 401) {
-//                    this.loginForm();
                     alert("Can't login: wrong user or pass");
-                } else {
-                    alert("A problem has occurred: " + response.status);
                 }
             }).catch(error => console.log("An error has ocurred: ", error))
 
         },
-        
+
+        showSignin() {
+            this.signIn = false;
+        },
+        hideSignin() {
+            this.signIn = true;
+        },
+
+
         logOut() {
             fetch('http://localhost:8080/api/logout', {
                 method: 'POST',
@@ -172,7 +171,7 @@ var allData = new Vue({
                     .reduce((a, b) => a + b, 0) || "Not Finish";
             }
         },
-        
+
         calculateScores() {
             for (var i = 0; i < this.gameScoreData.length; i++) {
                 let won = 0;

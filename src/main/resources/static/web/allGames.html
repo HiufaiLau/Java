@@ -81,28 +81,41 @@
                 </div>
             </div>
 -->
-            
-                <div class="login" v-if="gameData.isLogin == null" >
-                    <form onsubmit="return false">
-                        <label for="email-login">Username</label>
-                        <input id="email-login" type="email" required="username" placeholder="email...@" v-model="email">
-                        <label for="pass-login">Password</label>
-                        <input id="pass-login" type="password" required="current-password" placeholder="password..." v-model="password">
-                        <button type="submit" value="Login" v-on:click="loginForm">Login</button>
 
-                        <!--                <input type="button" value="Signup" onclick="signup()">-->
+            <div class="login" v-if="gameData.isLogin == null">
+                <form onsubmit="return false">
+                    <label for="email-login">Username</label>
+                    <input id="email-login" type="email" required="username" placeholder="email...@" v-model="email">
+                    <label for="pass-login">Password</label>
+                    <input id="pass-login" type="password" required="current-password" placeholder="password..." v-model="password">
+                    <button type="submit" value="Login" v-on:click="loginForm">Login</button>
+                </form>
+
+                <div v-if="signIn">
+                    <span><strong>If you are new here , please</strong></span> <button v-on:click="showSignin">Register</button>
+
+                </div>
+                <div v-else>
+                    <button v-on:click="hideSignin">Register</button>
+                    <form name="signin-form" id="signin-form" @submit.prevent="getPlayer">
+                        <label for="email-login">Username</label>
+                        <input id="email-login" type="email" name="email" placeholder="email...@" v-model="createEmail">
+                        <label for="pass-login">Password</label>
+                        <input id="pass-login" type="password" name="password" placeholder="password..." v-model="createPassword">
+                        <button type="submit">Sign up</button>
                     </form>
                 </div>
+            </div>
 
-                <div class="logout" v-else>
-                    <button type="submit" value="Login" v-on:click="logOut">Logout</button>
-                    <h4>Welcome {{gameData.isLogin.email}} !!</h4>
-                </div>
-                
-                <p>{{email}}</p>
-                <p>{{password}}</p>
-                <hr>
-            
+            <div class="logout" v-else>
+                <button type="submit" value="LogOut" v-on:click="logOut">Logout</button>
+                <h4>Welcome {{gameData.isLogin.email}} !!</h4>
+            </div>
+
+            <p>{{email}}</p>
+            <p>{{password}}</p>
+            <hr>
+
 
             <div v-for="(game, index) in gameData.listOfGames" :key="index">
                 <!--                 Game{{game.gameId}}: -->
