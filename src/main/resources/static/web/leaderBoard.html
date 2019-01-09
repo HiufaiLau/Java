@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,3 +38,44 @@
 <script src="leaderBoard.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leader Board!</title>
+</head>
+<body>
+<div id="leaderBoard">
+
+    <div v-if="isLoading==true">
+    </div>
+
+    <div v-else>
+        <table>
+            <thead>
+            <th>Name</th>
+            <th>Total</th>
+            <th>Won</th>
+            <th>Lost</th>
+            <th>Tied</th>
+            </thead>
+            <tbody>
+            <tr v-for="(gameScoreData, index) in gameScoreData" :key="index">
+                <td>{{gameScoreData.player}}</td>
+                <td>{{gameScoreData.totalScore}}</td>
+                <td>{{gameScoreData.won}}</td>
+                <td>{{gameScoreData.lost}}</td>
+                <td>{{gameScoreData.tied}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="leaderBoard.js"></script>
+</body>
+</html>
+>>>>>>> ecbb5b69e1a26bb351d994792946895e9c1ed972
