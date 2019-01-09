@@ -7,7 +7,7 @@
     /*    background-color: yellow;*/
 }
 
-#salvoTable{
+#salvoTable {
     border-collapse: collapse;
     width: 330px;
     height: 330px;
@@ -22,10 +22,11 @@
     /*    height: 34px;*/
     vertical-align: center;
     text-align: center;
-    
+
 
 }
- #salvoTable th{
+
+#salvoTable th {
     height: 28px;
     width: 28px;
     border: 2px grey solid;
@@ -45,7 +46,7 @@
 
 }
 
-#salvoTable td{
+#salvoTable td {
     border: 2px grey solid;
     /*    height: 34px;*/
     vertical-align: center;
@@ -53,20 +54,22 @@
 
 }
 
-.salvo2{
+.salvo2 {
     border-radius: 50px;
     background-color: green;
 }
-.ships{
+
+.ships {
     border-radius: 50px;
     background-color: orange;
 }
-.salvo3{
+
+.salvo3 {
     border-radius: 50px;
     background-color: grey;
 }
 
-.hit{
+.hit {
     background-color: red;
 }
 

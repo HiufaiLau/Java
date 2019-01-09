@@ -1,10 +1,26 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +39,11 @@ public class SalvoApplication {
                                       SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
-            Player player1 = new Player("jake@gmail.com");
-            Player player2 = new Player("micheal@gmail.com");
-            Player player3 = new Player("namie@gmail.com");
-            Player player4 = new Player("ottavia@gmail.com");
-            Player player5 = new Player("yuri@gmail.com");
+            Player player1 = new Player("jake@gmail.com","j");
+            Player player2 = new Player("micheal@gmail.com","m");
+            Player player3 = new Player("namie@gmail.com", "n");
+            Player player4 = new Player("ottavia@gmail.com", "o");
+            Player player5 = new Player("yuri@gmail.com", "y");
 
             Date date = new Date();
             Date date1 = Date.from(date.toInstant().plusSeconds(3600));
@@ -85,8 +101,8 @@ public class SalvoApplication {
             GamePlayer gamePlayer5 = new GamePlayer(creationDate1);
             player1.addGamePlayer(gamePlayer);
             game1.addGamePlayer(gamePlayer);
-			player1.addGamePlayer(gamePlayer5);
-			game3.addGamePlayer(gamePlayer5);
+            player1.addGamePlayer(gamePlayer5);
+            game3.addGamePlayer(gamePlayer5);
 
             GamePlayer gamePlayer2 = new GamePlayer(creationDate2);
             GamePlayer gamePlayer6 = new GamePlayer(creationDate2);
@@ -97,11 +113,11 @@ public class SalvoApplication {
 
 
             GamePlayer gamePlayer3 = new GamePlayer(creationDate3);
-            GamePlayer gamePlayer7= new GamePlayer(creationDate3);
+            GamePlayer gamePlayer7 = new GamePlayer(creationDate3);
             player3.addGamePlayer(gamePlayer3);
             game2.addGamePlayer(gamePlayer3);
-			player3.addGamePlayer(gamePlayer7);
-			game3.addGamePlayer(gamePlayer7);
+            player3.addGamePlayer(gamePlayer7);
+            game3.addGamePlayer(gamePlayer7);
 
             GamePlayer gamePlayer4 = new GamePlayer(creationDate3);
             GamePlayer gamePlayer8 = new GamePlayer(creationDate3);
@@ -116,6 +132,7 @@ public class SalvoApplication {
             gamePlayer.addShip(ship3);
             gamePlayer.addShip(ship4);
             gamePlayer.addShip(ship5);
+
             gamePlayer2.addShip(ship6);
             gamePlayer2.addShip(ship7);
             gamePlayer2.addShip(ship8);
@@ -184,10 +201,10 @@ public class SalvoApplication {
             gamePlayerRepository.save(gamePlayer2);
             gamePlayerRepository.save(gamePlayer3);
             gamePlayerRepository.save(gamePlayer4);
-			gamePlayerRepository.save(gamePlayer5);
-			gamePlayerRepository.save(gamePlayer6);
-			gamePlayerRepository.save(gamePlayer7);
-			gamePlayerRepository.save(gamePlayer8);
+            gamePlayerRepository.save(gamePlayer5);
+            gamePlayerRepository.save(gamePlayer6);
+            gamePlayerRepository.save(gamePlayer7);
+            gamePlayerRepository.save(gamePlayer8);
 //			gamePlayerRepository.save(gamePlayer9);
 //			gamePlayerRepository.save(gamePlayer10);
 
@@ -222,4 +239,76 @@ public class SalvoApplication {
 
         };
     }
+}
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(inputName -> {
+            Player player = playerRepository.findByUserName(inputName);
+            if (player != null) {
+                return new User(player.getEmail(), player.getPassword(),
+                        AuthorityUtils.createAuthorityList("USER"));
+            } else {
+                throw new UsernameNotFoundException("Unknown user: " + inputName);
+            }
+        });
+    }
+}
+
+@Configuration
+@EnableWebSecurity
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/api/game_view/*").hasAnyAuthority("USER")
+//                .antMatchers("/**").permitAll()
+                .antMatchers("/web/allGames.html").permitAll()
+                .antMatchers("/web/allGames.css").permitAll()
+                .antMatchers("/web/allGames.js").permitAll()
+                .antMatchers("/web/game.html").hasAnyAuthority("USER")
+                .antMatchers("/api/leaderBoard").permitAll()
+                .antMatchers("/api/games").permitAll()
+                .antMatchers("/api/players").permitAll()
+                .antMatchers("/rest/*").permitAll()
+                //rest should be deny all
+                .anyRequest().fullyAuthenticated()
+                .and()
+                .formLogin()
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginPage("/api/login");
+
+        http.logout().logoutUrl("/api/logout");
+
+        // turn off checking for CSRF tokens
+        http.csrf().disable();
+
+        // if user is not authenticated, just send an authentication failure response
+        http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+        // if login is successful, just clear the flags asking for authentication
+        http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+        // if login fails, just send an authentication failure response
+        http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+        // if logout is successful, just send a success response
+        http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+    }
+
+    private void clearAuthenticationAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
+    }
+
+
 }

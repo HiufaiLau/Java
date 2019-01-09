@@ -40,6 +40,19 @@ var eachGameData = new Vue({
                     this.isLoading = false;
                 })
         },
+        logOut() {
+            fetch('http://localhost:8080/api/logout', {
+                method: 'POST',
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.reload()
+                } else if (response.status === 401) {
+                    alert("Can't login: wrong user or pass");
+                } else {
+                    alert("A problem has occurred: " + response.status);
+                }
+            }).catch(error => console.log("An error has ocurred: ", error))
+        },
 
 
         getRelatedId() {

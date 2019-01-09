@@ -7,7 +7,13 @@ var allData = new Vue({
         gameScoreData: [],
         isLoading: true,
         date: [],
-
+        email: "",
+        password: "",
+        createEmail: "",
+        createPassword: "",
+        signIn: true,
+        //        loginOrSignUp: true,
+        //        loginOrBody: true,
         top25score: [],
         won: 0,
         lost: 0,
@@ -33,6 +39,8 @@ var allData = new Vue({
             .then(response => response.json())
             .then(data => {
                 this.isLoading = false;
+                //                this.login();
+                //                this.logout();
                 this.gameScoreData = data;
                 console.log(this.gameScoreData)
                 this.calculateTotalScore();
@@ -44,76 +52,119 @@ var allData = new Vue({
                 console.log(error);
             });
 
-//               fetch('http://localhost:8080/api/games', {
-//                    method: 'GET',
-//                })
-//                .then(response => response.json())
-//                .then(data => {
-//                    this.isLoading = false;
-//                    this.gameData = data;
-//                    console.log(this.gameData)
-//                    allData.dateConvert();
-//                })
-//                .catch(function (error) {
-//                    console.log(error);
-//                });
-//               
-//               fetch('http://localhost:8080/api/leaderBoard', {
-//                    method: 'GET',
-//                })
-//                .then(response => response.json())
-//                .then(data => {
-//                    this.isLoading = false;
-//                    this.gameScoreData = data;
-//                    console.log(this.gameScoreData)
-//                    this.calculateTotalScore();
-//                    console.log(this.gameScoreData);
-//                    this.calculateScores();
-//                    console.log(this.gameScoreData);
-//                })
-//                .catch(function (error) {
-//                    console.log(error);
-//               });
+
+        //               fetch('http://localhost:8080/api/games', {
+        //                    method: 'GET',
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameData = data;
+        //                    console.log(this.gameData)
+        //                    allData.dateConvert();
+        //                })
+        //                .catch(function (error) {
+        //                    console.log(error);
+        //                });
+        //               
+        //               fetch('http://localhost:8080/api/leaderBoard', {
+        //                    method: 'GET',
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameScoreData = data;
+        //                    console.log(this.gameScoreData)
+        //                    this.calculateTotalScore();
+        //                    console.log(this.gameScoreData);
+        //                    this.calculateScores();
+        //                    console.log(this.gameScoreData);
+        //                })
+        //                .catch(function (error) {
+        //                    console.log(error);
+        //               });
 
 
 
     },
     methods: {
 
-        //        fetchGame(url1, {
-        //            method: 'GET',
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            this.isLoading = false;
-        //            this.gameData = data;
-        //            console.log(this.gameData)
-        //            allData.dateConvert();
-        //        })
-        //        .catch(function (error) {
-        //            console.log(error);
-        //        });
 
+        loginForm() {
+            fetch('http://localhost:8080/api/login', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: "email=" + this.email + "&password=" + this.password
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.reload()
+                } else if (response.status === 401) {
+                    alert("Can't login: wrong user or pass");
+                } else {
+                    alert("A problem has occurred: " + response.status);
+                }
+            }).catch(error => console.log("An error has ocurred: ", error))
 
-        //        fetchGameScore(url, {
-        //            method: 'GET',
-        //        })
-        //        .then(response => response.json())
-        //        .then(data => {
-        //            this.isLoading = false;
-        //            this.gameScoreData = data;
-        //            console.log(this.gameScoreData)
-        //
-        //            this.calculateTotalScore();
-        //            console.log(this.gameScoreData);
-        //            this.calculateScores();
-        //            console.log(this.gameScoreData);
-        //
-        //        });
+        },
 
+        getPlayer() {
+            fetch('http://localhost:8080/api/players', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: "email=" + this.createEmail + "&password=" + this.createPassword
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.reload();
+//                    gameData.userEmail = gameData.addEmail;
+//                    gameData.userPassword = gameData.addPassword;
+                    this.loginForm();
+                    console.log(response)
+                } else if (response.status === 401) {
+                    alert("Please sign up");
+                }
+            }).catch(error => console.log("An error has ocurred: ", error))
+
+        },
+
+        showSignin() {
+            this.signIn = false;
+        },
+        hideSignin() {
+            this.signIn = true;
+        },
+
+        status() {
+//            if ( this.email == this.createEmail) {
+//                alert("user is already existed")
+//            } else {
+//                alert("sign up success!!!")
+//            }
+
+        },
+        logOut() {
+            fetch('http://localhost:8080/api/logout', {
+                method: 'POST',
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.reload()
+                } else if (response.status === 401) {
+                    alert("Can't login: wrong user or pass");
+                } else {
+                    alert("A problem has occurred: " + response.status);
+                }
+            }).catch(error => console.log("An error has ocurred: ", error))
+        },
 
         dateConvert() {
-            this.gameData.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
+            this.gameData.listOfGames.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
         },
 
         calculateTotalScore() {
@@ -123,6 +174,7 @@ var allData = new Vue({
                     .reduce((a, b) => a + b, 0) || "Not Finish";
             }
         },
+
         calculateScores() {
             for (var i = 0; i < this.gameScoreData.length; i++) {
                 let won = 0;
