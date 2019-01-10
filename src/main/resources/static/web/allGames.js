@@ -4,6 +4,7 @@ var allData = new Vue({
         //        gameUrl: 'http://localhost:8080/api/games',
         //        gameUrl: 'http://localhost:8080/api/leaderBoard',
         gameData: [],
+        gameUrl: ['http://localhost:8080/api/games', 'http://localhost:8080/api/leaderBoard'],
         gameScoreData: [],
         isLoading: true,
         date: [],
@@ -11,16 +12,49 @@ var allData = new Vue({
         password: "",
         createEmail: "",
         createPassword: "",
+        newGamePlayersId: "",
         signIn: true,
-        //        loginOrSignUp: true,
-        //        loginOrBody: true,
         top25score: [],
         won: 0,
         lost: 0,
         tied: 0,
 
     },
-    beforeCreate() {
+    beforeCreate(urlArr) {
+        //            fetch('http://localhost:8080/api/games', {
+        //                    method: 'GET',
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameData = data;
+        //                    console.log(this.gameData)
+        //    
+        //                    console.log(data.listOfGames[0].GamePlayers[0].GamePlayerID)
+        //                    console.log(data.listOfGames[0].GamePlayers[1].GamePlayerID)
+        //    //                this.backToGame()
+        //    
+        //                    allData.dateConvert();
+        //                    return fetch('http://localhost:8080/api/leaderBoard', {
+        //                        method: 'GET',
+        //                    })
+        //    
+        //                })
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    this.isLoading = false;
+        //                    this.gameScoreData = data;
+        //                    console.log(this.gameScoreData)
+        //                    this.calculateTotalScore();
+        //                    console.log(this.gameScoreData);
+        //                    this.calculateScores();
+        //                    console.log(this.gameScoreData);
+        //                })
+        //                .catch(function (error) {
+        //                    console.log(error);
+        //                });
+
+        //        },
 
         fetch('http://localhost:8080/api/games', {
                 method: 'GET',
@@ -30,16 +64,14 @@ var allData = new Vue({
                 this.isLoading = false;
                 this.gameData = data;
                 console.log(this.gameData)
-
-                console.log(data.listOfGames[0].GamePlayers[0].GamePlayerID)
-                console.log(data.listOfGames[0].GamePlayers[1].GamePlayerID)
-//                this.backToGame()
-
                 allData.dateConvert();
-                return fetch('http://localhost:8080/api/leaderBoard', {
-                    method: 'GET',
-                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
+        fetch('http://localhost:8080/api/leaderBoard', {
+                method: 'GET',
             })
             .then(response => response.json())
             .then(data => {
@@ -54,28 +86,24 @@ var allData = new Vue({
             .catch(function (error) {
                 console.log(error);
             });
+    },
 
 
-        //               fetch('http://localhost:8080/api/games', {
-        //                    method: 'GET',
-        //                })
-        //                .then(response => response.json())
+    //    created() {
+    //        this.fetchGame(this.gameUrl);
+    //    },
+
+    methods: {
+        //        fetchGame(gameUrlArr) {
+        //            Promise.all(gameUrlArr.map(url => fetch(url)
+        //                    .then(response => response.json())))
         //                .then(data => {
         //                    this.isLoading = false;
         //                    this.gameData = data;
         //                    console.log(this.gameData)
+        //                    console.log(data.listOfGames[0].GamePlayers[0].GamePlayerID)
+        //                    console.log(data.listOfGames[0].GamePlayers[1].GamePlayerID)
         //                    allData.dateConvert();
-        //                })
-        //                .catch(function (error) {
-        //                    console.log(error);
-        //                });
-        //               
-        //               fetch('http://localhost:8080/api/leaderBoard', {
-        //                    method: 'GET',
-        //                })
-        //                .then(response => response.json())
-        //                .then(data => {
-        //                    this.isLoading = false;
         //                    this.gameScoreData = data;
         //                    console.log(this.gameScoreData)
         //                    this.calculateTotalScore();
@@ -85,19 +113,10 @@ var allData = new Vue({
         //                })
         //                .catch(function (error) {
         //                    console.log(error);
-        //               });
-
-
-
-    },
-    methods: {
-
+        //                });
+        //        },
 
         loginForm() {
-            //            let email = () => document.getElementById("email-login").value
-            //            let password = () => document.getElementById("pass-login").value
-
-
             fetch('http://localhost:8080/api/login', {
                 method: 'POST',
                 credentials: 'include',
@@ -164,23 +183,32 @@ var allData = new Vue({
             }).catch(error => console.log("An error has ocurred: ", error))
         },
 
-        //         joinGame(i) {
-        //                id = this.gamesData.games[i].gameid;
-        //                $.post(`/api/game/${id}/players`)
-        //                    .done(res => {
-        //                        this.res = res, console.log(res), location.replace(`http://localhost:8080/web/game.html?gp=${res.gpid}`)
-        //                    })
-        //                    .fail(err => {
-        //                        this.errorMessage = err, console.log(this.errorMessage), this.errorStatus = true
-        //                    })
-        //            },
-//        backToGame(i, j) {
-//            let gpid = this.gameData.listOfGames[i].GamePlayers[j].GamePlayerID;
-//            //                let gpid1 = this.gameData.listOfGames[0].GamePlayers[0].Player.playerID;
-//            //                let gpid2 = this.gameData.listOfGames[0].GamePlayers[1].Player.playerID;
-//            console.log(this.gameData.listOfGames[0].GamePlayers[0].Player.playerID);
-//            console.log(this.gameData.listOfGames[0].GamePlayers[1].Player.playerID);
-//            location.replace(`http://localhost:8080/web/game.html?gp=${gpid}`)
+         createNewGame() {
+            fetch("http://localhost:8080//api/games", {
+                credentials: 'include',
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+            })
+            .then(function (data) {
+                console.log('Request success: ', data);
+                window.location.reload();
+            })
+            .catch(function (error) {
+                console.log('Request failure: ', error);
+                alert("Failure");
+            });
+        },
+        
+//         getGamePlayerId() {
+//             let gamePlayers=
+//            var gamePlayerArray = .map(game => game.gamePlayers);
+//            var allGamePlayerArray = [].concat.apply([], gamePlayerArray);
+//            // console.log(allGamePlayerArray);
+//            this.newGamePlayersId = (Math.max(...allGamePlayerArray.map(gamePlayer => gamePlayer.gpid))) + 1;
+//            // console.log(this.newGamePlayersId);
 //        },
 
         dateConvert() {

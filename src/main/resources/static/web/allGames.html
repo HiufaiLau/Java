@@ -29,10 +29,10 @@
                 <div v-else>
                     <button v-on:click="hideSignin">Register</button>
                     <form name="signin-form" id="signin-form" @submit.prevent="getPlayer">
-                        <label for="email-login">Username</label>
-                        <input id="email-login" type="email" name="email" placeholder="email...@" v-model="createEmail">
-                        <label for="pass-login">Password</label>
-                        <input id="pass-login" type="password" name="password" placeholder="password..." v-model="createPassword">
+                        <label for="email">Username</label>
+                        <input id="email" type="email" name="email" placeholder="email...@" v-model="createEmail">
+                        <label for="pass">Password</label>
+                        <input id="pass" type="password" name="password" placeholder="password..." v-model="createPassword">
                         <button type="submit">Sign up</button>
                     </form>
                 </div>
@@ -41,13 +41,14 @@
             <div class="logout" v-else>
                 <button type="submit" value="LogOut" v-on:click="logOut">Logout</button>
                 <h4>Welcome {{gameData.isLogin.email}} !!</h4>
+                <button v-on:click="createNewGame">New Game</button>
                 <p>{{email}}</p>
                 <p>{{password}}</p>
             </div>
             <hr>
-            
+
             <div v-for="(game, index) in gameData.listOfGames" :key="index">
-             
+
                 <p>Game{{game.gameId}}:</p>
                 <p>gameID: {{game.gameId}}</p>
                 <p>CreationDate: {{game.CreationDate}}</p>
@@ -63,7 +64,7 @@
                     <p>Email:{{gamePlayer.Player.email}}</p>
                     <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
                 </div>
-                  <br>
+                <br>
             </div>
             <hr>
 

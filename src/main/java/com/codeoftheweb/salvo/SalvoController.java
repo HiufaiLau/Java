@@ -51,10 +51,6 @@ public class SalvoController {
 
         }
 
-//    public List<Player> getPlayerId() {
-//        return playerRepository.findAll();
-//    }
-
     @RequestMapping("/games")
     public Map<String, Object> Games(Authentication authentication) {
         Map<String, Object> game = new HashMap<>();
@@ -80,8 +76,6 @@ public class SalvoController {
                 }}));
         game.put("listOfGames",listOfGames);
         return game;
-
-
     }
 
     private boolean isGuest(Authentication authentication) {
@@ -123,7 +117,23 @@ public class SalvoController {
 //            put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
 //        }
 //    };
-
+    @RequestMapping(value = "/games", method = RequestMethod.POST)
+    public ResponseEntity<String> createNewGame(Authentication auth){
+        if (auth.getName().isEmpty()) {
+            return new ResponseEntity<>("No player is given", HttpStatus.FORBIDDEN);
+        } else {
+            Date date = new Date();
+            Game game = new Game(date);
+            Player player = playerRepository.findByUserName(auth.getName());
+            GamePlayer gamePlayer = new GamePlayer(date);
+            gamePlayerRepository.save(gamePlayer);
+            game.addGamePlayer(gamePlayer);
+            player.addGamePlayer(gamePlayer);
+            gameRepository.save(game);
+            playerRepository.save(player);
+            return new ResponseEntity<>("new game created", HttpStatus.CREATED);
+        }
+    }
 
     @RequestMapping("/leaderBoard")
     public List<HashMap<String, Object>> getPlayersScore() {
