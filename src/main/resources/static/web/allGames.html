@@ -39,40 +39,31 @@
             </div>
 
             <div class="logout" v-else>
-                <a href="http://localhost:8080/web/game.html"><button type="submit" value="LogOut" v-on:click="logOut">Logout</button></a>
+                <button type="submit" value="LogOut" v-on:click="logOut">Logout</button>
                 <h4>Welcome {{gameData.isLogin.email}} !!</h4>
+                <p>{{email}}</p>
+                <p>{{password}}</p>
+                <hr>
             </div>
-
-            <p>{{email}}</p>
-            <p>{{password}}</p>
-            <hr>
-
-                        
-<!--            <p>{{gameData.isLogin.playerID}}</p>        -->
             <div v-for="(game, index) in gameData.listOfGames" :key="index">
-                
-                <p>Game{{game.gameId}}:</p>     
+                <p>Game{{game.gameId}}:</p>
                 <p>gameID: {{game.gameId}}</p>
                 <p>CreationDate: {{game.CreationDate}}</p>
                 <p>GamePlayers:</p>
-                
-                <!--                 Game{{game.gameId}}: -->
+
                 <div v-for="(gamePlayer, index) in game.GamePlayers" :key="index">
-                  
-                    <span v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID">
-<!--                        <button v-if="game.Player[0].playerID == gameP[i].Player[0].playerID" v-on:click="backToGame(i, j=0)">Back to Game</button>-->
-<!--                        <button v-if="game.Player[1].playerID == gameP[i].Player[1].playerID" v-on:click="backToGame(i, j=1)">Back to Game</button>-->
-                    <a :href=`game.html?gp=${gamePlayer.GamePlayerID}`>    <button>Info to url: {{gamePlayer.GamePlayerID}}</button></a>
-                    </span>
-                    
+                    <div v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID">
+                        <a :href=`game.html?gp=${gamePlayer.GamePlayerID}`> <button>Info to url: {{gamePlayer.GamePlayerID}}</button></a>
+                    </div>
                     <p>GameplayerID: {{gamePlayer.GamePlayerID}}</p>
                     <p>Player:</p>
                     <p>Email:{{gamePlayer.Player.email}}</p>
-                   <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
-                   <br>
+                    <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
+                    <br>
                 </div>
             </div>
             <hr>
+
             <table id="scoresTable">
                 <thead>
                     <th>Name</th>
