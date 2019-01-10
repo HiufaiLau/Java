@@ -238,37 +238,72 @@ public class SalvoController {
     }
 
     @RequestMapping("/game_view/{gamePlayerId}")
-    private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
+    private  Map<String, Object>  getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
         GamePlayer gp = gamePlayerRepository.findOne(gamePlayerId);
-        // if auth.getName() == gp.getPlayer().getEmail()
-        return new LinkedHashMap<String, Object>() {
-            {
-                put("gameId", gp.getGame().getGameId());
-                put("created", gp.getGame().getDate());
-                put("gamePlayers", new ArrayList<LinkedHashMap<String, Object>>() {{
-                    add(new LinkedHashMap<String, Object>() {{
-                        gp.getGame().getGamePlayers().stream()
-                                .forEach(gamePlayer -> put("players", getAllGameplayers(gp.getGame())));
+
+        if(auth.getName() == gp.getPlayer().getEmail()) {
+            return new LinkedHashMap<String, Object>() {
+                {
+                    put("gameId", gp.getGame().getGameId());
+                    put("created", gp.getGame().getDate());
+                    put("gamePlayers", new ArrayList<LinkedHashMap<String, Object>>() {{
+                        add(new LinkedHashMap<String, Object>() {{
+                            gp.getGame().getGamePlayers().stream()
+                                    .forEach(gamePlayer -> put("players", getAllGameplayers(gp.getGame())));
+                        }});
                     }});
-                }});
-                put("ships", getAllships(gp.getShips()));
-                put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
-            }
-        };
+                    put("ships", getAllships(gp.getShips()));
+                    put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
+                }
+            };
+        }else{
+            return repsonseEntitty("Wrong user", HttpStatus.FORBIDDEN);
+        }
+
     }
+
+
+
+
+
+//    private Map<String,Object>gamePlayers(GamePlayer gamePlayer){
+//        return  new LinkedHashMap<String, Object>() {
+//                {
+//                    put("gameId", gamePlayer.getGame().getGameId());
+//                    put("created", gamePlayer.getGame().getDate());
+//                    put("gamePlayers", new ArrayList<LinkedHashMap<String, Object>>() {{
+//                        add(new LinkedHashMap<String, Object>() {{
+//                            gamePlayer.getGame().getGamePlayers().stream()
+//                                    .forEach(gamePlayer -> put("players", getAllGameplayers(gamePlayer.getGame())));
+//                        }});
+//                    }});
+//                    put("ships", getAllships(gamePlayer.getShips()));
+//                    put("salvos", getAllSalvos(gamePlayer.getGame().getGamePlayers()));
+//                }
+//            };
+//
+//    }
+
+//    private ResponseEntity<String> unauthorizedGameView(){
+//        return new ResponseEntity<>("You are not authorized", HttpStatus.UNAUTHORIZED);
+//    }
+
+//    private  Boolean loginPlayer (Authentication auth,GamePlayer gamePlayer) {
+//        if (auth.getName()= gamePlayer.getPlayer().getEmail()) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//
+//    }
+
+    private Map<String, Object> repsonseEntitty(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", key);
+        map.put("message", value);
+        return map;
+    }
+
 }
 
-//    public Player currentUser(Authentication authentication) {
-//        if (userIsLogged(authentication)) {
-//            return playerRepository.findByUserName(authentication.getName());
-//        }
-//        return null;
-//    }
-//
-//    public Boolean userIsLogged (Authentication authentication) {
-//        if (authentication == null) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
+
