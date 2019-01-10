@@ -47,32 +47,29 @@
             <p>{{password}}</p>
             <hr>
 
-
+                        
+<!--            <p>{{gameData.isLogin.playerID}}</p>        -->
             <div v-for="(game, index) in gameData.listOfGames" :key="index">
+                
+                <p>Game{{game.gameId}}:</p>     
+                <p>gameID: {{game.gameId}}</p>
+                <p>CreationDate: {{game.CreationDate}}</p>
+                <p>GamePlayers:</p>
+                
                 <!--                 Game{{game.gameId}}: -->
-                <div v-for="(gameP, index) in game.GamePlayers" :key="index">
-                    Game{{game.gameId}}:<button v-on:click="">Back to Game</button>
-
-                    <ol>
-                        <li>gameID: {{game.gameId}}</li>
-                        <li>CreationDate: {{game.CreationDate}}</li>
-
-                        <ul>
-                            <li>GamePlayers:
-                                <ol>
-                                    <li>
-                                        GameplayerID: {{gameP.GamePlayerID}}
-                                    </li>
-                                    <li>
-                                        Player:
-                                        <br> Email:{{gameP.Player.email}}
-                                        <br>
-                                        PlayerID: {{gameP.Player.playerID}}
-                                    </li>
-                                </ol>
-                            </li>
-                        </ul>
-                    </ol>
+                <div v-for="(gamePlayer, index) in game.GamePlayers" :key="index">
+                  
+                    <span v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID">
+<!--                        <button v-if="game.Player[0].playerID == gameP[i].Player[0].playerID" v-on:click="backToGame(i, j=0)">Back to Game</button>-->
+<!--                        <button v-if="game.Player[1].playerID == gameP[i].Player[1].playerID" v-on:click="backToGame(i, j=1)">Back to Game</button>-->
+                    <a :href=`game.html?gp=${gamePlayer.GamePlayerID}`>    <button>Info to url: {{gamePlayer.GamePlayerID}}</button></a>
+                    </span>
+                    
+                    <p>GameplayerID: {{gamePlayer.GamePlayerID}}</p>
+                    <p>Player:</p>
+                    <p>Email:{{gamePlayer.Player.email}}</p>
+                   <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
+                   <br>
                 </div>
             </div>
             <hr>

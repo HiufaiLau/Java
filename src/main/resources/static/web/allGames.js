@@ -12,8 +12,6 @@ var allData = new Vue({
         createEmail: "",
         createPassword: "",
         signIn: true,
-//        viewingPlayerId: "",
-//        link: "",
         //        loginOrSignUp: true,
         //        loginOrBody: true,
         top25score: [],
@@ -32,8 +30,11 @@ var allData = new Vue({
                 this.isLoading = false;
                 this.gameData = data;
                 console.log(this.gameData)
-            console.log(data.listOfGames[0].GamePlayers[0].Player.playerID)
-            console.log(data.listOfGames[0].GamePlayers[0].GamePlayerID)
+
+                console.log(data.listOfGames[0].GamePlayers[0].GamePlayerID)
+                console.log(data.listOfGames[0].GamePlayers[1].GamePlayerID)
+//                this.backToGame()
+
                 allData.dateConvert();
                 return fetch('http://localhost:8080/api/leaderBoard', {
                     method: 'GET',
@@ -43,8 +44,6 @@ var allData = new Vue({
             .then(response => response.json())
             .then(data => {
                 this.isLoading = false;
-                //                this.login();
-                //                this.logout();
                 this.gameScoreData = data;
                 console.log(this.gameScoreData)
                 this.calculateTotalScore();
@@ -95,6 +94,10 @@ var allData = new Vue({
 
 
         loginForm() {
+            //            let email = () => document.getElementById("email-login").value
+            //            let password = () => document.getElementById("pass-login").value
+
+
             fetch('http://localhost:8080/api/login', {
                 method: 'POST',
                 credentials: 'include',
@@ -127,13 +130,12 @@ var allData = new Vue({
             }).then(response => {
                 if (response.status === 200) {
                     window.location.reload();
-                    //                    gameData.userEmail = gameData.addEmail;
-                    //                    gameData.userPassword = gameData.addPassword;
+                    gameData.userEmail = gameData.addEmail;
+                    gameData.userPassword = gameData.addPassword;
                     this.loginForm();
                     console.log(response)
-                     
                 } else if (response.status === 401) {
-                    alert("Please sign up");
+                    alert("Can't login: wrong user or pass");
                 }
             }).catch(error => console.log("An error has ocurred: ", error))
 
@@ -146,20 +148,14 @@ var allData = new Vue({
             this.signIn = true;
         },
 
-//        status() {
-//            //            if ( this.email == this.createEmail) {
-//            //                alert("user is already existed")
-//            //            } else {
-//            //                alert("sign up success!!!")
-//            //            }
-//
-//        },
+
         logOut() {
             fetch('http://localhost:8080/api/logout', {
                 method: 'POST',
             }).then(response => {
                 if (response.status === 200) {
                     window.location.reload()
+
                 } else if (response.status === 401) {
                     alert("Can't login: wrong user or pass");
                 } else {
@@ -167,8 +163,25 @@ var allData = new Vue({
                 }
             }).catch(error => console.log("An error has ocurred: ", error))
         },
-       
-       
+
+        //         joinGame(i) {
+        //                id = this.gamesData.games[i].gameid;
+        //                $.post(`/api/game/${id}/players`)
+        //                    .done(res => {
+        //                        this.res = res, console.log(res), location.replace(`http://localhost:8080/web/game.html?gp=${res.gpid}`)
+        //                    })
+        //                    .fail(err => {
+        //                        this.errorMessage = err, console.log(this.errorMessage), this.errorStatus = true
+        //                    })
+        //            },
+//        backToGame(i, j) {
+//            let gpid = this.gameData.listOfGames[i].GamePlayers[j].GamePlayerID;
+//            //                let gpid1 = this.gameData.listOfGames[0].GamePlayers[0].Player.playerID;
+//            //                let gpid2 = this.gameData.listOfGames[0].GamePlayers[1].Player.playerID;
+//            console.log(this.gameData.listOfGames[0].GamePlayers[0].Player.playerID);
+//            console.log(this.gameData.listOfGames[0].GamePlayers[1].Player.playerID);
+//            location.replace(`http://localhost:8080/web/game.html?gp=${gpid}`)
+//        },
 
         dateConvert() {
             this.gameData.listOfGames.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
