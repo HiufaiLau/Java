@@ -23,8 +23,8 @@
                 </form>
 
                 <div v-if="signIn">
-                    <span><strong>If you are new here , please</strong></span> <button v-on:click="showSignin">Register</button>
-
+                    <span><strong>If you are new here , please</strong></span>
+                    <button v-on:click="showSignin">Register</button>
                 </div>
                 <div v-else>
                     <button v-on:click="hideSignin">Register</button>
@@ -43,24 +43,27 @@
                 <h4>Welcome {{gameData.isLogin.email}} !!</h4>
                 <p>{{email}}</p>
                 <p>{{password}}</p>
-                <hr>
             </div>
+            <hr>
+            
             <div v-for="(game, index) in gameData.listOfGames" :key="index">
+             
                 <p>Game{{game.gameId}}:</p>
                 <p>gameID: {{game.gameId}}</p>
                 <p>CreationDate: {{game.CreationDate}}</p>
                 <p>GamePlayers:</p>
-
                 <div v-for="(gamePlayer, index) in game.GamePlayers" :key="index">
                     <div v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID">
-                        <a :href=`game.html?gp=${gamePlayer.GamePlayerID}`> <button>Info to url: {{gamePlayer.GamePlayerID}}</button></a>
+                        <a :href=`game.html?gp=${gamePlayer.GamePlayerID}`>
+                            <button>Back to Game{{game.gameId}}</button>
+                        </a>
                     </div>
                     <p>GameplayerID: {{gamePlayer.GamePlayerID}}</p>
                     <p>Player:</p>
                     <p>Email:{{gamePlayer.Player.email}}</p>
                     <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
-                    <br>
                 </div>
+                  <br>
             </div>
             <hr>
 

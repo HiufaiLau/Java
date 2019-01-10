@@ -240,6 +240,7 @@ public class SalvoController {
     @RequestMapping("/game_view/{gamePlayerId}")
     private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
         GamePlayer gp = gamePlayerRepository.findOne(gamePlayerId);
+        // if auth.getName() == gp.getPlayer().getEmail()
         return new LinkedHashMap<String, Object>() {
             {
                 put("gameId", gp.getGame().getGameId());
