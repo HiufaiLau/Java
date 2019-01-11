@@ -184,7 +184,7 @@ var allData = new Vue({
         },
 
          createNewGame() {
-            fetch("http://localhost:8080//api/games", {
+            fetch("http://localhost:8080/api/games", {
                 credentials: 'include',
                     method: "POST",
                     headers: {
