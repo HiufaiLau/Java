@@ -35,21 +35,27 @@ public class SalvoController {
 
     @RequestMapping(path ="/players", method = RequestMethod.POST)
 //    @OrderBy("Id asc")
-    public ResponseEntity <String> createPlayer( String email, String password) {
+    public ResponseEntity <Map<String, Object>> createPlayer( String email, String password) {
 
         if(email.isEmpty() || password.isEmpty()){
-            return new ResponseEntity<>(("error, please fill in all information"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(responseEntity("error", "please fill in all information"), HttpStatus.FORBIDDEN);
         }
 
         Player player = playerRepository.findByUserName(email);
         if(player != null) {
-            return new ResponseEntity<>(("error, username is already exists"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(responseEntity("error", "username is already exists"), HttpStatus.FORBIDDEN);
         }
 
         Player newPlayer = playerRepository.save(new Player( email, password));
-        return new ResponseEntity<>( "user added", HttpStatus.CREATED);
+        return new ResponseEntity<>(responseEntity("newPlayer", newPlayer.getEmail()), HttpStatus.CREATED);
 
         }
+
+    private Map<String, Object> responseEntity(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
 
     @RequestMapping("/games")
     public Map<String, Object> Games(Authentication authentication) {
@@ -118,9 +124,9 @@ public class SalvoController {
 //        }
 //    };
     @RequestMapping(value = "/games", method = RequestMethod.POST)
-    public ResponseEntity<String> createNewGame(Authentication auth){
+    public ResponseEntity<Map<String, Object>> createNewGame(Authentication auth){
         if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>("No player is given", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(responseEntity("error", "No player is given"), HttpStatus.FORBIDDEN);
         } else {
             Date date = new Date();
             Game game = new Game(date);
@@ -131,7 +137,7 @@ public class SalvoController {
             player.addGamePlayer(gamePlayer);
             gameRepository.save(game);
             playerRepository.save(player);
-            return new ResponseEntity<>("new game created", HttpStatus.CREATED);
+            return new ResponseEntity<>(responseEntity("gamePlayerId", gamePlayer.getGamePlayerId()), HttpStatus.CREATED);
         }
     }
 
@@ -267,7 +273,7 @@ public class SalvoController {
                 }
             };
         }else{
-            return repsonseEntitty("Wrong user", HttpStatus.FORBIDDEN);
+            return responseEntity("Wrong user", HttpStatus.FORBIDDEN);
         }
 
     }
@@ -307,12 +313,7 @@ public class SalvoController {
 //
 //    }
 
-    private Map<String, Object> repsonseEntitty(String key, Object value) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", key);
-        map.put("message", value);
-        return map;
-    }
+
 
 }
 
