@@ -198,8 +198,8 @@ var allData = new Vue({
                              )
                     .then(data => {
                         console.log(data)
-                        location.href=`http://localhost:8080/web/game.html?gp=${data.gamePlayerId}`
-//                        location.replace(`http://localhost:8080/web/game.html?gp=${data.gamePlayerId}`);
+//                        location.href=`http://localhost:8080/web/game.html?gp=${data.gamePlayerId}`
+                        location.assign(`http://localhost:8080/web/game.html?gp=${data.gamePlayerId}`);
                         
                     })
                                     .catch(error => {
