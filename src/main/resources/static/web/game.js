@@ -99,25 +99,30 @@ var eachGameData = new Vue({
         showTheShips(tableId) {
             var shipLocations = [];
             let ships = this.gameViewData.ships
-            console.log(ships)
-            ships.forEach(ship => {
-                ship.locations.forEach(location => {
-                    shipLocations.push(location)
+//            console.log(ships)
+            if (ships.length > 0) {
+                ships.forEach(ship => {
+                    ship.locations.forEach(location => {
+                        shipLocations.push(location)
+                    })
                 })
-            })
-            console.log("shipsLocation:" + shipLocations)
-
-            shipLocations.forEach(loc => {
-                let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
-                    .classList.add('ships')
-                //                console.log(loc)
-            })
+                console.log("shipsLocation:" + shipLocations)
+                shipLocations.forEach(loc => {
+                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                        .classList.add('ships')
+                    //                console.log(loc)
+                })
+            } else {
+                shipLocations = null
+                console.log(ships)
+            }
         },
-        
+
         showOpponentSalvos(tableId) {
             var shipLocations = [];
             let ships = this.gameViewData.ships
-            console.log(ships)
+//            console.log(ships)
+            
             ships.forEach(ship => {
                 ship.locations.forEach(location => {
                     shipLocations.push(location)
