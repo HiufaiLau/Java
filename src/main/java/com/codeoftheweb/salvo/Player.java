@@ -58,9 +58,7 @@ public class Player {
     public void setEmail(String email) {
         this.userName = email;
     }
-
-
-
+    
     public String toString() {
         return userName;
     }
