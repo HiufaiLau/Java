@@ -18,20 +18,21 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
-//    private String name;
+    //    private String name;
     private String userName;
     private String password;
 
-    @OneToMany(mappedBy="player", fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     @OrderBy("id asc")
     Set<GamePlayer> gamePlayers = new HashSet<>();
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
 
-    public Player() {}
+    public Player() {
+    }
 
-    public Player(String email, String password){
+    public Player(String email, String password) {
         this.userName = email;
 
         this.password = password;
@@ -46,7 +47,7 @@ public class Player {
         this.id = id;
     }
 
-    public void addGamePlayer(GamePlayer gamePlayer){
+    public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setPlayer(this);
         gamePlayers.add(gamePlayer);
     }
@@ -58,21 +59,25 @@ public class Player {
     public void setEmail(String email) {
         this.userName = email;
     }
-    
+
     public String toString() {
         return userName;
     }
 
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @JsonIgnore
     public List<Game> getGames() {
         return gamePlayers.stream().map(gamePlayer -> gamePlayer.getGame()).collect(toList());
     }
 
-    public void addScore(Score score){
+    public void addScore(Score score) {
         score.setPlayer(this);
         scores.add(score);
     }

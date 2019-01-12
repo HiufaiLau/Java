@@ -113,21 +113,24 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/game/{nn}/players", method = RequestMethod.POST)
-    public ResponseEntity<Map<String,Object>> joinGame(@PathVariable("nn") Long gameId, Authentication auth){
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable("nn") Long gameId, Authentication auth) {
         Game game = gameRepository.findOne(gameId);
-
-        if (auth.getName().isEmpty()){
-            return new ResponseEntity<>(responseEntity("loginStatus","not login"), HttpStatus.UNAUTHORIZED);
-        } else if(game == null) {
-            return new ResponseEntity<>(responseEntity("gameStatus","No such game"), HttpStatus.FORBIDDEN);
-        } else if(game.getPlayers().size() >1
-        ) {
-            return new ResponseEntity<>(responseEntity("gameError","Game is full"), HttpStatus.FORBIDDEN);
+        Player player = playerRepository.findByUserName(auth.getName());
+        if (auth.getName().isEmpty()) {
+            return new ResponseEntity<>(responseEntity("loginStatus", "not login"), HttpStatus.UNAUTHORIZED);
+        }
+        if (game == null) {
+            return new ResponseEntity<>(responseEntity("gameStatus", "No such game"), HttpStatus.FORBIDDEN);
+        }
+        if (game.getPlayers().size() > 1) {
+            return new ResponseEntity<>(responseEntity("gameError", "Game is full"), HttpStatus.FORBIDDEN);
+        }
+        if (game.getPlayers().contains(player)) {
+            return new ResponseEntity<>(responseEntity("gameError","You already joined this game"),HttpStatus.CONFLICT);
         } else {
             Date date = new Date();
-//            Game g = new Game(date);
             GamePlayer gamePlayer = new GamePlayer(date);
-            Player player = playerRepository.findByUserName(auth.getName());
+
             gamePlayerRepository.save(gamePlayer);
             gameRepository.save(game);
             playerRepository.save(player);

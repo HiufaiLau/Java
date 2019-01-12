@@ -129,12 +129,17 @@ var allData = new Vue({
                 if (response.status === 200) {
                     window.location.reload()
                 } else if (response.status === 401) {
-                    alert("Can't login: wrong user or pass");
+                    alert("Can't login: please register first");
                 } else {
-                    alert("A problem has occurred: " + response.status);
+                    alert("Sorry !! No Authurization");
                 }
             }).catch(error => console.log("An error has ocurred: ", error))
 
+        },
+        
+        alert(){
+        
+            alert("Success !! Your are registered ")
         },
 
         getPlayer() {
@@ -153,9 +158,11 @@ var allData = new Vue({
                     gameData.userPassword = gameData.addPassword;
                     this.loginForm();
                     console.log(response)
-                } else if (response.status === 401) {
-                    alert("Can't login: wrong user or pass");
-                }
+                } 
+//                else if (response.status === 401) {
+//                    alert("Can't login: please register first");
+//                };
+                
             }).catch(error => console.log("An error has ocurred: ", error))
 
         },
@@ -192,7 +199,7 @@ var allData = new Vue({
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 })
-                .then(data => data.json())
+                .then(repsonse => repsonse.json())
                 .then(data => {
                     console.log(data)
                     //                        location.href=`http://localhost:8080/web/game.html?gp=${data.gamePlayerId}`
@@ -204,6 +211,7 @@ var allData = new Vue({
                     alert("Failure");
                 });
         },
+
         joinGame(gameId) {
             fetch("/api/game/" + gameId + "/players", {
                     credentials: 'include',
@@ -213,31 +221,40 @@ var allData = new Vue({
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 })
-                .then(function (data) {
-                    console.log('Request success: ', data);
-//                    window.location.reload();
-                })
-                .catch(function (error) {
-                    console.log('Request error: ', error);
-                    alert("Fail");
-                });
-        },
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 403) {
+                        alert("The game is full")
+                    }
+                    if (response.status == 401) {
+                        alert("You are not logged in")
+                    }
+                    if (response.status == 409) {
+                        alert("You are already in this game")
+                    }
+                    return response.json()
 
-//        checkPlayerInGame(gamePlayers) {
-//            if (gamePlayers.length === 1 && this.viewingPlayer) {
-//                return 1;
-//            } else {
-//                return null;
+                })
+                .then(data => {
+                    //                    window.location.reload()
+                    location.assign(`http://localhost:8080/web/game.html?gp=${data.gpId}`);
+                })
+
+        },
+//
+//        checkGamePlayer(game) {
+//            console.log(game)
+//            
+//            if (game.GamePlayers.length > 1) {
+//                return false
 //            }
+//            if (this.gameData.isLogin.playerID === game.GamePlayers.Player.playerID) {
+//                return false
+//            }
+//            return true
+//            
 //        },
-//
-//        getGameIdToJoin(game) {
-//            this.joiningGameId = game.id;
-//            console.log(this.joiningGameId);
-//            this.joinGame();
-//            // window.location.reload();
-//
-//        }
+        
 
         dateConvert() {
             this.gameData.listOfGames.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
