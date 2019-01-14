@@ -19,8 +19,10 @@
   <div class="input-group-prepend">
   </div>
 -->
-                    <input type="text" class="form-control" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="email" class="col-2">
-                    <input type="text" class="form-control" placeholder="password..." aria-label="" aria-describedby="basic-addon1" v-model="password" class="col-2">
+                    <label for="email">Username</label>
+                    <input type="text" class="form-control col-5" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="email" class="col-2">
+                    <label for="pass">Password</label>
+                    <input type="text" class="form-control col-5" placeholder="password..." aria-label="" aria-describedby="basic-addon1" v-model="password" >
                     <button type="submit" value="Login" v-on:click="loginForm" class="btn btn-secondary" class="col-2">Login</button>
                 </div>
                 <!--
@@ -52,9 +54,9 @@
                     <button v-on:click="hideSignin" type="button" class="btn btn-secondary">Register</button>
                     <form name="signin-form" id="signin-form" @submit.prevent="getPlayer">
                         <label for="email">Username</label>
-                        <input id="email" type="email" name="email" placeholder="email...@" v-model="createEmail">
+                        <input id="email" type="email" name="email" class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createEmail">
                         <label for="pass">Password</label>
-                        <input id="pass" type="password" name="password" placeholder="password..." v-model="createPassword">
+                        <input id="pass" type="password" name="password" placeholder="password..." class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createPassword">
                         <button type="submit" v-on:click="alert" type="button" class="btn btn-secondary">Sign up</button>
                     </form>
                 </div>
@@ -91,10 +93,13 @@
                             <td>{{gamePlayer.Player.email}}</td>
                             <td>{{gamePlayer.Player.playerID}}</td>
                             <td>
-                                <button v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID" v-on:click="createNewGame" type="button" class="btn btn-secondary">Back to Game</button>
+                                <button v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID" v-on:click="backToGame(gamePlayer.GamePlayerID)" type="button" class="btn btn-secondary">Back to Game</button>
                             </td>
                             <td>
-                                <button v-if="gameData.isLogin != null && gameData.isLogin.playerID != gamePlayer.Player.playerID" v-on:click="joinGame(game.gameId)" type="button" class="btn btn-secondary">Join</button>
+                                <div v-if="gameData.isLogin != null && checkGamePlayer(game)">
+                                    <button v-on:click="joinGame(game.gameId)" type="button" class="btn btn-secondary">Join</button>
+                                </div>
+
                             </td>
 
                             <!-- && gamePlayer.length < 2-->

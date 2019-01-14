@@ -189,6 +189,10 @@ var allData = new Vue({
                 }
             }).catch(error => console.log("An error has ocurred: ", error))
         },
+        
+        backToGame(gpId){
+            location.assign(`http://localhost:8080/web/game.html?gp=${gpId}`);
+        },
 
         createNewGame() {
             fetch("http://localhost:8080/api/games", {
@@ -241,21 +245,19 @@ var allData = new Vue({
                 })
 
         },
-//
-//        checkGamePlayer(game) {
-//            console.log(game)
-//            
-//            if (game.GamePlayers.length > 1) {
-//                return false
-//            }
-//            if (this.gameData.isLogin.playerID === game.GamePlayers.Player.playerID) {
-//                return false
-//            }
-//            return true
-//            
-//        },
-        
 
+        checkGamePlayer(game) {
+//            console.log(game)
+            if (game.GamePlayers.length > 1) {
+                return false
+            }
+            if (this.gameData.isLogin.playerID == game.GamePlayers[0].Player.playerID) {
+                return false
+            }
+            return true
+            
+        },
+        
         dateConvert() {
             this.gameData.listOfGames.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())
         },
