@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -117,7 +114,7 @@ public class SalvoController {
         Game game = gameRepository.findOne(gameId);
         Player player = playerRepository.findByUserName(auth.getName());
         if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>(responseEntity("loginStatus", "not login"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
         }
         if (game == null) {
             return new ResponseEntity<>(responseEntity("gameStatus", "No such game"), HttpStatus.FORBIDDEN);
@@ -140,6 +137,38 @@ public class SalvoController {
             playerRepository.save(player);
             return new ResponseEntity<>(responseEntity("gpId", gamePlayer.getGamePlayerId()), HttpStatus.CREATED);
         }
+    }
+
+    @RequestMapping(value = "/games/players/{nn}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addShips(Authentication auth, @PathVariable long gpId ,
+                                                        @RequestBody ArrayList<Ship> shipArray){
+        if (auth.getName().isEmpty()) {
+            return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.FORBIDDEN);
+        }
+        if(!gamePlayerRepository.existsById(gpId)){
+            return new ResponseEntity<>(responseEntity("error", "GamePlayer doesn't exist."), HttpStatus.UNAUTHORIZED);
+        }
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gpId);
+        Player player = playerRepository.findByUserName(auth.getName());
+        if(gamePlayer.getPlayer().getPlayerId()!=player.getPlayerId()) {
+            return new ResponseEntity<>(responseEntity("error", "You are not in this game."), HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer.getShips().size()>0){
+            return new ResponseEntity<>(responseEntity("error", "Ships are already placed."), HttpStatus.FORBIDDEN);
+        }
+
+        Map<String,Object>placeShips = new HashMap<>();
+        shipArray.forEach(ship -> {
+
+            gamePlayer.addShip(ship);
+            shipRepository.save(ship);
+//            placeShips.put("shipId",ship.getShipId());
+//            placeShips.put("type", ship.getType());
+//            placeShips.put("locations", ship.getLocations());
+//            gamePlayerRepository.save(gamePlayer);
+
+        });
+        return new ResponseEntity<>(responseEntity("success", "Ships are placed"), HttpStatus.CREATED);
     }
 
     @RequestMapping("/leaderBoard")
@@ -182,6 +211,7 @@ public class SalvoController {
     private List<Map<String, Object>> getAllships(Set<Ship> ships) {
         return ships.stream()
                 .map(ship -> new LinkedHashMap<String, Object>() {{
+                    put("shipId",ship.getShipId());
                     put("type", ship.getType());
                     put("locations", ship.getLocations());
                 }})

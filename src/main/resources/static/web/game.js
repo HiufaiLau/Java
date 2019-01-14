@@ -64,6 +64,33 @@ var eachGameData = new Vue({
         },
 
 
+           
+        placeShip(){
+             fetch("/api/games/players/"+this.gamePlayerId+"/ships", {
+                    credentials: 'include',
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    body:JSON.stringify({  "type": "destroyer", "locations": ["A1", "B1", "C1"] }),
+                    }
+                })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 403) {
+                        alert("ship is alredy placed")
+                    }
+                    if (response.status == 401) {
+                        alert("You are not logged in")
+                    }
+                    return response.json()
+
+                }).catch(error => {
+                    console.log('Request failure: ', error);
+                    alert("Failure");
+                });
+        },
+        
         createShipTable(tableId, tableName) {
             let table = document.getElementById(tableId);
             let tbody = document.createElement("tbody");

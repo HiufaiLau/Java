@@ -257,6 +257,8 @@ var allData = new Vue({
             return true
             
         },
+     
+        
         
         dateConvert() {
             this.gameData.listOfGames.map(game => game.CreationDate = new Date(game.CreationDate).toLocaleString())

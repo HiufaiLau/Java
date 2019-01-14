@@ -80,8 +80,8 @@ public class GamePlayer {
     }
 
     public void addShip(Ship ship) {
-        ship.setGamePlayer(this);
         this.ships.add(ship);
+        ship.setGamePlayer(this);
     }
 
     public Set<Salvo> getSalvoes() {
