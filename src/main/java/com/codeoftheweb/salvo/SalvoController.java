@@ -139,14 +139,14 @@ public class SalvoController {
         }
     }
 
-    @RequestMapping(value = "/games/players/{nn}/ships", method = RequestMethod.POST)
+    @RequestMapping(value = "/games/players/{gpId}/ships", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> addShips(Authentication auth, @PathVariable long gpId ,
                                                         @RequestBody ArrayList<Ship> shipArray){
         if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
         }
         if(!gamePlayerRepository.existsById(gpId)){
-            return new ResponseEntity<>(responseEntity("error", "GamePlayer doesn't exist."), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(responseEntity("error", "GamePlayer doesn't exist."), HttpStatus.FORBIDDEN);
         }
         GamePlayer gamePlayer = gamePlayerRepository.findById(gpId);
         Player player = playerRepository.findByUserName(auth.getName());
@@ -157,7 +157,7 @@ public class SalvoController {
             return new ResponseEntity<>(responseEntity("error", "Ships are already placed."), HttpStatus.FORBIDDEN);
         }
 
-        Map<String,Object>placeShips = new HashMap<>();
+//        Map<String,Object>placeShips = new HashMap<>();
         shipArray.forEach(ship -> {
 
             gamePlayer.addShip(ship);

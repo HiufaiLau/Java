@@ -8,6 +8,16 @@ var eachGameData = new Vue({
         columns: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
         localPlayer: "",
         opponentPlayer: "",
+        shipArray: [
+//            {
+//                "type": "destroyer",
+//                "locations": ["A1", "B1", "C1"]
+//            },
+            {
+                "type": "patrol boat",
+                "locations": ["H5", "H6"]
+            }
+                  ],
         isLoading: true,
         date: [],
     },
@@ -64,16 +74,16 @@ var eachGameData = new Vue({
         },
 
 
-           
-        placeShip(){
-             fetch("/api/games/players/"+this.gamePlayerId+"/ships", {
+
+        placeShip() {
+            fetch("/api/games/players/" + this.gamePlayerId + "/ships", {
                     credentials: 'include',
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    body:JSON.stringify({  "type": "destroyer", "locations": ["A1", "B1", "C1"] }),
-                    }
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.shipArray)
                 })
                 .then(response => {
                     console.log(response)
@@ -85,12 +95,12 @@ var eachGameData = new Vue({
                     }
                     return response.json()
 
-                }).catch(error => {
+                }).then(data=>console.log(data)).catch(error => {
                     console.log('Request failure: ', error);
                     alert("Failure");
                 });
         },
-        
+
         createShipTable(tableId, tableName) {
             let table = document.getElementById(tableId);
             let tbody = document.createElement("tbody");
@@ -127,7 +137,7 @@ var eachGameData = new Vue({
             var shipLocations = [];
             let ships = this.gameViewData.ships
             console.log(ships)
-//            if (ships.length > 0)
+            //            if (ships.length > 0)
             ships.forEach(ship => {
                 ship.locations.forEach(location => {
                     shipLocations.push(location)
@@ -141,7 +151,7 @@ var eachGameData = new Vue({
                 //                console.log(loc)
             })
         },
-        
+
         showOpponentSalvos(tableId) {
             var shipLocations = [];
             let ships = this.gameViewData.ships
