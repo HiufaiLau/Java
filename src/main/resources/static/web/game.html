@@ -13,13 +13,13 @@
     <div v-else id="eachGame">
         <h1>Let's battle!</h1>
         <a href="http://localhost:8080/web/allGames.html">
-        <button type="submit" value="LogOut" v-on:click="logOut" class="btn btn-secondary">Logout</button>
-        
+            <button type="submit" value="LogOut" v-on:click="logOut" class="btn btn-secondary">Logout</button>
         </a>
+
         <button v-on:click="placeShip" type="button" class="btn btn-secondary">place ship</button>
-        
+
         <a href="http://localhost:8080/web/allGames.html">
-        <button type="submit" value="LogOut"class="btn btn-secondary">back to home page</button>
+            <button type="submit" value="LogOut" class="btn btn-secondary">back to home page</button>
         </a>
         <h3>{{localPlayer}}(YOU!!!) vs. {{opponentPlayer}}</h3>
         <h5>{{gameViewData.created}}</h5>
@@ -28,6 +28,10 @@
 
         <h3>My ships Table</h3>
         <table id="shipTable">
+        </table>
+
+        <h3>Ships Type</h3>
+        <table id="shipType">
         </table>
 
         <h3>My salvos Table</h3>

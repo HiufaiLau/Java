@@ -19,9 +19,9 @@
   <div class="input-group-prepend">
   </div>
 -->
-                    <label for="email">Username</label>
+<!--                    <label for="email">Username</label>-->
                     <input type="text" class="form-control col-5" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="email" class="col-2">
-                    <label for="pass">Password</label>
+<!--                    <label for="pass">Password</label>-->
                     <input type="text" class="form-control col-5" placeholder="password..." aria-label="" aria-describedby="basic-addon1" v-model="password" >
                     <button type="submit" value="Login" v-on:click="loginForm" class="btn btn-secondary" class="col-2">Login</button>
                 </div>
@@ -53,9 +53,9 @@
 
                     <button v-on:click="hideSignin" type="button" class="btn btn-secondary">Register</button>
                     <form name="signin-form" id="signin-form" @submit.prevent="getPlayer">
-                        <label for="email">Username</label>
+<!--                        <label for="email">Username</label>-->
                         <input id="email" type="email" name="email" class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createEmail">
-                        <label for="pass">Password</label>
+<!--                        <label for="pass">Password</label>-->
                         <input id="pass" type="password" name="password" placeholder="password..." class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createPassword">
                         <button type="submit" v-on:click="alert" type="button" class="btn btn-secondary">Sign up</button>
                     </form>

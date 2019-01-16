@@ -9,14 +9,28 @@ var eachGameData = new Vue({
         localPlayer: "",
         opponentPlayer: "",
         shipArray: [
-//            {
-//                "type": "destroyer",
-//                "locations": ["A1", "B1", "C1"]
-//            },
             {
-                "type": "patrol boat",
-                "locations": ["H5", "H6"]
-            }
+                "type": "destroyer",
+                "locations": ["H5", "I5", "J5"]
+            },
+            {
+                "type": "patrolboat",
+                "locations": ["D1", "D2"]
+            },
+            {
+                "type": "carrier",
+                "locations": ["B2", "B3", "B4", "B5", "B6"]
+            },
+            {
+                "type": "submarine",
+                "locations": ["F4", "F5", "F6"]
+            },
+            {
+                "type": "battleship",
+                "locations": ["C8", "D8", "E8", "F8"]
+            },
+
+
                   ],
         isLoading: true,
         date: [],
@@ -45,6 +59,7 @@ var eachGameData = new Vue({
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
+                    this.showShipType("shipType")
                     this.showPlayers()
                     eachGameData.dateConvert();
                     this.isLoading = false;
@@ -95,7 +110,13 @@ var eachGameData = new Vue({
                     }
                     return response.json()
 
-                }).then(data=>console.log(data)).catch(error => {
+                }).then(data => {
+                    if (response.status === 201) {
+                        window.location.reload();
+                        console.log(data)
+                    }
+                })
+                .catch(error => {
                     console.log('Request failure: ', error);
                     alert("Failure");
                 });
@@ -106,7 +127,7 @@ var eachGameData = new Vue({
             let tbody = document.createElement("tbody");
             let thead = document.createElement("thead");
             let row = "";
-            let tem = "";
+            let col = "";
             let salvoCol = "";
 
             for (let i = 0; i < this.rows.length; i++) {
@@ -115,7 +136,7 @@ var eachGameData = new Vue({
 
             table.appendChild(thead).innerHTML = row;
             for (let c = 0; c < this.columns.length; c++) {
-                tem += `<tr class="grids ${tableName}">
+                col += `<tr class="grids ${tableName}">
                             <td>${this.columns[c]}</td>   
                             <td class="${this.columns[c]}1" ></td>
                             <td class="${this.columns[c]}2"></td>
@@ -129,12 +150,12 @@ var eachGameData = new Vue({
                             <td class="${this.columns[c]}10"></td>
                         </tr>`
             }
-            table.appendChild(tbody).innerHTML = tem;
+            table.appendChild(tbody).innerHTML = col;
         },
 
 
         showTheShips(tableId) {
-            var shipLocations = [];
+            let shipLocations = [];
             let ships = this.gameViewData.ships
             console.log(ships)
             //            if (ships.length > 0)
@@ -150,6 +171,16 @@ var eachGameData = new Vue({
                     .classList.add('ships')
                 //                console.log(loc)
             })
+        },
+
+        showShipType(tableId) {
+            let shipLength = this.shipArray[0].locations;
+            let ships = this.gameViewData.ships[3].locations;
+            console.log(shipLength)
+            console.log(ships)
+//            ships.forEach(ship=>ship.shipLength.forEach(location => shipLength.push(location)));
+//            console.log(shipLength);
+
         },
 
         showOpponentSalvos(tableId) {
