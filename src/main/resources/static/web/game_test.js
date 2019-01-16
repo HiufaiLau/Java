@@ -8,55 +8,31 @@ var eachGameData = new Vue({
         columns: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
         localPlayer: "",
         opponentPlayer: "",
-        placedShip: null,
-        shipOrientation: null,
-        shipLength: 0,
-        shipArray: [
-            {
-                "type": "destroyer",
-                "locations": []
-            },
-            {
-                "type": "patrolboat",
-                "locations": []
-            },
-            {
-                "type": "carrier",
-                "locations": []
-            },
-            {
-                "type": "submarine",
-                "locations": []
-            },
-            {
-                "type": "battleship",
-                "locations": []
-            },
-                  ],
-        //        shipArray: [
-        //            {
-        //                "type": "destroyer",
-        //                "locations": ["H5", "I5", "J5"]
-        //            },
-        //            {
-        //                "type": "patrolboat",
-        //                "locations": ["D1", "D2"]
-        //            },
-        //            {
-        //                "type": "carrier",
-        //                "locations": ["B2", "B3", "B4", "B5", "B6"]
-        //            },
-        //            {
-        //                "type": "submarine",
-        //                "locations": ["F4", "F5", "F6"]
-        //            },
-        //            {
-        //                "type": "battleship",
-        //                "locations": ["C8", "D8", "E8", "F8"]
-        //            },
-        //
+//        
+//        shipArray: [
+//            {
+//                "type": "destroyer",
+//                "locations": ["H5", "I5", "J5"]
+//            },
+//            {
+//                "type": "patrolboat",
+//                "locations": ["D1", "D2"]
+//            },
+//            {
+//                "type": "carrier",
+//                "locations": ["B2", "B3", "B4", "B5", "B6"]
+//            },
+//            {
+//                "type": "submarine",
+//                "locations": ["F4", "F5", "F6"]
+//            },
+//            {
+//                "type": "battleship",
+//                "locations": ["C8", "D8", "E8", "F8"]
+//            },
 
-        //                  ],
+
+                  ],
         isLoading: true,
         date: [],
     },
@@ -84,8 +60,7 @@ var eachGameData = new Vue({
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
-                    //                    this.showShipType("shipType")
-                    this.defineShips("shipTable")
+                    this.showShipType("shipType")
                     this.showPlayers()
                     eachGameData.dateConvert();
                     this.isLoading = false;
@@ -164,17 +139,16 @@ var eachGameData = new Vue({
             for (let c = 0; c < this.columns.length; c++) {
                 col += `<tr class="grids ${tableName}">
                             <td>${this.columns[c]}</td>   
-                            <td @mouseover="defineShips" @mouseout="defineShips" data-className="${this.columns[c]}1" class="${this.columns[c]}1" ></td>;
-                                 
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}2" class="${this.columns[c]}2"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}3" class="${this.columns[c]}3"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}4" class="${this.columns[c]}4"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}5" class="${this.columns[c]}5"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}6" class="${this.columns[c]}6"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}7" class="${this.columns[c]}7"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}8" class="${this.columns[c]}8"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}9" class="${this.columns[c]}9"></td>
-                            <td @mouseover="defineShips" @mouseout="defineShips"  data-className="${this.columns[c]}10" class="${this.columns[c]}10"></td>
+                            <td class="${this.columns[c]}1" ></td>
+                            <td class="${this.columns[c]}2"></td>
+                            <td class="${this.columns[c]}3"></td>
+                            <td class="${this.columns[c]}4"></td>
+                            <td class="${this.columns[c]}5"></td>
+                            <td class="${this.columns[c]}6"></td>
+                            <td class="${this.columns[c]}7"></td>
+                            <td class="${this.columns[c]}8"></td>
+                            <td class="${this.columns[c]}9"></td>
+                            <td class="${this.columns[c]}10"></td>
                         </tr>`
             }
             table.appendChild(tbody).innerHTML = col;
@@ -199,35 +173,16 @@ var eachGameData = new Vue({
                 //                console.log(loc)
             })
         },
-        showShipType(event) {
-            console.log(event)
-            this.placedShip = event.toElement.value
+
+        showShipType(tableId) {
+            let shipLength = this.shipArray[0].locations;
+            let ships = this.gameViewData.ships[3].locations;
+            console.log(shipLength)
+            console.log(ships)
+//            ships.forEach(ship=>ship.shipLength.forEach(location => shipLength.push(location)));
+//            console.log(shipLength);
+
         },
-
-
-
-        defineShips() {
-            //            if(this.placedShip == "carrier"){
-            //                this.shipLength = 5
-            //            }
-            //            this.hoverShipHorizontal(loc)
-            console.log("hi");
-        },
-
-        //        hoverShipHorizontal(loc){
-        //            if(this.placedShip!=null && this.shipOrientation== "horizontal"){
-        //                console.log(loc)
-        //            }
-        //        },
-        //        showShipType(tableId) {
-        //            let shipLength = this.shipArray[0].locations;
-        //            let ships = this.gameViewData.ships[3].locations;
-        //            console.log(shipLength)
-        //            console.log(ships)
-        ////            ships.forEach(ship=>ship.shipLength.forEach(location => shipLength.push(location)));
-        ////            console.log(shipLength);
-        //
-        //        },
 
         showOpponentSalvos(tableId) {
             var shipLocations = [];

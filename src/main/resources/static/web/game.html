@@ -30,9 +30,49 @@
         <table id="shipTable">
         </table>
 
-        <h3>Ships Type</h3>
-        <table id="shipType">
-        </table>
+        <div id="ships-and-direction" class="col-12 col-sm-12 col-md-6">
+            <h3 class="titleTxt-color">Ships to add</h3>
+            <p>{{placedShip}}</p>
+            <p>{{shipOrientation}}</p>
+            <div class="table-responsive mt-2">
+                <!--                <div class="table-responsive">-->
+                <table class="table table-bordered table-style">
+                    <tr>
+                        <th>Type</th>
+                    </tr>
+                    <tr>
+                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)" value="carrier" name="ship" id="carrier" data-shiptype="carrier" data-shiplength="5"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="btn btn-warning btn-lg" type="button"  v-on:click="showShipType(this.event)" value="battleship" name="ship" id="battleship" data-shiptype="battleship" data-shiplength="4"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="btn btn-warning btn-lg" type="button"  v-on:click="showShipType(this.event)"  value="submarine" name="ship" id="submarine" data-shiptype="submarine" data-shiplength="3"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)"value="destroyer" name="ship" id="destroyer" data-shiptype="destroyer" data-shiplength="3"></td>
+                    </tr>
+                    <tr>
+                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)" value="patrol" name="ship" id="patrol" data-shiptype="patral" data-shiplength="2"> </td>
+                    </tr>
+                    <tr>
+                        <th>Direction</th>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" class="text-left">
+                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="horizontal" type="radio" class="col-2 col-lg-1">Horizontal</label>
+                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="vertical" type="radio" class="col-2 col-lg-1">Vertical</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button v-on:click="placeShip" type="button" class="btn btn-secondary btn-md">place ship</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
         <h3>My salvos Table</h3>
         <table id="salvoTable">
