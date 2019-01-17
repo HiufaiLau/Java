@@ -33,32 +33,54 @@ var eachGameData = new Vue({
         placingShipLocation: [],
         errorLocation: [],
         shipList: [],
-        ships:[],
-
-
-
-        //        shipArray: [
-        //            {
-        //                "type": "destroyer",
-        //                "locations": ["H5", "I5", "J5"]
-        //            },
-        //            {
-        //                "type": "patrolboat",
-        //                "locations": ["D1", "D2"]
-        //            },
-        //            {
-        //                "type": "carrier",
-        //                "locations": ["B2", "B3", "B4", "B5", "B6"]
-        //            },
-        //            {
-        //                "type": "submarine",
-        //                "locations": ["F4", "F5", "F6"]
-        //            },
-        //            {
-        //                "type": "battleship",
-        //                "locations": ["C8", "D8", "E8", "F8"]
-        //            },
-        //
+        ships: [],
+        
+        carrier: {
+			type: "",
+			locations: []
+		},
+        battleship: {
+			type: "",
+			locations: []
+		},
+		destroyer: {
+			type: "",
+			locations: []
+		},
+		submarine: {
+			type: "",
+			locations: []
+		},
+		patrol: {
+			type: "",
+			locations: []
+		},
+        selectedCell: null,
+        cellNumber: null,
+		cellAlpha: null,
+        //          shipArray: [
+        //                    {
+        //                        "type": "destroyer",
+        //                        "locations": ["H5", "I5", "J5"]
+        //                    },
+        //                    {
+        //                        "type": "patrolboat",
+        //                        "locations": ["D1", "D2"]
+        //                    },
+        //                    {
+        //                        "type": "carrier",
+        //                        "locations": ["B2", "B3", "B4", "B5", "B6"]
+        //                    },
+        //                    {
+        //                        "type": "submarine",
+        //                        "locations": ["F4", "F5", "F6"]
+        //                    },
+        //                    {
+        //                        "type": "battleship",
+        //                        "locations": ["C8", "D8", "E8", "F8"]
+        //                    }
+        //                           ],
+        //        
 
         //                  ],
         isLoading: true,
@@ -84,7 +106,7 @@ var eachGameData = new Vue({
                 .then(response => response.json())
                 .then(data => {
                     this.gameViewData = data;
-                this.ships = this.gameViewData.ships
+                    this.ships = this.gameViewData.ships
                     console.log(this.gameViewData)
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
@@ -187,8 +209,8 @@ var eachGameData = new Vue({
 
         showTheShips(tableId) {
             let shipLocations = [];
-             
-//            console.log(ships)
+
+            //            console.log(ships)
             //            if (ships.length > 0)
             this.ships.forEach(ship => {
                 ship.locations.forEach(location => {
@@ -211,27 +233,33 @@ var eachGameData = new Vue({
 
         defineShips(event) {
             let hoverLocation = event.currentTarget.getAttribute("data-className");
+            let ships = {}
             if (this.placedShip == "carrier") {
                 this.shipLength = 5
+                ships = this.carrier
             }
             if (this.placedShip == "battleship") {
                 this.shipLength = 4
+              ships = this.battleship
             }
             if (this.placedShip == "destroyer") {
                 this.shipLength = 3
+                ships = this.destroyer
             }
             if (this.placedShip == "submarine") {
                 this.shipLength = 3
+                ships = this.submarine
             }
             if (this.placedShip == "patrol") {
                 this.shipLength = 2
+                ships = this.patrol
             }
 
-            this.hoverShipHorizontal(hoverLocation, this.shipLength)
+            this.hoverShipHorizontal(hoverLocation, this.shipLength,ships)
             //            console.log("hi");
         },
 
-        hoverShipHorizontal(location, shipLength) {
+        hoverShipHorizontal(location, shipLength, ship) {
             if (this.placedShip != null && this.shipOrientation == "horizontal") {
 
                 var locationNumber = [];
@@ -243,6 +271,8 @@ var eachGameData = new Vue({
                         .forEach(oneNumber => this.placingShipLocation.push(location.split("")[0] + oneNumber))
                     this.placingShipLocation
                         .map(oneCell => document.querySelector(`.${oneCell}`).classList.add("ship_hover"))
+                    ship.locations = this.placingShipLocation;
+					ship.shipType = this.placedShip;
                 } else {
                     var numberOutGrid = locationNumber.filter(oneLocation => oneLocation < 11)
                     numberOutGrid.forEach(oneNumber => this.errorLocation.push(location.split("")[0] + oneNumber))
@@ -260,6 +290,7 @@ var eachGameData = new Vue({
                 this.placingShipLocation
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("ship_hover"))
                 this.placingShipLocation = []
+            } else {
                 this.errorLocation
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("error_hover"))
                 this.errorLocation = []
@@ -267,18 +298,27 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location) {
-            if (this.placedShip != null && this.shipOrientation != null) {
-                this.shipArray.type = this.placedShip
-                this.shipArray.locations = this.placingShipLocation
-//                console.log(this.shipArray)
-                console.log(this.ships)
-                this.ships.push(this.shipArray)
-                console.log(this.ships)
-                this.showTheShips("shipTable")
-//                this.shipsLocation= this.ships;
-              
+            if (this.placedShip == 'carrier') {
+//                this.shipArray.type = this.placedShip
+//                this.shipArray.locations = this.placingShipLocation
+                //                console.log(this.shipArray)
+//                console.log(this.ships)
+                this.ships.push(this.carrier)
+                
+                //                this.shipsLocation= this.ships;
+
             }
+            if(this.placedShip == 'battleship'){
+                this.ships.push(this.battleship)
+            }
+            console.log(this.ships)
+                this.showTheShips("shipTable")
         },
+
+        pacingShipCondition() {
+
+        },
+
         //        showShipType(tableId) {
         //            let shipLength = this.shipArray[0].locations;
         //            let ships = this.gameViewData.ships[3].locations;
