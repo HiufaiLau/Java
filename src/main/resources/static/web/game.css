@@ -4,7 +4,7 @@
     width: 330px;
     height: 330px;
     text-align: center;
-    margin-bottom: 10%;
+/*    margin-bottom: 10%;*/
     /*    background-color: yellow;*/
 }
 
@@ -23,7 +23,7 @@
     /*    height: 34px;*/
     vertical-align: center;
     text-align: center;
-
+    
 
 }
 
@@ -43,8 +43,7 @@
     border: 2px grey solid;
     /*    height: 34px;*/
     vertical-align: center;
-    text-align: center;
-
+    text-align: center; 
 }
 
 #salvoTable td {
@@ -74,6 +73,38 @@
     background-color: red;
 }
 
+.carrier {
+    height: 30px;
+    width: 150px;
+}
+
+.battleship {
+    height: 30px;
+    width: 120px;
+}
+
+.submarine {
+    height: 30px;
+    width: 90px;
+}
+
+.destroyer {
+    height: 30px;
+    width: 90px;
+}
+
+.patrol {
+    height: 30px;
+    width: 60px;
+}
+
+
+.ship_hover{
+    background-color: dimgrey;
+}
+.error_hover{
+    background-color: firebrick;
+}
 
 /*
 .salvo{

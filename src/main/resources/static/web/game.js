@@ -8,31 +8,35 @@ var eachGameData = new Vue({
         columns: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
         localPlayer: "",
         opponentPlayer: "",
+        //        orientationOption: false,
+        //        selectedShip: null,
+        //        selectedOrientation: null,
+        //        placingShipLocation: [],
+        //        shipLength: null,
+        //        errorLocation: [],
+        //        aircraftCarrier: {
+        //            "type": "",
+        //            "location": []
+        //        },
+        //        shipList: []
+
+
         placedShip: null,
         shipOrientation: null,
-        shipLength: 0,
+        shipLength: null,
         shipArray: [
             {
-                "type": "destroyer",
+                "type": "",
                 "locations": []
-            },
-            {
-                "type": "patrolboat",
-                "locations": []
-            },
-            {
-                "type": "carrier",
-                "locations": []
-            },
-            {
-                "type": "submarine",
-                "locations": []
-            },
-            {
-                "type": "battleship",
-                "locations": []
-            },
-                  ],
+            }
+        ],
+        placingShipLocation: [],
+        errorLocation: [],
+        shipList: [],
+        ships:[],
+
+
+
         //        shipArray: [
         //            {
         //                "type": "destroyer",
@@ -85,7 +89,7 @@ var eachGameData = new Vue({
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
                     //                    this.showShipType("shipType")
-//                    this.defineShips("shipTable")
+                    //                    this.defineShips("shipTable")
                     this.showPlayers()
                     eachGameData.dateConvert();
                     this.isLoading = false;
@@ -164,16 +168,16 @@ var eachGameData = new Vue({
             for (let c = 0; c < this.columns.length; c++) {
                 col += `<tr class="grids ${tableName}">
                             <td>${this.columns[c]}</td>   
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}1" class="${this.columns[c]}1"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}2" class="${this.columns[c]}2"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}3" class="${this.columns[c]}3"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}4" class="${this.columns[c]}4"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}5" class="${this.columns[c]}5"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}6" class="${this.columns[c]}6"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}7" class="${this.columns[c]}7"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}8" class="${this.columns[c]}8"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}9" class="${this.columns[c]}9"></td>
-                            <td @mouseover="defineShips" @mouseout=""  data-className="${this.columns[c]}10" class="${this.columns[c]}10"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}1" class="${this.columns[c]}1"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}2" class="${this.columns[c]}2"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}3" class="${this.columns[c]}3"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}4" class="${this.columns[c]}4"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}5" class="${this.columns[c]}5"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}6" class="${this.columns[c]}6"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}7" class="${this.columns[c]}7"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}8" class="${this.columns[c]}8"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}9" class="${this.columns[c]}9"></td>
+                            <td @mouseover="defineShips" @mouseout="removeHover" @click="placeShipOnGrid" data-className="${this.columns[c]}10" class="${this.columns[c]}10"></td>
                         </tr>`
             }
             table.appendChild(tbody).innerHTML = col;
@@ -198,15 +202,14 @@ var eachGameData = new Vue({
                 //                console.log(loc)
             })
         },
+
         showShipType(event) {
             console.log(event)
             this.placedShip = event.toElement.value
         },
 
-
-
         defineShips(event) {
-          let hoverLocation = event.currentTarget.getAttribute("data-className");
+            let hoverLocation = event.currentTarget.getAttribute("data-className");
             if (this.placedShip == "carrier") {
                 this.shipLength = 5
             }
@@ -222,17 +225,57 @@ var eachGameData = new Vue({
             if (this.placedShip == "patrol") {
                 this.shipLength = 2
             }
-          
-            this.hoverShipHorizontal(hoverLocation)
-//            console.log("hi");
+
+            this.hoverShipHorizontal(hoverLocation, this.shipLength)
+            //            console.log("hi");
         },
 
-                hoverShipHorizontal(loc){
-                    if(this.placedShip!=null && this.shipOrientation== "horizontal"){
-                        
-                        console.log(loc)
-                    }
-                },
+        hoverShipHorizontal(location, shipLength) {
+            if (this.placedShip != null && this.shipOrientation == "horizontal") {
+
+                var locationNumber = [];
+                for (var i = 0; i < shipLength; i++) {
+                    locationNumber.push(parseInt(location.substr(1, 2)) + i)
+                }
+                if (locationNumber[locationNumber.length - 1] < 11) {
+                    locationNumber
+                        .forEach(oneNumber => this.placingShipLocation.push(location.split("")[0] + oneNumber))
+                    this.placingShipLocation
+                        .map(oneCell => document.querySelector(`.${oneCell}`).classList.add("ship_hover"))
+                } else {
+                    var numberOutGrid = locationNumber.filter(oneLocation => oneLocation < 11)
+                    numberOutGrid.forEach(oneNumber => this.errorLocation.push(location.split("")[0] + oneNumber))
+                    this.errorLocation
+                        .map(oneCell => {
+                            document.querySelector(`.${oneCell}`).classList.add("error_hover")
+                        })
+                }
+                console.log(location, shipLength)
+            }
+        },
+
+        removeHover(location) {
+            if (this.placedShip != null && this.shipOrientation != null) {
+                this.placingShipLocation
+                    .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("ship_hover"))
+                this.placingShipLocation = []
+                this.errorLocation
+                    .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("error_hover"))
+                this.errorLocation = []
+            }
+        },
+
+        placeShipOnGrid(location) {
+            if (this.placedShip != null && this.shipOrientation != null) {
+                this.shipArray.type = this.placedShip
+                this.shipArray.location = this.placingShipLocation
+                console.log(this.shipArray)
+                this.ships.push(this.shipArray)
+                console.log(this.ships)
+                this.shipsLocation= this.ships;
+              
+            }
+        },
         //        showShipType(tableId) {
         //            let shipLength = this.shipArray[0].locations;
         //            let ships = this.gameViewData.ships[3].locations;

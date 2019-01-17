@@ -36,24 +36,24 @@
             <p>{{shipOrientation}}</p>
             <div class="table-responsive mt-2">
                 <!--                <div class="table-responsive">-->
-                <table class="table table-bordered table-style">
+                <table class="shipType  table-style">
                     <tr>
                         <th>Type</th>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)" value="carrier" name="ship" id="carrier" data-shiptype="carrier" data-shiplength="5"></td>
+                        <td><input class="carrier btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="carrier" name="ship" id="carrier" data-shiptype="carrier" data-shiplength="5"></td>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-warning btn-lg" type="button"  v-on:click="showShipType(this.event)" value="battleship" name="ship" id="battleship" data-shiptype="battleship" data-shiplength="4"></td>
+                        <td><input class="battleship btn btn-warning btn-md" type="button"  v-on:click="showShipType(this.event)" value="battleship" name="ship" id="battleship" data-shiptype="battleship" data-shiplength="4"></td>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-warning btn-lg" type="button"  v-on:click="showShipType(this.event)"  value="submarine" name="ship" id="submarine" data-shiptype="submarine" data-shiplength="3"></td>
+                        <td><input class="submarine btn btn-warning btn-md" type="button"  v-on:click="showShipType(this.event)"  value="submarine" name="ship" id="submarine" data-shiptype="submarine" data-shiplength="3"></td>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)"value="destroyer" name="ship" id="destroyer" data-shiptype="destroyer" data-shiplength="3"></td>
+                        <td><input class="destroyer btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)"value="destroyer" name="ship" id="destroyer" data-shiptype="destroyer" data-shiplength="3"></td>
                     </tr>
                     <tr>
-                        <td><input class="btn btn-warning btn-lg" type="button" v-on:click="showShipType(this.event)" value="patrol" name="ship" id="patrol" data-shiptype="patral" data-shiplength="2"> </td>
+                        <td><input class=" patrol btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="patrol" name="ship" id="patrol" data-shiptype="patral" data-shiplength="2"> </td>
                     </tr>
                     <tr>
                         <th>Direction</th>
@@ -61,8 +61,8 @@
 
                     <tr>
                         <td colspan="3" class="text-left">
-                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="horizontal" type="radio" class="col-2 col-lg-1">Horizontal</label>
-                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="vertical" type="radio" class="col-2 col-lg-1">Vertical</label>
+                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="horizontal" type="radio" class="col-2 col-lg-1" style="margin-left: 4%">Horizontal</label>
+                            <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="vertical" type="radio" class="col-2 col-lg-1" style="margin-left: 4%">Vertical</label>
                         </td>
                     </tr>
                     <tr>
