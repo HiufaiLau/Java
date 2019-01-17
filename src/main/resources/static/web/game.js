@@ -84,6 +84,7 @@ var eachGameData = new Vue({
                 .then(response => response.json())
                 .then(data => {
                     this.gameViewData = data;
+                this.ships = this.gameViewData.ships
                     console.log(this.gameViewData)
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
@@ -186,10 +187,10 @@ var eachGameData = new Vue({
 
         showTheShips(tableId) {
             let shipLocations = [];
-            let ships = this.gameViewData.ships
-            console.log(ships)
+             
+//            console.log(ships)
             //            if (ships.length > 0)
-            ships.forEach(ship => {
+            this.ships.forEach(ship => {
                 ship.locations.forEach(location => {
                     shipLocations.push(location)
                 })
@@ -268,11 +269,13 @@ var eachGameData = new Vue({
         placeShipOnGrid(location) {
             if (this.placedShip != null && this.shipOrientation != null) {
                 this.shipArray.type = this.placedShip
-                this.shipArray.location = this.placingShipLocation
-                console.log(this.shipArray)
+                this.shipArray.locations = this.placingShipLocation
+//                console.log(this.shipArray)
+                console.log(this.ships)
                 this.ships.push(this.shipArray)
                 console.log(this.ships)
-                this.shipsLocation= this.ships;
+                this.showTheShips("shipTable")
+//                this.shipsLocation= this.ships;
               
             }
         },
