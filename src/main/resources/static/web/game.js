@@ -35,29 +35,30 @@ var eachGameData = new Vue({
         shipList: [],
         ships: [],
         
+
         carrier: {
-			type: "",
-			locations: []
-		},
+            type: "",
+            locations: []
+        },
         battleship: {
-			type: "",
-			locations: []
-		},
-		destroyer: {
-			type: "",
-			locations: []
-		},
-		submarine: {
-			type: "",
-			locations: []
-		},
-		patrol: {
-			type: "",
-			locations: []
-		},
+            type: "",
+            locations: []
+        },
+        destroyer: {
+            type: "",
+            locations: []
+        },
+        submarine: {
+            type: "",
+            locations: []
+        },
+        patrol: {
+            type: "",
+            locations: []
+        },
         selectedCell: null,
         cellNumber: null,
-		cellAlpha: null,
+        cellAlpha: null,
         //          shipArray: [
         //                    {
         //                        "type": "destroyer",
@@ -109,6 +110,7 @@ var eachGameData = new Vue({
                     this.ships = this.gameViewData.ships
                     console.log(this.gameViewData)
                     this.showTheShips("shipTable")
+
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
                     //                    this.showShipType("shipType")
@@ -240,7 +242,7 @@ var eachGameData = new Vue({
             }
             if (this.placedShip == "battleship") {
                 this.shipLength = 4
-              ships = this.battleship
+                ships = this.battleship
             }
             if (this.placedShip == "destroyer") {
                 this.shipLength = 3
@@ -255,7 +257,7 @@ var eachGameData = new Vue({
                 ships = this.patrol
             }
 
-            this.hoverShipHorizontal(hoverLocation, this.shipLength,ships)
+            this.hoverShipHorizontal(hoverLocation, this.shipLength, ships)
             //            console.log("hi");
         },
 
@@ -272,7 +274,7 @@ var eachGameData = new Vue({
                     this.placingShipLocation
                         .map(oneCell => document.querySelector(`.${oneCell}`).classList.add("ship_hover"))
                     ship.locations = this.placingShipLocation;
-					ship.shipType = this.placedShip;
+                    ship.type = this.placedShip;
                 } else {
                     var numberOutGrid = locationNumber.filter(oneLocation => oneLocation < 11)
                     numberOutGrid.forEach(oneNumber => this.errorLocation.push(location.split("")[0] + oneNumber))
@@ -290,7 +292,6 @@ var eachGameData = new Vue({
                 this.placingShipLocation
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("ship_hover"))
                 this.placingShipLocation = []
-            } else {
                 this.errorLocation
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("error_hover"))
                 this.errorLocation = []
@@ -298,26 +299,71 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location) {
-            if (this.placedShip == 'carrier') {
-//                this.shipArray.type = this.placedShip
-//                this.shipArray.locations = this.placingShipLocation
-                //                console.log(this.shipArray)
-//                console.log(this.ships)
-                this.ships.push(this.carrier)
-                
-                //                this.shipsLocation= this.ships;
+            if (this.placingShipLocation.length == this.shipLength) {
+                if (this.placedShip == 'carrier') {
+                    this.ships.push(this.carrier)
+                    document.getElementById("carrier").disabled = true;
+                    this.placedShip = null
+                    this.shipOrientation = null
+                } else if (this.placedShip == 'battleship') {
+                    this.ships.push(this.battleship)
+                    document.getElementById("battleship").disabled = true;
+                     this.placedShip = null
+                    this.shipOrientation = null
+                } else if (this.placedShip == 'destroyer') {
+                    this.ships.push(this.destroyer)
+                    document.getElementById("destroyer").disabled = true;
+                     this.placedShip = null
+                    this.shipOrientation = null
+                } else if (this.placedShip == 'submarine') {
+                    this.ships.push(this.submarine)
+                    document.getElementById("submarine").disabled = true;
+                     this.placedShip = null
+                    this.shipOrientation = null
+                } else if (this.placedShip == 'patrol') {
+                    this.ships.push(this.patrol)
+                    document.getElementById("patrol").disabled = true;
+                     this.placedShip = null
+                    this.shipOrientation = null
+                }
+            } else {
+                alert("Sorry, this is a wrong move ")
+            }
+            //            else if (this.placingShipLocation.length!=this.shipLength) {
+            //                this.ships.remove(this.placedShip)
+            //                 document.getElementById("patrol").disabled = false;
+            //                alert("Sorry, the ship is outside the table!")
+            //            }
 
-            }
-            if(this.placedShip == 'battleship'){
-                this.ships.push(this.battleship)
-            }
             console.log(this.ships)
-                this.showTheShips("shipTable")
+
+//            this.pacingShipCondition()
+                     let cell=    
+            this.placingShipLocation.forEach(loc => {
+                let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                    .classList.add('ships')
+            })
+            //                this.showTheShips("shipTable")
         },
 
-        pacingShipCondition() {
-
-        },
+//        pacingShipCondition() {
+//            console.log('hi')
+//            let checkShipLoc = [];
+//            let shipInData = this.ships
+////            console.log(this.ships[0].locations)
+//            console.log(shipInData)
+// console.log(checkShipLoc)
+//            shipInData.forEach(ship => {
+//                console.log("ship") 
+//                if(checkShipLoc.includes(ship.locations)){
+//                    checkShipLoc.push(ship.locations)
+//                }
+//                 console.log(checkShipLoc)   
+//                })
+//
+//        
+//
+//        },
 
         //        showShipType(tableId) {
         //            let shipLength = this.shipArray[0].locations;
