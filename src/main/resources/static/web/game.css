@@ -101,9 +101,11 @@
 
 
 .ship_hover{
+     border-radius: 50px;
     background-color: dimgrey;
 }
 .error_hover{
+     border-radius: 50px;
     background-color: firebrick;
 }
 
