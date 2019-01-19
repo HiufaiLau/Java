@@ -12,6 +12,7 @@ var eachGameData = new Vue({
         shipOrientation: null,
         shipLength: null,
         checkShip: [],
+        isAbleToPlace: true,
         shipArray: [
             {
                 "type": "",
@@ -216,7 +217,7 @@ var eachGameData = new Vue({
                 this.placingShipLocation = []
             }
             console.log(this.carrier)
-            this.hoverShipHorizontal(hoverLocation, this.shipLength, ships)
+            this.hoverShipHorizontal(hoverLocation, this.shipLength, ships, this.isAbleToPlace)
             //            console.log("hi");
         },
 
@@ -227,7 +228,7 @@ var eachGameData = new Vue({
 
         },
 
-        hoverShipHorizontal(location, shipLength, ship) {
+        hoverShipHorizontal(location, shipLength, ship, isAbleToPlace) {
             if (this.placedShip != null && this.shipOrientation == "horizontal") {
 
 
@@ -265,23 +266,34 @@ var eachGameData = new Vue({
                 })
                 console.log("checkShip:" + checkShip)
                 console.log("placeSHips" + this.placingShipLocation)
+                this.isAbleToPlace=true
                 for (var i = 0; i < checkShip.length; i++) {
                     if (this.placingShipLocation.includes(checkShip[i])) {
-                        console.log('no')
+                        for(var j=0; j< this.placingShipLocation.length ; j++){
+                            if(this.placingShipLocation[j]== checkShip[i]){
+                                this.isAbleToPlace=false
+                                console.log('no')
+                            }
+                        }
+                        
+                        
+                    } 
+                } console.log(this.isAbleToPlace)
+                if(this.isAbleToPlace == false){
+                    console.log(this.isAbleToPlace)
                         this.placingShipLocation
-                            .forEach(loc => {
-                                //                            let removeCell = document.querySelector(`.${loc}`).classList.remove("ship_hover")
+                            .forEach(loc => {                            
                                 let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
                                     .classList.add('error_hover')
                             })
-                    } else {
-                        this.placingShipLocation
+
+                } else {
+                    this.placingShipLocation
                             .forEach(loc => {
                                 //                                let removeCell = document.querySelector(`.${loc}`).classList.remove("error_hover")
                                 let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
                                     .classList.add('ship_hover')
                             })
-                    }
                 }
 
                 //                console.log(locationNumber, shipLength)
@@ -302,9 +314,8 @@ var eachGameData = new Vue({
             }
         },
 
-        placeShipOnGrid(location) {
-            if (this.placingShipLocation.length == this.shipLength) {
-
+        placeShipOnGrid(location, isAbleToPlace) {
+            if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace) {
 
                 if (this.placedShip == 'carrier') {
                     this.ships.push(this.carrier)
@@ -336,31 +347,30 @@ var eachGameData = new Vue({
                     this.placedShip = null
                     this.shipOrientation = null
                 }
+
+                this.placingShipLocation.forEach(loc => {
+                    let removeCell = document.querySelector(`.${loc}`).classList.remove("ship_hover")
+                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                        .classList.add('ships')
+
+
+                })
             } else {
                 alert("Sorry, this is a wrong move ")
             }
             //            this.checkShipsLocation()
-            this.placingShipLocation.forEach(loc => {
-                let removeCell = document.querySelector(`.${loc}`).classList.remove("ship_hover")
-                let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
-                    .classList.add('ships')
-//                this.ship.forEach(ship=>{
-//                    if(ship.includes(this.placingShipLocation)){
-//                    alert("this is not allow!")
-//                }})
-                
-            })
 
-           
-//            this.placingShipLocation.forEach(ship => {
-//                let checkShip = [];
-//                    ship.locations.forEach(location => {
-//                    checkShip.push(location)     
-//                }) 
-//                
-//
-//            })
-//            console.log("checkShip:" + checkShip)
+
+
+            //            this.placingShipLocation.forEach(ship => {
+            //                let checkShip = [];
+            //                    ship.locations.forEach(location => {
+            //                    checkShip.push(location)     
+            //                }) 
+            //                
+            //
+            //            })
+            //            console.log("checkShip:" + checkShip)
 
 
             //            if(this.placingShipLocation == checkShip){
