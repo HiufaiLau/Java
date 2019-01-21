@@ -358,27 +358,6 @@ var eachGameData = new Vue({
             } else {
                 alert("Sorry, this is a wrong move ")
             }
-            //            this.checkShipsLocation()
-
-
-
-            //            this.placingShipLocation.forEach(ship => {
-            //                let checkShip = [];
-            //                    ship.locations.forEach(location => {
-            //                    checkShip.push(location)     
-            //                }) 
-            //                
-            //
-            //            })
-            //            console.log("checkShip:" + checkShip)
-
-
-            //            if(this.placingShipLocation == checkShip){
-            //                 this.placingShipLocation.forEach(loc => {
-            //                document.querySelector(`.${loc}`).classList.add("error_hover")
-            //                alert("Sorry, the ship could not place here")
-            //                        })
-            //            }
 
         },
 
