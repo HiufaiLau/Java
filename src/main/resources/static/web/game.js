@@ -12,7 +12,7 @@ var eachGameData = new Vue({
         shipOrientation: null,
         shipLength: null,
         checkShip: [],
-        isAbleToPlace: true,
+        //        isAbleToPlace: true,
         shipArray: [
             {
                 "type": "",
@@ -50,6 +50,8 @@ var eachGameData = new Vue({
         cellAlpha: null,
         isLoading: true,
         date: [],
+        allShipsLocation: [],
+        oneShip: {}
     },
 
     created() {
@@ -190,115 +192,189 @@ var eachGameData = new Vue({
 
         defineShips(event) {
             let hoverLocation = event.currentTarget.getAttribute("data-className");
-            let ships = {}
+            //            let ships = {}
             if (this.placedShip == "carrier") {
                 this.shipLength = 5
-                ships = this.carrier
+                this.oneShip = this.carrier
                 this.placingShipLocation = []
             }
             if (this.placedShip == "battleship") {
                 this.shipLength = 4
-                ships = this.battleship
+                this.oneShip = this.battleship
                 this.placingShipLocation = []
             }
             if (this.placedShip == "destroyer") {
                 this.shipLength = 3
-                ships = this.destroyer
+                this.oneShip = this.destroyer
                 this.placingShipLocation = []
             }
             if (this.placedShip == "submarine") {
                 this.shipLength = 3
-                ships = this.submarine
+                this.oneShip = this.submarine
                 this.placingShipLocation = []
             }
             if (this.placedShip == "patrol") {
                 this.shipLength = 2
-                ships = this.patrol
+                this.oneShip = this.patrol
                 this.placingShipLocation = []
             }
             console.log(this.carrier)
-            this.hoverShipHorizontal(hoverLocation, this.shipLength, ships, this.isAbleToPlace)
-            //            console.log("hi");
+            this.hoverShipHorizontal(hoverLocation, this.shipLength)
         },
 
-        checkShipsLocation() {
+        hoverShipHorizontal(location, shipLength) {
+            if (this.placedShip != null && this.shipOrientation != null) {
+                let locationNumber = [];
+                let asciiToNumber = [];
+                var locationAlphabet = [];
 
-            //            let x = this.ships[1].locations;
-            //            console.log(x)
-
-        },
-
-        hoverShipHorizontal(location, shipLength, ship, isAbleToPlace) {
-            if (this.placedShip != null && this.shipOrientation == "horizontal") {
-
-
-                var locationNumber = [];
                 for (var i = 0; i < shipLength; i++) {
-                    locationNumber.push(parseInt(location.substr(1, 2)) + i)
+                    locationNumber.push(parseInt(location.substr(1, 2)) + i);
+                    asciiToNumber.push(location.charCodeAt(location.substr(0, 1)) + i);
+                    locationAlphabet.push(String.fromCharCode(asciiToNumber[i]))
                 }
-
-                if (locationNumber[locationNumber.length - 1] < 11) {
-                    locationNumber
-                        .forEach(oneNumber => this.placingShipLocation.push(location.split("")[0] + oneNumber))
-                    this.placingShipLocation
-                        .map(oneCell => document.querySelector(`.${oneCell}`).classList.add("ship_hover"))
-                    ship.locations = this.placingShipLocation;
-                    ship.type = this.placedShip;
-                    //                    console.log(ship)
-                    console.log("placeShip" + this.placingShipLocation)
-
-                } else {
-                    var numberOutGrid = locationNumber.filter(oneLocation => oneLocation < 11)
-                    numberOutGrid.forEach(oneNumber => this.errorLocation.push(location.split("")[0] + oneNumber))
-                    this.errorLocation
-                        .map(oneCell => {
-                            document.querySelector(`.${oneCell}`).classList.add("error_hover")
-                        })
-                }
-
-
-                //checking location
-                let checkShip = [];
-                this.ships.forEach(ship => {
-                    ship.locations.forEach(location => {
-                        checkShip.push(location)
-                    })
-                })
-                console.log("checkShip:" + checkShip)
-                console.log("placeSHips" + this.placingShipLocation)
-                this.isAbleToPlace=true
-                for (var i = 0; i < checkShip.length; i++) {
-                    if (this.placingShipLocation.includes(checkShip[i])) {
-                        for(var j=0; j< this.placingShipLocation.length ; j++){
-                            if(this.placingShipLocation[j]== checkShip[i]){
-                                this.isAbleToPlace=false
-                                console.log('no')
-                            }
-                        }
-                        
-                        
-                    } 
-                } console.log(this.isAbleToPlace)
-                if(this.isAbleToPlace == false){
-                    console.log(this.isAbleToPlace)
+                if (this.shipOrientation == "horizontal") {
+                    if (locationNumber[locationNumber.length - 1] < 11) {
+                        locationNumber
+                            .forEach(oneNumber => this.placingShipLocation.push(location.split("")[0] + oneNumber))
                         this.placingShipLocation
-                            .forEach(loc => {                            
-                                let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
-                                    .classList.add('error_hover')
-                            })
+                            .map(oneCell => document.querySelector(`.${oneCell}`).classList.add("ship_hover"))
 
-                } else {
-                    this.placingShipLocation
-                            .forEach(loc => {
-                                //                                let removeCell = document.querySelector(`.${loc}`).classList.remove("error_hover")
-                                let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
-                                    .classList.add('ship_hover')
+                        console.log("placeShip" + this.placingShipLocation)
+                        if (this.isAbleToPlace() == false) {
+                            //                            console.log(this.isAbleToPlace)
+                            this.placingShipLocation
+                                .forEach(loc => {
+                                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                                        .classList.add('error_hover')
+                                })
+
+                        } else {
+                            this.placingShipLocation
+                                .forEach(loc => {
+                                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                                        .classList.add('ship_hover')
+                                })
+                        }
+                    } else {
+                        var numberOutGrid = locationNumber.filter(oneLocation => oneLocation < 11)
+                        numberOutGrid.forEach(oneNumber => this.errorLocation.push(location.split("")[0] + oneNumber))
+                        this.errorLocation
+                            .map(oneCell => {
+                                document.querySelector(`.${oneCell}`).classList.add("error_hover")
                             })
+                    }
                 }
 
-                //                console.log(locationNumber, shipLength)
+
+                if (this.shipOrientation == "vertical") {
+                    console.log("hi")
+                    if (asciiToNumber[asciiToNumber.length - 1] < 75) {
+                        console.log(locationAlphabet)
+                        locationAlphabet.forEach(alphabet => this.placingShipLocation.push(alphabet + location.substr(1, 2)))
+                        if (this.isAbleToPlace() == true) {
+                            this.placingShipLocation
+                                .forEach(loc => {
+                                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                                        .classList.add('ship_hover')
+                                })
+
+                        } else {
+                            console.log("hi")
+                            this.placingShipLocation
+                                .forEach(loc => {
+                                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+                                        .classList.add('error_hover')
+                                })
+                        }
+                    } else {
+                        console.log("hi")
+                        var asciiOutGrid = asciiToNumber.filter(oneLocation => oneLocation < 75)
+                        var letterOutGrid = []
+                        for (var i = 0; i < asciiOutGrid.length; i++) {
+                            letterOutGrid.push(String.fromCharCode(asciiOutGrid[i]))
+                        }
+                        console.log(letterOutGrid)
+                        //                        console.log(letterOutGrid)
+                        letterOutGrid.forEach(oneLetter => this.errorLocation.push(oneLetter + location.substr(1, 2)))
+                        console.log(this.errorLocation)
+                        this.errorLocation
+                            .map(oneCell => {
+                                document.querySelector(`.${oneCell}`).classList.add("error_hover")
+                            })
+                        console.log(letterOutGrid)
+                    }
+                }
             }
+
+
+
+
+
+
+            //        if (this.isAbleToPlace == false) {
+            //            console.log(this.isAbleToPlace)
+            //            this.placingShipLocation
+            //                .forEach(loc => {
+            //                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+            //                        .classList.add('error_hover')
+            //                })
+            //
+            //        } else {
+            //            this.placingShipLocation
+            //                .forEach(loc => {
+            //                    let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
+            //                        .classList.add('ship_hover')
+            //                })
+            //        }
         },
+        isAbleToPlace() {
+            //checking location
+            if (this.ships.length == 0 || (this.ships.length == 1 && this.ships[0].locations.length == 0)) {
+                console.log("false")
+                return true
+            } else {
+
+                this.allShipsLocation = [].concat.apply([], this.ships.map(oneShip => oneShip.locations))
+                //                console.log(this.allShipsLocation)
+                for (var i = 0; i < this.allShipsLocation.length; i++) {
+                    if (this.placingShipLocation.includes(this.allShipsLocation[i])) {
+                        console.log("no")
+                        return false
+                    }
+                }
+                console.log("yes")
+                return true
+            }
+            //            let checkShip = [];
+            //            this.ships.forEach(ship => {
+            //                ship.locations.forEach(location => {
+            //                    checkShip.push(location)
+            //                })
+            //            })
+            //            console.log("checkShip:" + checkShip)
+            //            console.log("placeSHips" + this.placingShipLocation)
+            ////            this.isAbleToPlace = true
+            //            for (var i = 0; i < this.checkShip.length; i++) {
+            //                if (this.placingShipLocation.includes(checkShip[i])) {
+            ////                    return false
+            ////                            console.log('no')
+            ////                    console.log(this.isAbleToPlace)
+            //                    for (var j = 0; j < this.placingShipLocation.length; j++) {
+            //                        if (this.placingShipLocation[j] == checkShip[i]) {
+            //                            console.log('no')
+            //                            return false
+            //                            
+            //                        }
+            //                    }
+            //                }else{
+            //                    console.log('yes')
+            //                    return true
+            //                    
+            //                }
+            //            }
+        },
+
 
         removeHover(location) {
             if (this.placedShip != null && this.shipOrientation != null) {
@@ -315,33 +391,43 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location, isAbleToPlace) {
-            if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace) {
+            if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
 
                 if (this.placedShip == 'carrier') {
+                    this.oneShip.locations = this.placingShipLocation;
+                    this.oneShip.type = this.placedShip;
                     this.ships.push(this.carrier)
                     document.getElementById("carrier").disabled = true;
                     this.placedShip = null
                     this.shipOrientation = null
 
                 } else if (this.placedShip == 'battleship') {
+                    this.oneShip.locations = this.placingShipLocation;
+                    this.oneShip.type = this.placedShip;
                     this.ships.push(this.battleship)
                     document.getElementById("battleship").disabled = true;
                     this.placedShip = null
                     this.shipOrientation = null
 
                 } else if (this.placedShip == 'destroyer') {
+                    this.oneShip.locations = this.placingShipLocation;
+                    this.oneShip.type = this.placedShip;
                     this.ships.push(this.destroyer)
                     document.getElementById("destroyer").disabled = true;
                     this.placedShip = null
                     this.shipOrientation = null
 
                 } else if (this.placedShip == 'submarine') {
+                    this.oneShip.locations = this.placingShipLocation;
+                    this.oneShip.type = this.placedShip;
                     this.ships.push(this.submarine)
                     document.getElementById("submarine").disabled = true;
                     this.placedShip = null
                     this.shipOrientation = null
 
                 } else if (this.placedShip == 'patrol') {
+                    this.oneShip.locations = this.placingShipLocation;
+                    this.oneShip.type = this.placedShip;
                     this.ships.push(this.patrol)
                     document.getElementById("patrol").disabled = true;
                     this.placedShip = null
