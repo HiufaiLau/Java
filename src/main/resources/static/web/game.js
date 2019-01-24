@@ -187,11 +187,12 @@ var eachGameData = new Vue({
 
         showShipType(event) {
             console.log(event)
-            this.placedShip = event.toElement.value
+            this.placedShip = event.currentTarget.getAttribute("data-shiptype");
         },
 
         defineShips(event) {
             let hoverLocation = event.currentTarget.getAttribute("data-className");
+//            let getShipType = event.currentTarget.getAttribute("data-shiptype");  
             //            let ships = {}
             if (this.placedShip == "carrier") {
                 this.shipLength = 5
@@ -218,7 +219,8 @@ var eachGameData = new Vue({
                 this.oneShip = this.patrol
                 this.placingShipLocation = []
             }
-            console.log(this.carrier)
+            console.log(this.oneShip)
+            console.log(hoverLocation)
             this.hoverShipHorizontal(hoverLocation, this.shipLength)
         },
 
@@ -226,7 +228,7 @@ var eachGameData = new Vue({
             if (this.placedShip != null && this.shipOrientation != null) {
                 let locationNumber = [];
                 let asciiToNumber = [];
-                var locationAlphabet = [];
+                let locationAlphabet = [];
 
                 for (var i = 0; i < shipLength; i++) {
                     locationNumber.push(parseInt(location.substr(1, 2)) + i);
@@ -340,8 +342,9 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location) {
-            if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
 
+            if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
+               
                 if (this.placedShip == 'carrier') {
                     this.oneShip.locations = this.placingShipLocation;
                     this.oneShip.type = this.placedShip;
@@ -384,82 +387,98 @@ var eachGameData = new Vue({
                 }
 
                 this.placingShipLocation.forEach(loc => {
-                    let removeCell = document.querySelector(`.${loc}`).classList.remove('ship_hover')
+                    let removeCell = document.querySelector(`.${loc}`).classList.remove("ship_hover")
                     let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
                         .classList.add('ships')
-
-
+                    
+//               var ship = this.ships[0].type
+//               console.log(ship)
+                this.reLocateShip()
                 })
 
-             
-            } else {
-                alert("Sorry, this is a wrong move ")
-            }
-    },
-    
-    
 
-    showOpponentSalvos(tableId) {
-        var shipLocations = [];
-        let ships = this.gameViewData.ships
-        console.log(ships)
-        ships.forEach(ship => {
-            ship.locations.forEach(location => {
-                shipLocations.push(location)
+            } else {
+                                alert("Sorry, this is a wrong move ")
+            }
+        },
+
+        reLocateShip(){
+            let loc = this.ships
+            console.log(loc)
+            
+            this.ships.forEach(ship => {
+                if(ship.type == this.placedShip.type){
+//                    console.log(ship.locations)
+                console.log(ship.type)
+                }else{
+                    console.log("hi")
+                }
+                
             })
-        })
-        console.log(shipLocations)
-        let salvos = this.gameViewData.salvos
-        console.log(salvos)
-        salvos.forEach(oneSalvo => {
-            if (this.gamePlayerId != oneSalvo.gamePlayerId) {
-                oneSalvo.locations.forEach(oneLoc => {
-                    shipLocations.forEach(loc => {
-                        if (oneLoc == loc) {
-                            document.getElementById("shipTable").querySelector(`.${loc}`)
-                                .classList.add('hit');
-                            document.getElementById("shipTable").querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn;
-                            console.log(document.querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn)
-                        } else {
-                            document.getElementById("shipTable").querySelector(`.${oneLoc}`)
-                                .classList.add('salvo3');
-                            document.getElementById("shipTable").querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn;
-                        }
+            
+        },
+
+        showOpponentSalvos(tableId) {
+            var shipLocations = [];
+            let ships = this.gameViewData.ships
+            console.log(ships)
+            ships.forEach(ship => {
+                ship.locations.forEach(location => {
+                    shipLocations.push(location)
+                })
+            })
+            console.log(shipLocations)
+            let salvos = this.gameViewData.salvos
+            console.log(salvos)
+            salvos.forEach(oneSalvo => {
+                if (this.gamePlayerId != oneSalvo.gamePlayerId) {
+                    oneSalvo.locations.forEach(oneLoc => {
+                        shipLocations.forEach(loc => {
+                            if (oneLoc == loc) {
+                                document.getElementById("shipTable").querySelector(`.${loc}`)
+                                    .classList.add('hit');
+                                document.getElementById("shipTable").querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn;
+                                console.log(document.querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn)
+                            } else {
+                                document.getElementById("shipTable").querySelector(`.${oneLoc}`)
+                                    .classList.add('salvo3');
+                                document.getElementById("shipTable").querySelector(`.${oneLoc}`).innerHTML = oneSalvo.turn;
+                            }
+                        })
                     })
-                })
-            }
-        })
-    },
+                }
+            })
+        },
 
-    showLocalPalyerSalvos(tableId) {
-        let salvos = this.gameViewData.salvos
-        console.log(salvos)
-        salvos.forEach(oneSalvo => {
-            if (this.gamePlayerId == oneSalvo.gamePlayerId) {
-                oneSalvo.locations.forEach(oneSalvoLocation => {
-                    document.getElementById("salvoTable").querySelector(`.${oneSalvoLocation}`)
-                        .classList.add('salvo2');
-                    document.getElementById("salvoTable").querySelector(`.${oneSalvoLocation}`).innerHTML = oneSalvo.turn;
-                })
-            }
-        })
-    },
+        showLocalPalyerSalvos(tableId) {
+            let salvos = this.gameViewData.salvos
+            console.log(salvos)
+            salvos.forEach(oneSalvo => {
+                if (this.gamePlayerId == oneSalvo.gamePlayerId) {
+                    oneSalvo.locations.forEach(oneSalvoLocation => {
+                        document.getElementById("salvoTable").querySelector(`.${oneSalvoLocation}`)
+                            .classList.add('salvo2');
+                        document.getElementById("salvoTable").querySelector(`.${oneSalvoLocation}`).innerHTML = oneSalvo.turn;
+                    })
+                }
+            })
+        },
 
-    showPlayers() {
-        for (var i = 0; i < this.gameViewData.gamePlayers[0].players.length; i++) {
-            if (this.gamePlayerId == this.gameViewData.gamePlayers[0].players[i].gamePlayerID) {
-                this.localPlayer = this.gameViewData.gamePlayers[0].players[i].player.email
-            } else {
-                this.opponentPlayer = this.gameViewData.gamePlayers[0].players[i].player.email
+        showPlayers() {
+            for (var i = 0; i < this.gameViewData.gamePlayers[0].players.length; i++) {
+                if (this.gamePlayerId == this.gameViewData.gamePlayers[0].players[i].gamePlayerID) {
+                    this.localPlayer = this.gameViewData.gamePlayers[0].players[i].player.email
+                } else {
+                    this.opponentPlayer = this.gameViewData.gamePlayers[0].players[i].player.email
+                }
             }
+            console.log(this.localPlayer);
+            console.log(this.opponentPlayer);
+        },
+
+
+        dateConvert() {
+            this.gameViewData.created = new Date(this.gameViewData.created).toLocaleString()
         }
-        console.log(this.localPlayer);
-        console.log(this.opponentPlayer);
-    },
-
-
-    dateConvert() {
-        this.gameViewData.created = new Date(this.gameViewData.created).toLocaleString()
     }
-}
 })
