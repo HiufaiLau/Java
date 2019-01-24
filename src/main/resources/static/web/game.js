@@ -50,7 +50,7 @@ var eachGameData = new Vue({
         cellAlpha: null,
         isLoading: true,
         date: [],
-        allShipsLocation: [],
+        allShipLocation: [],
         oneShip: {}
     },
 
@@ -192,7 +192,7 @@ var eachGameData = new Vue({
 
         defineShips(event) {
             let hoverLocation = event.currentTarget.getAttribute("data-className");
-//            let getShipType = event.currentTarget.getAttribute("data-shiptype");  
+            //            let getShipType = event.currentTarget.getAttribute("data-shiptype");  
             //            let ships = {}
             if (this.placedShip == "carrier") {
                 this.shipLength = 5
@@ -315,9 +315,9 @@ var eachGameData = new Vue({
                 return true
             } else {
 
-                this.allShipsLocation = [].concat.apply([], this.ships.map(oneShip => oneShip.locations))
-                for (var i = 0; i < this.allShipsLocation.length; i++) {
-                    if (this.placingShipLocation.includes(this.allShipsLocation[i])) {
+                this.allShipLocation = [].concat.apply([], this.ships.map(oneShip => oneShip.locations))
+                for (var i = 0; i < this.allShipLocation.length; i++) {
+                    if (this.placingShipLocation.includes(this.allShipLocation[i])) {
                         console.log("no")
                         return false
                     }
@@ -344,7 +344,8 @@ var eachGameData = new Vue({
         placeShipOnGrid(location) {
 
             if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
-               
+
+            this.reLocateShip(location)
                 if (this.placedShip == 'carrier') {
                     this.oneShip.locations = this.placingShipLocation;
                     this.oneShip.type = this.placedShip;
@@ -390,32 +391,81 @@ var eachGameData = new Vue({
                     let removeCell = document.querySelector(`.${loc}`).classList.remove("ship_hover")
                     let cell = document.getElementById("shipTable").querySelector(`.${loc}`)
                         .classList.add('ships')
-                    
-//               var ship = this.ships[0].type
-//               console.log(ship)
-                this.reLocateShip()
+
+                    //               var ship = this.ships[0].type
+                    //               console.log(ship)
                 })
 
 
             } else {
-                                alert("Sorry, this is a wrong move ")
+               // this.reLocateShip(location)
+                //check if click on location has a battleship.
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
+            let shouldBeRemoved = false;
+
+                this.ships.forEach((ship, i) => {
+                    ship.locations.forEach(location => {
+                        if (location.includes(hoverLocation)) {
+                                shouldBeRemoved = true;
+                        }
+                    })
+                })
+                
+                if(shouldBeRemoved && this.placedShip == null) {
+                    this.reLocateShip(location)
+                } else {
+                    alert("Sorry, this is a wrong move ")  
+                }
+                    shouldBeRemoved = false;
+                   
             }
         },
 
-        reLocateShip(){
-            let loc = this.ships
-            console.log(loc)
-            
-            this.ships.forEach(ship => {
-                if(ship.type == this.placedShip.type){
-//                    console.log(ship.locations)
-                console.log(ship.type)
-                }else{
-                    console.log("hi")
+        reLocateShip(location) {
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
+            let shouldBeRemoved = false;
+            console.log(this.ships)
+            this.ships.forEach((ship, i) => {
+                ship.locations.forEach(location => {
+                    if (location.includes(hoverLocation)) {
+                        //                        alert("relocated")
+                        shouldBeRemoved = true;
+                    }
+                })
+                if (shouldBeRemoved) {
+                    ship.locations.forEach(location => {
+                        let cell = document.getElementById("shipTable").querySelector(`.${location}`).classList.remove('ships')
+                    })
+                    //                    alert(ship.type)
+                    ship.locations.splice(i, 1)
+                    ship.locations = []
+                    //                    this[ship.type].locations =[]
+                    this.placedShip = ship.type
+                    this.shipOrientation = "horizontal"
+                   
                 }
-                
+                shouldBeRemoved = false;
             })
             
+           
+
+
+            //            let loc = this.ships
+            //            console.log(loc)
+            //            var x = this.placedShip
+            //          
+            //            this.ships.forEach(ship => {
+            //
+            //                if (ship.type == this.placedShip) {
+            //                    //                    console.log(ship.locations)
+            //                    console.log(ship.type)
+            //                      console.log(this.placedShip)
+            //                } else {
+            //                    console.log("hi")
+            //                }
+            //
+            //            })
+
         },
 
         showOpponentSalvos(tableId) {
