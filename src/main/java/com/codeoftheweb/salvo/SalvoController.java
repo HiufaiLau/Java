@@ -171,6 +171,44 @@ public class SalvoController {
         return new ResponseEntity<>(responseEntity("success", "Ships are placed"), HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>>getSalvoLocation(@PathVariable Long gpId,Authentication auth,@RequestBody Salvo salvo){
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gpId);
+        Player player = playerRepository.findByUserName(auth.getName());
+
+        if (auth.getName().isEmpty()) {
+            return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer.getPlayer().getPlayerId()!= player.getPlayerId()) {
+            return new ResponseEntity<>(responseEntity("error", "You are not in this game."), HttpStatus.UNAUTHORIZED);
+        }
+        if (gamePlayer == null) {
+            return new ResponseEntity<>(responseEntity("gameStatus", "No such game"), HttpStatus.FORBIDDEN);
+        }
+        if(!gamePlayerRepository.existsById(gpId)){
+            return new ResponseEntity<>(responseEntity("error", "GamePlayer doesn't exist."), HttpStatus.FORBIDDEN);
+        }
+        if(ifSalvoIsPlaced(gamePlayer, salvo)){
+            return new ResponseEntity<>(responseEntity("error", "Sorry, could not place salvos."), HttpStatus.FORBIDDEN);
+        }
+        gamePlayer.addSalvo(salvo);
+        salvoRepository.save(salvo);
+
+        return new ResponseEntity<>(responseEntity("success", "The salvos are added"), HttpStatus.CREATED);
+    }
+
+    private boolean ifSalvoIsPlaced(GamePlayer gamePlayer, Salvo salvo){
+        if(gamePlayer.getSalvoes().size() > 0){
+            gamePlayer.getSalvoes().stream().map(salvos -> {
+                if(salvos.getTurn() == salvo.getTurn()){
+                    return true;
+                }
+                return false;
+            });
+        }
+        return false;
+    }
+
     @RequestMapping("/leaderBoard")
     public List<HashMap<String, Object>> getPlayersScore() {
         return playerRepository.findAll()

@@ -13,12 +13,12 @@ var eachGameData = new Vue({
         shipLength: null,
         checkShip: [],
         //        isAbleToPlace: true,
-        shipArray: [
-            {
-                "type": "",
-                "locations": []
-            }
-        ],
+//        shipArray: [
+//            {
+//                "type": "",
+//                "locations": []
+//            }
+//        ],
         placingShipLocation: [],
         errorLocation: [],
         //        checkShipList: [],
