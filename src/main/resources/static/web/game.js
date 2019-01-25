@@ -114,7 +114,7 @@ var eachGameData = new Vue({
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(this.shipArray)
+                    body: JSON.stringify(this.ships)
                 })
                 .then(response => {
                     console.log(response)
@@ -127,10 +127,10 @@ var eachGameData = new Vue({
                     return response.json()
 
                 }).then(data => {
-                    if (response.status === 201) {
+                    
                         window.location.reload();
                         console.log(data)
-                    }
+                    
                 })
                 .catch(error => {
                     console.log('Request failure: ', error);
