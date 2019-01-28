@@ -16,7 +16,7 @@
             <button type="submit" value="LogOut" v-on:click="logOut" class="btn btn-secondary">Logout</button>
         </a>
 
-        <button v-on:click="placeShip" type="button" class="btn btn-secondary">place ship</button>
+<!--        <button v-on:click="placeShip" type="button" class="btn btn-secondary">place ship</button>-->
 
         <a href="http://localhost:8080/web/allGames.html">
             <button type="submit" value="LogOut" class="btn btn-secondary">back to home page</button>
@@ -68,7 +68,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <button v-on:click="placeShip" type="button" class="btn btn-secondary btn-md">place ship</button>
+                            <button v-on:click="placeShip" type="button" class="btn btn-secondary btn-md">place ships</button>
                         </td>
                     </tr>
                 </table>
@@ -78,6 +78,7 @@
         <h3>My salvos Table</h3>
         <table id="salvoTable">
         </table>
+        <button v-on:click="placeSalvo" type="button" class="btn btn-secondary">place salvos</button>
 
 
     </div>
