@@ -172,8 +172,8 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>>getSalvoLocation(@PathVariable Long gpId,Authentication auth,@RequestBody Salvo salvo){
-        GamePlayer gamePlayer = gamePlayerRepository.findById(gpId);
+    public ResponseEntity<Map<String, Object>>getSalvoLocation(@PathVariable Long gamePlayerId,Authentication auth,@RequestBody Salvo salvo){
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId);
         Player player = playerRepository.findByUserName(auth.getName());
 
         if (auth.getName().isEmpty()) {
@@ -185,7 +185,7 @@ public class SalvoController {
         if (gamePlayer == null) {
             return new ResponseEntity<>(responseEntity("gameStatus", "No such game"), HttpStatus.FORBIDDEN);
         }
-        if(!gamePlayerRepository.existsById(gpId)){
+        if(!gamePlayerRepository.existsById(gamePlayerId)){
             return new ResponseEntity<>(responseEntity("error", "GamePlayer doesn't exist."), HttpStatus.FORBIDDEN);
         }
         if(ifSalvoIsPlaced(gamePlayer, salvo)){
