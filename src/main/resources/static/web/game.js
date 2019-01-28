@@ -157,7 +157,7 @@ var eachGameData = new Vue({
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(this.sendAllsalvos)
+                        body: JSON.stringify(this.salvos)
                     })
                     .then(response => {
                         console.log(response)
@@ -383,6 +383,8 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location) {
+                             
+
 
             if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
 
@@ -438,6 +440,7 @@ var eachGameData = new Vue({
 
 
             }
+            
 
             //            if(this.placingSalvoLocation<=5 && this.isAbletoPlaceSalvo == false){
 
@@ -445,8 +448,8 @@ var eachGameData = new Vue({
             else {
                 let hoverLocation = location.currentTarget.getAttribute("data-className");
                 let shouldBeRemoved = false;
-                 this.placeSalvoOnGrid(location)
-
+                
+                
                 this.ships.forEach((ship, i) => {
                     ship.locations.forEach(location => {
                         if (location.includes(hoverLocation)) {
@@ -464,7 +467,7 @@ var eachGameData = new Vue({
 
             }
 
-           
+           this.placeSalvoOnGrid(location)
 
         },
 
@@ -546,6 +549,7 @@ var eachGameData = new Vue({
         hoverSalvoOnGrid(location) {
             //            let hoverLocation = location.currentTarget.getAttribute("data-className");
             this.placingSalvoLocation = location
+            console.log(location)
             if (this.isAbletoPlaceSalvo() == false) {
                 document.getElementById("salvoTable").querySelector(`.${this.placingSalvoLocation}`).classList.add("salvo3")
             } else {
@@ -574,10 +578,11 @@ var eachGameData = new Vue({
                 } else {
                     if (this.placingSalvoLocation.length <= 5) {
                         console.log(location.toElement.attributes[0].nodeValue)
-                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
+//                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
                         document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
+                        document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.salvos.turn;
                         console.log(this.placingSalvoLocation)
-                        this.salvoa.push(location)
+                        this.salvos.push(location)
                         
                     }
                 }
