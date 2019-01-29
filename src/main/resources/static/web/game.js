@@ -463,10 +463,6 @@ var eachGameData = new Vue({
 
             }
             
-
-            //            if(this.placingSalvoLocation<=5 && this.isAbletoPlaceSalvo == false){
-
-            //            }
             else {
                 let hoverLocation = location.currentTarget.getAttribute("data-className");
                 let shouldBeRemoved = false;
