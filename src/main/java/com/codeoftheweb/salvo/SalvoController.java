@@ -261,7 +261,7 @@ public class SalvoController {
         return gps.stream()
                 .flatMap(gp -> gp.getSalvoes().stream()
                         .map(salvo -> new LinkedHashMap<String, Object>() {{
-                            put("gamePlayerId", salvo.getGamePlayer().getPlayer().getPlayerId());
+                            put("gamePlayerId", salvo.getGamePlayer().getGamePlayerId());
                             put("turn", salvo.getTurn());
                             put("locations", salvo.getSalvoLocations());
                         }})

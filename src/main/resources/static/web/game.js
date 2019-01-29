@@ -24,12 +24,27 @@ var eachGameData = new Vue({
         //        checkShipList: [],
         ships: [],
 
-        opponentShips : [
-            {"type":"carrier","locations":["J3","J4","J5","J6","J7"]},
-            {"type":"battleship","locations":["I3","I4","I5","I6"]},
-            {"type":"submarine","locations":["H3","H4","H5"]},
-            {"type":"destroyer","locations":["G3","G4","G5"]},
-            {"type":"patrol","locations":["F3","F4"]}
+        opponentShips: [
+            {
+                "type": "carrier",
+                "locations": ["J3", "J4", "J5", "J6", "J7"]
+            },
+            {
+                "type": "battleship",
+                "locations": ["I3", "I4", "I5", "I6"]
+            },
+            {
+                "type": "submarine",
+                "locations": ["H3", "H4", "H5"]
+            },
+            {
+                "type": "destroyer",
+                "locations": ["G3", "G4", "G5"]
+            },
+            {
+                "type": "patrol",
+                "locations": ["F3", "F4"]
+            }
         ],
         carrier: {
             type: "",
@@ -59,7 +74,7 @@ var eachGameData = new Vue({
         allShipLocation: [],
         oneShip: {},
 
-//        salvoLocations: [],
+        //        salvoLocations: [],
         sendAllsalvos: [],
         salvos: [],
         turn: 1,
@@ -163,28 +178,31 @@ var eachGameData = new Vue({
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({turn:this.turn,salvoLocations:this.sendAllsalvos})
+                        body: JSON.stringify({
+                            turn: this.turn,
+                            salvoLocations: this.sendAllsalvos
+                        })
                     })
                     .then(response => {
-                    console.log(response)
-                    if (response.status == 403) {
-//                        alert("ship is alredy placed")
-                    }
-                    if (response.status == 401) {
-                        alert("You are not logged in")
-                    }
-                    return response.json()
+                        console.log(response)
+                        if (response.status == 403) {
+                            //                        alert("ship is alredy placed")
+                        }
+                        if (response.status == 401) {
+                            alert("You are not logged in")
+                        }
+                        return response.json()
 
-                }).then(data => {
+                    }).then(data => {
 
-                    window.location.reload();
-                    console.log(data)
+                        window.location.reload();
+                        console.log(data)
 
-                })
-                .catch(error => {
-                    console.log('Request failure: ', error);
-                    alert("Failure");
-                })
+                    })
+                    .catch(error => {
+                        console.log('Request failure: ', error);
+                        alert("Failure");
+                    })
                 //this.turn = this.salvos.turn+1
             } else {
                 alert("You still have some salvos!")
@@ -240,7 +258,7 @@ var eachGameData = new Vue({
                     .classList.add('ships')
                 //                console.log(loc)
             })
-            this.turn = this.salvos.length+1
+            this.turn = this.salvos.length + 1
         },
 
         showShipType(event) {
@@ -404,8 +422,8 @@ var eachGameData = new Vue({
         },
 
         placeShipOnGrid(location) {
-                             
-                             
+
+
 
 
             if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
@@ -461,13 +479,11 @@ var eachGameData = new Vue({
 
 
 
-            }
-            
-            else {
+            } else {
                 let hoverLocation = location.currentTarget.getAttribute("data-className");
                 let shouldBeRemoved = false;
-                
-                
+
+
                 this.ships.forEach((ship, i) => {
                     ship.locations.forEach(location => {
                         if (location.includes(hoverLocation)) {
@@ -585,54 +601,28 @@ var eachGameData = new Vue({
             this.sendAllsalvos.locations = this.placingSalvoLocation
 
             console.log(this.turn)
-            console.log(this.salvos)
+            console.log(this.sendAllsalvos.locations)
 
             //if (this.isAbletoPlaceSalvo() == false) {
 
+            console.log(this.placingSalvoLocation)
+            if (this.placingSalvoLocation.includes(location)) {
+                this.removeSalvoFromGrid(location)
+            } else {
+                if (this.salvos.length < 5) {
+                    console.log(location.toElement.attributes[0].nodeValue)
+                    //                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
+                    document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
+                    document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
                     console.log(this.placingSalvoLocation)
-                if (this.placingSalvoLocation.includes(location)) {
-                    this.removeSalvoFromGrid(location)
-                } else {
-                    if (this.salvos.length < 5) {
-                        console.log(location.toElement.attributes[0].nodeValue)
-//                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
-                        document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
-                        document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
-                        console.log(this.placingSalvoLocation)
-                        this.sendAllsalvos.push(this.placingSalvoLocation)
-                        
-                    }
-               // }
+                    this.sendAllsalvos.push(this.placingSalvoLocation)
 
-                
-
+                }
             }
-//            if (this.isAbletoPlaceSalvo() == false) {
-//                this.salvoLocations.forEach(salvo=>{
-//                    console.log(this.salvoLocations)
-//                if (this.salvoLocations.includes(salvo)) {
-//                    this.removeSalvoFromGrid(salvo)
-//                } else {
-//                    if (this.salvoLocations.length <= 5) {
-//                        document.getElementById("salvoTable").querySelector(`.${salvo}`).classList.add("salvo2")
-//                        this.salvoLocations.push(salvo)
-//
-//                    }
-//                }
-//})        
-//                
-//
-//            }
-//            this.salvos.turn = this.turn
-//            this.salvos.locations = this.salvoLocations
-//
-//            console.log(this.turn)
-//            console.log(this.salvos)
-
         },
 
         isAbletoPlaceSalvo() {
-           // let hoverLocation = location.currentTarget.getAttribute("data-className");
+            // let hoverLocation = location.currentTarget.getAttribute("data-className");
             this.allSalvos = [].concat.apply([], this.salvos.map(oneSalvo => oneSalvo.locations))
             if (this.allSalvos.length == 0) {
                 return false
@@ -644,8 +634,6 @@ var eachGameData = new Vue({
             }
 
         },
-
-
 
         showPlayers() {
             for (var i = 0; i < this.gameViewData.gamePlayers[0].players.length; i++) {
