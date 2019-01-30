@@ -16,7 +16,7 @@
             <button type="submit" value="LogOut" v-on:click="logOut" class="btn btn-secondary">Logout</button>
         </a>
 
-<!--        <button v-on:click="placeShip" type="button" class="btn btn-secondary">place ship</button>-->
+        <!--        <button v-on:click="placeShip" type="button" class="btn btn-secondary">place ship</button>-->
 
         <a href="http://localhost:8080/web/allGames.html">
             <button type="submit" value="LogOut" class="btn btn-secondary">back to home page</button>
@@ -35,7 +35,6 @@
             <p>{{placedShip}}</p>
             <p>{{shipOrientation}}</p>
             <div class="table-responsive mt-2">
-                <!--                <div class="table-responsive">-->
                 <table class="shipType  table-style">
                     <tr>
                         <th>Type</th>
@@ -44,13 +43,13 @@
                         <td><input class="carrier btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="carrier" name="ship" id="carrier" data-shiptype="carrier" data-shiplength="5"></td>
                     </tr>
                     <tr>
-                        <td><input class="battleship btn btn-warning btn-md" type="button"  v-on:click="showShipType(this.event)" value="battleship" name="ship" id="battleship" data-shiptype="battleship" data-shiplength="4"></td>
+                        <td><input class="battleship btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="battleship" name="ship" id="battleship" data-shiptype="battleship" data-shiplength="4"></td>
                     </tr>
                     <tr>
-                        <td><input class="submarine btn btn-warning btn-md" type="button"  v-on:click="showShipType(this.event)"  value="submarine" name="ship" id="submarine" data-shiptype="submarine" data-shiplength="3"></td>
+                        <td><input class="submarine btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="submarine" name="ship" id="submarine" data-shiptype="submarine" data-shiplength="3"></td>
                     </tr>
                     <tr>
-                        <td><input class="destroyer btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)"value="destroyer" name="ship" id="destroyer" data-shiptype="destroyer" data-shiplength="3"></td>
+                        <td><input class="destroyer btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="destroyer" name="ship" id="destroyer" data-shiptype="destroyer" data-shiplength="3"></td>
                     </tr>
                     <tr>
                         <td><input class=" patrol btn btn-warning btn-md" type="button" v-on:click="showShipType(this.event)" value="patrol" name="ship" id="patrol" data-shiptype="patrol" data-shiplength="2"> </td>
@@ -62,7 +61,7 @@
                     <tr>
                         <td colspan="3" class="text-left">
                             <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="horizontal" type="radio" class="col-2 col-lg-1" style="margin-left: 4%">Horizontal</label>
-                            
+
                             <label class="row" style="padding: 0px 10px;align-items: center"><input v-model="shipOrientation" name="direction" value="vertical" type="radio" class="col-2 col-lg-1" style="margin-left: 4%">Vertical</label>
                         </td>
                     </tr>
@@ -76,10 +75,31 @@
         </div>
 
         <h3>My salvos Table</h3>
-        <table id="salvoTable">
-        </table>
-        <button v-on:click="placeSalvo" type="button" class="btn btn-secondary">place salvos</button>
-
+            <table id="salvoTable">
+            </table>
+            
+            <div class="container mt-6">
+                <table id="scoresTable" class="table table-striped table-dark ">
+                    <thead>
+                        <th scope="col">Turn</th>
+                        <th scope="col">Shiptype</th>
+                        <th scope="col">Hit Location</th>
+                        <th scope="col">Hits</th>
+                        <th scope="col">Sunk</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(oneHit, index) in localPlayerHit" :key="index" scope="row">
+                            <td>{{oneHit.turn}}</td>
+                            <td>{{oneHit.shiptype}}</td>
+                            <td >{{oneHit.hitLocations}}</td>
+                            <td>{{oneHit.hits}}</td>
+                            <td>{{oneHit.sunk}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button v-on:click="placeSalvo" type="button" class="btn btn-secondary">place salvos</button>
+        
 
     </div>
 

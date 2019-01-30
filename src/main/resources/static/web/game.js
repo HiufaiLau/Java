@@ -80,6 +80,56 @@ var eachGameData = new Vue({
         turn: 1,
         placingSalvoLocation: [],
         allSalvos: [],
+        getHit: [
+            {
+                "gamePlayerId": 4,
+
+                "hit": [
+                    {
+                        "turn": 1,
+                        "shiptype": "carrier",
+                        "hitLocations": ["G3", "G4", "G5", "G6"],
+                        "hits": 4,
+                        "sunk": 0,
+                    },
+                    
+                    {
+                        "turn": 2,
+                        "shiptype": "battleship",
+                        "hitLocations": ["H4", "H5", "H6", "H7"],
+                        "hits": 4,
+                        "sunk": 1,
+                    }
+                ]
+            },
+
+
+            {
+                "gamePlayerId": 3,
+
+                "hit": [
+                    {
+                        "turn": 1,
+                        "shiptype": "carrier",
+                        "hitLocations": ["G3"],
+                        "hits": 1,
+                        "sunk": 0,
+                    },
+                    {
+                        "turn": 2,
+                        "shiptype": "carrier",
+                        "hitLocations": ["G4"],
+                        "hits": 1,
+                        "sunk": 0,
+                    }
+                ]
+            },
+
+
+        ],
+        localPlayerHit: [],
+        opponentPlayerHit: [],
+
     },
 
     created() {
@@ -103,10 +153,25 @@ var eachGameData = new Vue({
                     this.salvos = this.gameViewData.salvos
                     console.log(this.salvos)
                     console.log(this.ships)
+
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
                     this.showPlayers()
+
+                    this.getHit.forEach(gp => {
+                        if (gp.gamePlayerId == this.gamePlayerId) {
+                            this.opponentPlayerHit = gp.hit
+                        } else {
+                            this.localPlayerHit = gp.hit
+                        }
+                    })
+//                this.showHitLocation()
+                    console.log(this.opponentPlayerHit)
+                    console.log(this.localPlayerHit)
+                    console.log(this.localPlayerHit)
+                    console.log(this.getHit[1].gamePlayerId)
+
                     eachGameData.dateConvert();
                     this.isLoading = false;
                 })
@@ -601,11 +666,8 @@ var eachGameData = new Vue({
             this.sendAllsalvos.locations = this.placingSalvoLocation
 
             console.log(this.turn)
-            console.log(this.sendAllsalvos.locations)
-
-            //if (this.isAbletoPlaceSalvo() == false) {
-
             console.log(this.placingSalvoLocation)
+
             if (this.placingSalvoLocation.includes(location)) {
                 this.removeSalvoFromGrid(location)
             } else {
@@ -646,6 +708,13 @@ var eachGameData = new Vue({
             console.log(this.localPlayer);
             console.log(this.opponentPlayer);
         },
+        
+        
+//        showHitLocation(){
+//            
+//            let hitName = this.localPlayerHit.forEach(gp=>{gp.hitLocations.forEach(oneHit=>{oneHit.toString()})})
+//            console.log(hitName)
+//        },
 
 
         dateConvert() {
