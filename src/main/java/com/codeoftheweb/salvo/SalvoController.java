@@ -336,6 +336,7 @@ public class SalvoController {
                     }});
                     put("ships", getAllships(gp.getShips()));
                     put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
+                    put("hits",getHitData(gp));
                 }
             };
         } else {
@@ -356,8 +357,85 @@ public class SalvoController {
         return opponentMap.get("opponentPlayer");
     }
 
-    private List<Map<String,Object>>getHits(GamePlayer gamePlayer){
-        List<>
+//    private List<Map<String,Object>>getAllHits(Set<GamePlayer> gps){
+////        List<Salvo> salvos = salvoRepository.findAll().contains(getSalvoLocation())
+//        return new LinkedHashMap<String,Object>(){{
+//            put("")
+//        }}
+//    }
+
+    private List<HashMap<String, Object>> getHitResults(GamePlayer gamePlayer) {
+        List<HashMap<String, Object>> hitList = gamePlayer.getSalvoes().stream().map(salvo ->
+                new LinkedHashMap<String, Object>() {{
+                    put("turn", salvo.getTurn());
+                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer));
+                }}
+        ).collect(Collectors.toList());
+        return hitList;
+    }
+//    private List<Map<String,Object>>getOneHit(List<Salvo> salvos){
+//        List<Salvo> Hits = game.getSalvoes().stream().filter()
+//    }
+
+    public List<Map<String, Object>> getOneHit(List<String> salvoLocations, GamePlayer gamePlayer) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        getOpponent(gamePlayer).getShips().stream().forEach(ship -> {
+            for (int i = 0; i < salvoLocations.size(); i++) {
+                if (ship.getLocations().contains(salvoLocations.get(i))) {
+                    LinkedHashMap<String, Object> oneHit= new LinkedHashMap<>();
+                    oneHit.put("hitShipType", ship.getType());
+                    oneHit.put("hitLocation", salvoLocations.get(i));
+                    result.add(oneHit);
+                }
+            }
+        });
+        return result;
+    }
+
+    private List<HashMap<String, Object>> getHitData(GamePlayer gamePlayer) {
+        List<HashMap<String, Object>> hits = new ArrayList<>();
+        HashMap<String, Object> localPlayer = new HashMap<>();
+        localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
+        localPlayer.put("hit", getHitResults(gamePlayer));
+        hits.add(0, localPlayer );
+        HashMap<String, Object> opponentPlayer = new HashMap<>();
+        opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
+        opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
+        hits.add(1, opponentPlayer);
+        return hits;
+    }
+
+    private Map<String, Object> getHits(Ship ship) {
+     if()
+
+        if (hits.size() == 0) return null;
+        Integer hits = 0;
+
+        if ()
+
+        if ()
+
+
+        return new LinkedHashMap<String, Object>() {{
+            put("numberOfHits", ship.getHit());
+            put("sunk", ship.getSunk());
+            put("hitShipType", ship.getType());
+
+        }};
+    }
+
+    private Long countHits(List<Score> allScores, Double scores) {
+        return allScores
+                .stream()
+                .filter(score -> scores.equals(score.getScore()))
+                .count();
+    }
+
+    private Double getTotalScore(List<Score> scores) {
+        return scores
+                .stream()
+                .mapToDouble(Score::getScore)
+                .sum();
     }
 
 }

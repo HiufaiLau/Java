@@ -91,13 +91,5 @@ public class Player {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "Player{" +
-//                "name='" + userName + '\'' +
-//                ", userName='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                '}';
-//    }
 }
 

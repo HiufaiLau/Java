@@ -14,11 +14,15 @@ public class Ship {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
     private String type;
+    private Integer hit;
+    private Integer shipLength;
+    private Boolean sunk;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer_id")
     private GamePlayer gamePlayer;
+
 
     @ElementCollection
     private List<String> locations = new ArrayList<>();
@@ -28,6 +32,9 @@ public class Ship {
     public Ship(String type, List<String> locations) {
         this.type = type;
         this.locations = locations;
+        this.hit=0;
+        this.shipLength = locations.size();
+        this.sunk=false;
     }
 
     public Long getShipId() {
@@ -56,6 +63,30 @@ public class Ship {
 
     public void setGamePlayer(GamePlayer gamePlayer) {
         this.gamePlayer = gamePlayer;
+    }
+
+    public Integer getHit() {
+        return hit;
+    }
+
+    public void setHit(Integer hit) {
+        this.hit = hit;
+    }
+
+    public Integer getShipLength() {
+        return shipLength;
+    }
+
+    public void setShipLength(Integer shipLength) {
+        this.shipLength = shipLength;
+    }
+
+    public Boolean getSunk() {
+        return sunk;
+    }
+
+    public void setSunk(Boolean sunk) {
+        this.sunk = sunk;
     }
 }
 
