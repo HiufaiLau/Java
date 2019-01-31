@@ -350,10 +350,10 @@ public class SalvoController {
                 .forEach
                         (gp -> {
                             if (gp.getGamePlayerId() != gamePlayer.getGamePlayerId()) {
-                                opponentMap.put("opponent", gp);
+                                opponentMap.put("opponentPlayer", gp);
                             }
                         });
-        return opponentMap.get("opponent");
+        return opponentMap.get("opponentPlayer");
     }
 
     private List<Map<String,Object>>getHits(GamePlayer gamePlayer){
