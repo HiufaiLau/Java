@@ -400,7 +400,9 @@ public class SalvoController {
                     if(ship.getShipLength()== ship.getHit()){
                         ship.setSunk(true);
                         oneHit.put("sunk",ship.getSunk());
+                    }else{
 
+                        oneHit.put("sunk",ship.getSunk());
                     }
                     hitInfo.add(oneHit);
                 }
