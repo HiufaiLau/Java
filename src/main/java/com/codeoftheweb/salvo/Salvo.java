@@ -1,11 +1,9 @@
 package com.codeoftheweb.salvo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Entity
@@ -14,7 +12,7 @@ public class Salvo {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private int turn;
+    private Integer turn;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer_id")
@@ -25,7 +23,7 @@ public class Salvo {
 
     public Salvo() {}
 
-    public Salvo(int turn, List<String> salvoLocations) {
+    public Salvo(Integer turn, List<String> salvoLocations) {
         this.turn = turn;
         this.salvoLocations = salvoLocations;
     }
@@ -38,11 +36,11 @@ public class Salvo {
         this.id = id;
     }
 
-    public int getTurn() {
+    public Integer getTurn() {
         return turn;
     }
 
-    public void setTurn(int turn) {
+    public void setTurn(Integer turn) {
         this.turn = turn;
     }
 
