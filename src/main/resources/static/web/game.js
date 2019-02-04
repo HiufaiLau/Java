@@ -309,6 +309,8 @@ var eachGameData = new Vue({
                         </tr>`
             }
             table.appendChild(tbody).innerHTML = col;
+
+
         },
 
         showTheShips(tableId) {
@@ -326,6 +328,8 @@ var eachGameData = new Vue({
                 //                console.log(loc)
             })
             this.turn = this.salvos.length + 1
+            this.disableAllbuttons()
+
         },
 
         showShipType(event) {
@@ -493,7 +497,12 @@ var eachGameData = new Vue({
 
             if (this.placingShipLocation.length == this.shipLength && this.isAbleToPlace() == true) {
 
-                this.reLocateShip(location)
+                //this.reLocateShip(location)
+                this.ships.forEach((ship, i) => {
+                    if (ship.type == this.placedShip) {
+                        this.ships.splice(i, 1);
+                    }
+                })
                 if (this.placedShip == 'carrier') {
                     this.oneShip.locations = this.placingShipLocation;
                     this.oneShip.type = this.placedShip;
@@ -541,13 +550,9 @@ var eachGameData = new Vue({
                         .classList.add('ships')
                 })
 
-
-
-
             } else {
                 let hoverLocation = location.currentTarget.getAttribute("data-className");
                 let shouldBeRemoved = false;
-
 
                 this.ships.forEach((ship, i) => {
                     ship.locations.forEach(location => {
@@ -556,11 +561,14 @@ var eachGameData = new Vue({
                         }
                     })
                 })
-
-                if (shouldBeRemoved && this.placedShip == null) {
+                // after place ships button is pressed , could not place ships again.
+                if (shouldBeRemoved && this.placedShip == null && this.ships.length < 6 && this.allShipLocation.length != 0) {
                     this.reLocateShip(location)
+                } else if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+                    alert("Sorry, could not place ships anymore ")
+
                 } else {
-                    alert("Sorry, this is a wrong move ")
+                    alert("Sorry, this is a wrong move")
                 }
                 shouldBeRemoved = false;
 
@@ -568,6 +576,18 @@ var eachGameData = new Vue({
 
 
         },
+
+        disableAllbuttons() {
+            //after the place ship button is pressed, no ships could be chosen.
+            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+                document.getElementById("carrier").disabled = true;
+                document.getElementById("battleship").disabled = true;
+                document.getElementById("destroyer").disabled = true;
+                document.getElementById("patrol").disabled = true;
+                document.getElementById("submarine").disabled = true;
+            }
+        },
+
 
         reLocateShip(location) {
 
@@ -664,14 +684,19 @@ var eachGameData = new Vue({
         placeSalvoOnGrid(location) {
             this.sendAllsalvos.turn = this.turn
             this.sendAllsalvos.locations = this.placingSalvoLocation
-
+            console.log(this.salvos)
             console.log(this.turn)
             console.log(this.placingSalvoLocation)
-
-            if (this.placingSalvoLocation.includes(location)) {
-                this.removeSalvoFromGrid(location)
-            } else {
-                if (this.salvos.length < 5) {
+            let noOverlap=true;
+            this.salvos.forEach(salvo => {
+                if (salvo.locations.includes(this.placingSalvoLocation)) {
+                     alert("Warning!! could not place here.")
+                    noOverlap=false
+                }
+            }) 
+//            else {
+                if (this.sendAllsalvos.length < 5 && noOverlap) {
+                    
                     console.log(location.toElement.attributes[0].nodeValue)
                     //                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
                     document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
@@ -679,12 +704,16 @@ var eachGameData = new Vue({
                     console.log(this.placingSalvoLocation)
                     this.sendAllsalvos.push(this.placingSalvoLocation)
 
+                } else if(noOverlap){
+                    
+                    alert("Warning!! No more salovs in this turn!!!!")
                 }
-            }
+//            }
         },
 
         isAbletoPlaceSalvo() {
             // let hoverLocation = location.currentTarget.getAttribute("data-className");
+
             this.allSalvos = [].concat.apply([], this.salvos.map(oneSalvo => oneSalvo.locations))
             if (this.allSalvos.length == 0) {
                 return false
@@ -708,14 +737,6 @@ var eachGameData = new Vue({
             console.log(this.localPlayer);
             console.log(this.opponentPlayer);
         },
-
-
-        //        showHitLocation(){
-        //            
-        //            let hitName = this.localPlayerHit.forEach(gp=>{gp.hitLocations.forEach(oneHit=>{oneHit.toString()})})
-        //            console.log(hitName)
-        //        },
-
 
         dateConvert() {
             this.gameViewData.created = new Date(this.gameViewData.created).toLocaleString()
