@@ -87,13 +87,13 @@
                         <th scope="col">Hits</th>
                         <th scope="col">Sunk</th>
                     </thead>
-                    <tbody>
-                        <tr v-for="(oneHit, index) in localPlayerHit" :key="index" scope="row">
-                            <td>{{oneHit.turn}}</td>
-                            <td>{{oneHit.shiptype}}</td>
-                            <td >{{oneHit.hitLocations}}</td>
-                            <td>{{oneHit.hits}}</td>
-                            <td>{{oneHit.sunk}}</td>
+                    <tbody v-for="(allHit, index) in localPlayerHit" :key="index">
+                        <tr  v-for="(oneHit, index) in allHit.hits" :key="index" scope="row">
+                            <td>{{allHit.turn}}</td>
+                            <td>{{oneHit.hitShipType}}</td>
+                            <td >{{oneHit.hitLocation}}</td>
+                            <td>{{oneHit.totalHits}}</td>
+                            <td>{{oneHit.totalSunk}}</td>
                         </tr>
                     </tbody>
                 </table>
