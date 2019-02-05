@@ -687,28 +687,28 @@ var eachGameData = new Vue({
             console.log(this.salvos)
             console.log(this.turn)
             console.log(this.placingSalvoLocation)
-            let noOverlap=true;
+            let noOverlap = true;
             this.salvos.forEach(salvo => {
                 if (salvo.locations.includes(this.placingSalvoLocation)) {
-                     alert("Warning!! could not place here.")
-                    noOverlap=false
+                    alert("Warning!! could not place here.")
+                    noOverlap = false
                 }
-            }) 
-//            else {
-                if (this.sendAllsalvos.length < 5 && noOverlap) {
-                    
-                    console.log(location.toElement.attributes[0].nodeValue)
-                    //                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
-                    document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
-                    document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
-                    console.log(this.placingSalvoLocation)
-                    this.sendAllsalvos.push(this.placingSalvoLocation)
+            })
+            //            else {
+            if (this.sendAllsalvos.length < 5 && noOverlap) {
 
-                } else if(noOverlap){
-                    
-                    alert("Warning!! No more salovs in this turn!!!!")
-                }
-//            }
+                console.log(location.toElement.attributes[0].nodeValue)
+                //                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
+                document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
+                document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
+                console.log(this.placingSalvoLocation)
+                this.sendAllsalvos.push(this.placingSalvoLocation)
+
+            } else if (noOverlap) {
+
+                alert("Warning!! No more salovs in this turn!!!!")
+            }
+            //            }
         },
 
         isAbletoPlaceSalvo() {
