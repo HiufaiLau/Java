@@ -328,7 +328,7 @@ var eachGameData = new Vue({
                 //                console.log(loc)
             })
             this.turn = this.salvos.length + 1
-            this.disableAllbuttons()
+//            this.disableAllbuttons()
 
         },
 
@@ -576,17 +576,18 @@ var eachGameData = new Vue({
 
 
         },
-
-        disableAllbuttons() {
-            //after the place ship button is pressed, no ships could be chosen.
-            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
-                document.getElementById("carrier").disabled = true;
-                document.getElementById("battleship").disabled = true;
-                document.getElementById("destroyer").disabled = true;
-                document.getElementById("patrol").disabled = true;
-                document.getElementById("submarine").disabled = true;
-            }
-        },
+//
+//        disableAllbuttons() {
+//            //after the place ship button is pressed, no ships could be chosen.
+////            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+//            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+//                document.getElementById("carrier").disabled = true;
+//                document.getElementById("battleship").disabled = true;
+//                document.getElementById("destroyer").disabled = true;
+//                document.getElementById("patrol").disabled = true;
+//                document.getElementById("submarine").disabled = true;
+//            }
+//        },
 
 
         reLocateShip(location) {

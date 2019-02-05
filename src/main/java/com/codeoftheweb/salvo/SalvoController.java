@@ -175,7 +175,14 @@ public class SalvoController {
     public ResponseEntity<Map<String, Object>> getSalvoLocation(@PathVariable Long gamePlayerId, Authentication auth, @RequestBody Salvo salvo) {
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId);
         Player player = playerRepository.findByUserName(auth.getName());
-
+//        boolean gameOver = false;
+//        if (gamePlayer.getSalvoes().size() <= 1) {
+//            gameOver = false;
+//        } else {
+//
+//            ;
+//        }
+//        if (!gameOver) {
         if (auth.getName().isEmpty()) {
             return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
         }
@@ -191,6 +198,9 @@ public class SalvoController {
         if (ifSalvoIsPlaced(gamePlayer, salvo)) {
             return new ResponseEntity<>(responseEntity("error", "Sorry, could not place salvos."), HttpStatus.FORBIDDEN);
         }
+
+        if()
+
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
 
@@ -375,19 +385,25 @@ public class SalvoController {
 
         Collections.sort(salvoList, compareSalvo);
 
+        List<String> sunkShipList = new ArrayList<>();
         List<HashMap<String, Object>> hitList = salvoList.stream().map(salvo ->
                 new LinkedHashMap<String, Object>() {{
                     put("turn", salvo.getTurn());
-                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer));
+                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer,sunkShipList));
+
+
+                        if (sunkShipList.size() == 5) {
+                            put("gameIsOver", true);
+                        } else {
+                            put("gameIsOver", false);
+                        }
+
                 }}
         ).collect(Collectors.toList());
         return hitList;
     }
-//    private List<Map<String,Object>>getOneHit(List<Salvo> salvos){
-//        List<Salvo> Hits = game.getSalvoes().stream().filter()
-//    }
-
-    public List<Map<String, Object>> getOneHit(List<String> salvoLocations, GamePlayer gamePlayer) {
+//   
+    public List<Map<String, Object>> getOneHit(List<String> salvoLocations, GamePlayer gamePlayer, List<String> sunkShipList) {
         List<Map<String, Object>> hitInfo = new ArrayList<>();
         getOpponent(gamePlayer).getShips().stream().forEach(ship -> {
             for (int i = 0; i < salvoLocations.size(); i++) {
@@ -399,12 +415,17 @@ public class SalvoController {
                     oneHit.put("totalHits",ship.getHit());
                     if(ship.getShipLength()== ship.getHit()){
                         ship.setSunk(true);
+//                        checkTotalSunk();
                         oneHit.put("sunk",ship.getSunk());
-                        ship.setTotalSunk(ship.getTotalSunk()+1);
-                        oneHit.put("totalSunk",ship.getTotalSunk());
+                        ship.setCountSunk(ship.getCountSunk()+1);
+                        oneHit.put("countOneSunk",ship.getCountSunk());
+                        if(ship.getCountSunk()==1){
+                        sunkShipList.add(ship.getType());
+                        }
                     }else{
                         oneHit.put("sunk",ship.getSunk());
-                        oneHit.put("totalSunk",ship.getTotalSunk());
+                        oneHit.put("countOneSunk",ship.getCountSunk());
+//                       totalSunk;
                     }
                     hitInfo.add(oneHit);
                 }
@@ -412,6 +433,29 @@ public class SalvoController {
         });
         return hitInfo;
     }
+
+
+//    private Map<String,Object> countTotalSunk (Ship ship){
+////        Integer sunk = 0;
+//       if(ship.getCountSunk()!=0){
+//            return new LinkedHashMap<String, Object>() {{
+//               put("TotalSunk", ship.getCountSunk()+1);
+//           }};
+//       }else {
+//           return new LinkedHashMap<String, Object>() {{
+//               put("TotalSunk", ship.getCountSunk()-1);
+//           }};
+//       }
+//
+//    }
+//        private Integer countTotalSunk(GamePlayer gamePlayer, Integer sunks) {
+//        Game
+//            return sunks
+//                    .stream()
+//                    .filter(sunk -> sunk.equals(sunk....))
+//                    .count();
+//        }
+
 
     private List<HashMap<String, Object>> getHitData(GamePlayer gamePlayer) {
         List<HashMap<String, Object>> hits = new ArrayList<>();
@@ -426,8 +470,41 @@ public class SalvoController {
         return hits;
     }
 
+    private Integer checkLastTurn(GamePlayer gamePlayer) {
+        List<Integer> turnList = gamePlayer.getSalvoes().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
+        Comparator<Integer> compareTurn = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        };
+        Collections.sort(turnList, compareTurn);
+        return turnList.get(turnList.size() - 1);
+    }
 
+    private Map<String, Integer> getTurns(GamePlayer gamePlayer) {
+        Map<String, Integer> turns = new LinkedHashMap<>();
+        if(gamePlayer.getSalvoes().size() > 0) {
+            turns.put("myLastTurn", checkLastTurn(gamePlayer));
+        } else {
+            turns.put("myLastTurn", null);
+        }
+        if(getOpponent(gamePlayer) != null && getOpponent(gamePlayer).getSalvoes().size() > 0) {
+            turns.put("opponentLastTurn", checkLastTurn(getOpponent(gamePlayer)));
+        } else {
+            turns.put("opponentLastTurn", null);
+        }
+        return turns;
+    }
 
+    private boolean checkSalvoTurn(GamePlayer gamePlayer, Salvo salvoLocations) {
+        List<Integer> myTurnList = gamePlayer.getSalvoes().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
+        if(myTurnList.contains(salvoLocations.getTurn())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
 }

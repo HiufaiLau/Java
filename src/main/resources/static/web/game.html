@@ -35,9 +35,9 @@
                         <button v-on:click="placeShip" type="button" class="btn btn-secondary btn-md">place ships</button>
                         <div class="table-responsive mt-2">
                             <h3>Ships to choose</h3>
-                            <div  class="rounded border border-warning col-8 col-sm-8 col-md-8">
-                            <span >You choose : {{placedShip}}</span><br>
-                            <span>Direction : {{shipOrientation}}</span>
+                            <div class="rounded border border-secondary col-8 col-sm-8 col-md-8">
+                                <span>You choose : {{placedShip}}</span><br>
+                                <span>Direction : {{shipOrientation}}</span>
                             </div>
                             <table class="shipType  table-style">
                                 <tr>
@@ -90,8 +90,8 @@
                             <th scope="col">Turn</th>
                             <th scope="col">Shiptype</th>
                             <th scope="col">Hit Location</th>
-                            <th scope="col">Total Hits</th>
-                            <th scope="col">Total Sunk</th>
+                            <th scope="col">Hits</th>
+                            <th scope="col">Sunk</th>
                         </thead>
                         <tbody v-for="(allHit, index) in localPlayerHit" :key="index">
                             <tr v-for="(oneHit, index) in allHit.hits" :key="index" scope="row">
@@ -99,7 +99,7 @@
                                 <td>{{oneHit.hitShipType}}</td>
                                 <td>{{oneHit.hitLocation}}</td>
                                 <td>{{oneHit.totalHits}}</td>
-                                <td>{{oneHit.totalSunk}}</td>
+                                <td>{{oneHit.countOneSunk}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -108,7 +108,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

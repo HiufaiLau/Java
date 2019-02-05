@@ -16,7 +16,7 @@ public class Ship {
     private String type;
     private Integer hit;
     private Integer shipLength;
-    private Integer totalSunk;
+    private Integer countSunk;
     private Boolean sunk;
 
 
@@ -35,7 +35,7 @@ public class Ship {
         this.locations = locations;
         this.hit=0;
         this.shipLength = locations.size();
-        this.totalSunk = 0;
+        this.countSunk = 0;
         this.sunk=false;
     }
 
@@ -91,12 +91,13 @@ public class Ship {
         this.sunk = sunk;
     }
 
-    public Integer getTotalSunk() {
-        return totalSunk;
+    public Integer getCountSunk() {
+        return countSunk;
     }
 
-    public void setTotalSunk(Integer totalSunk) {
-        this.totalSunk = totalSunk;
+    public void setCountSunk(Integer countSunk) {
+        this.countSunk = countSunk;
     }
+
 }
 

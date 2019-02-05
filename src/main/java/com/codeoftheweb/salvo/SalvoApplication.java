@@ -81,17 +81,19 @@ public class SalvoApplication {
             Ship ship10 = new Ship("submarine", location10);
 
 
-            List<String> salvoLocation1 = Arrays.asList("E6", "C8", "A2");
-            List<String> salvoLocation2 = Arrays.asList("H1", "H2", "H3");
-            List<String> salvoLocation3 = Arrays.asList("A4", "E4", "F7");
+            List<String> salvoLocation1 = Arrays.asList("E9", "F9", "G9","I4","I5");
+            List<String> salvoLocation2 = Arrays.asList("H4", "H5");
+            List<String> salvoLocation3 = Arrays.asList("A4", "E4", "F7","A5","B5");
             List<String> salvoLocation4 = Arrays.asList("I4", "A9", "D3");
-            List<String> salvoLocation5 = Arrays.asList("E2", "F2", "G2");
+            List<String> salvoLocation5 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
+            List<String> salvoLocation6 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
 
             Salvo salvo1 = new Salvo(1, salvoLocation1);
             Salvo salvo2 = new Salvo(1, salvoLocation2);
             Salvo salvo3 = new Salvo(2, salvoLocation3);
             Salvo salvo4 = new Salvo(2, salvoLocation4);
             Salvo salvo5 = new Salvo(3, salvoLocation5);
+            Salvo salvo6 = new Salvo(3, salvoLocation6);
 
             Date creationDate1 = Date.from(date.toInstant().plusSeconds(3600));
             Date creationDate2 = Date.from(date.toInstant().plusSeconds(7200));
@@ -144,6 +146,7 @@ public class SalvoApplication {
             gamePlayer.addSalvo(salvo3);
             gamePlayer2.addSalvo(salvo4);
             gamePlayer.addSalvo(salvo5);
+            gamePlayer.addSalvo(salvo6);
 
             Date finishDate = Date.from(date.toInstant().plusSeconds(1800));
             Date finishDate1 = Date.from(date1.toInstant().plusSeconds(1800));
