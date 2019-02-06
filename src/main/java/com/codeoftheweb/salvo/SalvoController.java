@@ -193,7 +193,6 @@ public class SalvoController {
         }
 
 
-
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
 
@@ -339,7 +338,7 @@ public class SalvoController {
                     }});
                     put("ships", getAllships(gp.getShips()));
                     put("salvos", getAllSalvos(gp.getGame().getGamePlayers()));
-                    put("hits",getHitData(gp));
+                    put("hits", getHitData(gp));
                 }
             };
         } else {
@@ -375,42 +374,41 @@ public class SalvoController {
         List<HashMap<String, Object>> hitList = salvoList.stream().map(salvo ->
                 new LinkedHashMap<String, Object>() {{
                     put("turn", salvo.getTurn());
-                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer,sunkShipList));
+                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
 
-
-                        if (sunkShipList.size() == 5) {
-                            put("gameIsOver", true);
-                        } else {
-                            put("gameIsOver", false);
-                        }
+                    if (sunkShipList.size() == 5) {
+                        put("gameIsOver", true);
+                    } else {
+                        put("gameIsOver", false);
+                    }
 
                 }}
         ).collect(Collectors.toList());
         return hitList;
     }
-//
+
     public List<Map<String, Object>> getOneHit(List<String> salvoLocations, GamePlayer gamePlayer, List<String> sunkShipList) {
         List<Map<String, Object>> hitInfo = new ArrayList<>();
         getOpponent(gamePlayer).getShips().stream().forEach(ship -> {
             for (int i = 0; i < salvoLocations.size(); i++) {
                 if (ship.getLocations().contains(salvoLocations.get(i))) {
-                    LinkedHashMap<String, Object> oneHit= new LinkedHashMap<>();
+                    LinkedHashMap<String, Object> oneHit = new LinkedHashMap<>();
                     oneHit.put("hitShipType", ship.getType());
                     oneHit.put("hitLocation", salvoLocations.get(i));
-                    ship.setHit(ship.getHit()+1);
-                    oneHit.put("totalHits",ship.getHit());
-                    if(ship.getShipLength()== ship.getHit()){
+                    ship.setHit(ship.getHit() + 1);
+                    oneHit.put("totalHits", ship.getHit());
+                    if (ship.getLocations().size() == ship.getHit()) {
                         ship.setSunk(true);
 //                        checkTotalSunk();
-                        oneHit.put("sunk",ship.getSunk());
-                        ship.setCountSunk(ship.getCountSunk()+1);
-                        oneHit.put("countOneSunk",ship.getCountSunk());
-                        if(ship.getCountSunk()==1){
-                        sunkShipList.add(ship.getType());
+                        oneHit.put("sunk", ship.getSunk());
+                        ship.setCountSunk(ship.getCountSunk() + 1);
+                        oneHit.put("countOneSunk", ship.getCountSunk());
+                        if (ship.getCountSunk() == 1) {
+                            sunkShipList.add(ship.getType());
                         }
-                    }else{
-                        oneHit.put("sunk",ship.getSunk());
-                        oneHit.put("countOneSunk",ship.getCountSunk());
+                    } else {
+                        oneHit.put("sunk", ship.getSunk());
+                        oneHit.put("countOneSunk", ship.getCountSunk());
 //                       totalSunk;
                     }
                     hitInfo.add(oneHit);
@@ -420,35 +418,12 @@ public class SalvoController {
         return hitInfo;
     }
 
-
-//    private Map<String,Object> countTotalSunk (Ship ship){
-////        Integer sunk = 0;
-//       if(ship.getCountSunk()!=0){
-//            return new LinkedHashMap<String, Object>() {{
-//               put("TotalSunk", ship.getCountSunk()+1);
-//           }};
-//       }else {
-//           return new LinkedHashMap<String, Object>() {{
-//               put("TotalSunk", ship.getCountSunk()-1);
-//           }};
-//       }
-//
-//    }
-//        private Integer countTotalSunk(GamePlayer gamePlayer, Integer sunks) {
-//        Game
-//            return sunks
-//                    .stream()
-//                    .filter(sunk -> sunk.equals(sunk....))
-//                    .count();
-//        }
-
-
     private List<HashMap<String, Object>> getHitData(GamePlayer gamePlayer) {
         List<HashMap<String, Object>> hits = new ArrayList<>();
         HashMap<String, Object> localPlayer = new LinkedHashMap<>();
         localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
         localPlayer.put("hit", getHitResults(gamePlayer));
-        hits.add(0, localPlayer );
+        hits.add(0, localPlayer);
         HashMap<String, Object> opponentPlayer = new LinkedHashMap<>();
         opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
         opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
@@ -456,32 +431,6 @@ public class SalvoController {
         return hits;
     }
 
-//    private Integer checkLastTurn(GamePlayer gamePlayer) {
-//            List<Integer> turnList = gamePlayer.getSalvoes().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
-//            Comparator<Integer> compareTurn = new Comparator<Integer>() {
-//                @Override
-//                public int compare(Integer o1, Integer o2) {
-//                    return o1.compareTo(o2);
-//                }
-//            };
-//            Collections.sort(turnList, compareTurn);
-//            return turnList.get(turnList.size() - 1);
-//        }
-//
-//        private Map<String, Integer> getTurns(GamePlayer gamePlayer) {
-//            Map<String, Integer> turns = new LinkedHashMap<>();
-//            if (gamePlayer.getSalvoes().size() > 0) {
-//                turns.put("myLastTurn", checkLastTurn(gamePlayer));
-//            } else {
-//                turns.put("myLastTurn", null);
-//            }
-//            if (getOpponent(gamePlayer) != null && getOpponent(gamePlayer).getSalvoes().size() > 0) {
-//                turns.put("opponentLastTurn", checkLastTurn(getOpponent(gamePlayer)));
-//            } else {
-//                turns.put("opponentLastTurn", null);
-//            }
-//            return turns;
-//    }
 }
 
 

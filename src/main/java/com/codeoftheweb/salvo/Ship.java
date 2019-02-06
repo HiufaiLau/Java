@@ -14,29 +14,30 @@ public class Ship {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
     private String type;
-    private Integer hit;
-    private Integer shipLength;
-    private Integer countSunk;
-    private Boolean sunk;
+    private Integer hit = 0;
+    //    private Integer shipLength;
+    private Integer countSunk = 0;
+    private Boolean sunk = false;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="gamePlayer_id")
+    @JoinColumn(name = "gamePlayer_id")
     private GamePlayer gamePlayer;
 
 
     @ElementCollection
     private List<String> locations = new ArrayList<>();
 
-    public Ship() {}
+    public Ship() {
+    }
 
     public Ship(String type, List<String> locations) {
         this.type = type;
         this.locations = locations;
-        this.hit=0;
-        this.shipLength = locations.size();
+//        this.hit=0;
+//        this.shipLength = locations.size();
         this.countSunk = 0;
-        this.sunk=false;
+        this.sunk = false;
     }
 
     public Long getShipId() {
@@ -48,15 +49,22 @@ public class Ship {
     }
 
 
-    public String getType() { return type; }
+    public String getType() {
+        return type;
+    }
 
-    public void setType(String type) { this.type = type; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
 
+    public List<String> getLocations() {
+        return locations;
+    }
 
-    public List<String> getLocations() { return locations; }
-
-    public void setLocations(List<String> locations) { this.locations = locations; }
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
+    }
 
     @JsonIgnore
     public GamePlayer getGamePlayer() {
@@ -75,13 +83,13 @@ public class Ship {
         this.hit = hit;
     }
 
-    public Integer getShipLength() {
-        return shipLength;
-    }
-
-    public void setShipLength(Integer shipLength) {
-        this.shipLength = shipLength;
-    }
+//    public Integer getShipLength() {
+//        return shipLength;
+//    }
+//
+//    public void setShipLength(Integer shipLength) {
+//        this.shipLength = shipLength;
+//    }
 
     public Boolean getSunk() {
         return sunk;
