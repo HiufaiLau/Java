@@ -153,9 +153,12 @@ public class SalvoController {
         if (gamePlayer.getPlayer().getPlayerId() != player.getPlayerId()) {
             return new ResponseEntity<>(responseEntity("error", "You are not in this game."), HttpStatus.UNAUTHORIZED);
         }
-        if (gamePlayer.getShips().size() > 0) {
+        if (gamePlayer.getShips().size() == 5) {
             return new ResponseEntity<>(responseEntity("error", "Ships are already placed."), HttpStatus.FORBIDDEN);
         }
+//        if (gamePlayer.getShips().size()==0){
+//            return new ResponseEntity<>(responseEntity("OK","Please place the ships"), HttpStatus.OK);
+//        }
 
 //        Map<String,Object>placeShips = new HashMap<>();
         shipArray.forEach(ship -> {
@@ -172,10 +175,12 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> getSalvoLocation(Set<GamePlayer> gamePlayers,@PathVariable Long gamePlayerId, Authentication auth, @RequestBody Salvo salvo) {
+    public ResponseEntity<Map<String, Object>> getSalvoLocation(@PathVariable Long gamePlayerId, Authentication auth, @RequestBody Salvo salvo) {
+//        Set<GamePlayer> gamePlayers
+
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId);
         Player player = playerRepository.findByUserName(auth.getName());
-        GamePlayer opponent = getOpponent(gamePlayer);
+//        GamePlayer opponent = getOpponent(gamePlayer);
 //
         if (auth.getName().isEmpty()) {
             return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
@@ -192,10 +197,13 @@ public class SalvoController {
         if (ifSalvoIsPlaced(gamePlayer, salvo)) {
             return new ResponseEntity<>(responseEntity("error", "Sorry, could not place salvos."), HttpStatus.FORBIDDEN);
         }
-        if (opponent.getShips().size() != 5){
-            return new 
-        }
-
+//        if (opponent.getShips().size() != 5 && opponent != null){
+//            return new ResponseEntity<>(responseEntity("error", "Please wait for the opponent to place ships!"),HttpStatus.FORBIDDEN);
+//        }
+//        if (opponent.getShips().size() == 5 && opponent != null && salvo.getTurn()!= salvo.getTurn()){
+//            return new ResponseEntity<>(responseEntity("error", "Please wait for the opponent to place salvos"),HttpStatus.FORBIDDEN);
+//        }
+//        if  (salvo.getSalvoLocations()==game)
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
 
