@@ -296,16 +296,16 @@ var eachGameData = new Vue({
             for (let c = 0; c < this.columns.length; c++) {
                 col += `<tr class="grids ${tableName}">
                             <td>${this.columns[c]}</td>   
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}1" class="${this.columns[c]}1"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}2" class="${this.columns[c]}2"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}3" class="${this.columns[c]}3"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}4" class="${this.columns[c]}4"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}5" class="${this.columns[c]}5"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}6" class="${this.columns[c]}6"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}7" class="${this.columns[c]}7"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}8" class="${this.columns[c]}8"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}9" class="${this.columns[c]}9"></td>
-                            <td @mouseover="defineShips" @mouseout="removeHover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}10" class="${this.columns[c]}10"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}1" class="${this.columns[c]}1"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}2" class="${this.columns[c]}2"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}3" class="${this.columns[c]}3"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}4" class="${this.columns[c]}4"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}5" class="${this.columns[c]}5"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}6" class="${this.columns[c]}6"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}7" class="${this.columns[c]}7"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}8" class="${this.columns[c]}8"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}9" class="${this.columns[c]}9"></td>
+                            <td @mouseover="define${functionName}" @mouseout="remove${functionName}Hover" @click="place${functionName}OnGrid" data-className="${this.columns[c]}10" class="${this.columns[c]}10"></td>
                         </tr>`
             }
             table.appendChild(tbody).innerHTML = col;
@@ -327,8 +327,8 @@ var eachGameData = new Vue({
                     .classList.add('ships')
                 //                console.log(loc)
             })
-            this.turn = this.salvos.length + 1
-//            this.disableAllbuttons()
+//            this.turn = this.salvos.length + 1
+                        this.disableAllbuttons()
 
         },
 
@@ -337,7 +337,7 @@ var eachGameData = new Vue({
             this.placedShip = event.currentTarget.getAttribute("data-shiptype");
         },
 
-        defineShips(event) {
+        defineShip(event) {
             let hoverLocation = event.currentTarget.getAttribute("data-className");
             //            let getShipType = event.currentTarget.getAttribute("data-shiptype");  
             //            let ships = {}
@@ -454,7 +454,6 @@ var eachGameData = new Vue({
                     }
                 }
             }
-            this.hoverSalvoOnGrid(location)
         },
 
         isAbleToPlace() {
@@ -477,7 +476,7 @@ var eachGameData = new Vue({
 
         },
 
-        removeHover(location) {
+        removeShipHover(location) {
             if (this.placedShip != null && this.shipOrientation != null) {
                 this.placingShipLocation
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("ship_hover"))
@@ -489,7 +488,7 @@ var eachGameData = new Vue({
                     .map(oneCell => document.querySelector(`.${oneCell}`).classList.remove("error_hover"))
                 this.errorLocation = []
             }
-            this.removeSalvoHover(location)
+            //            this.removeSalvoHover(location)
         },
 
         placeShipOnGrid(location) {
@@ -576,18 +575,18 @@ var eachGameData = new Vue({
 
 
         },
-//
-//        disableAllbuttons() {
-//            //after the place ship button is pressed, no ships could be chosen.
-////            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
-//            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
-//                document.getElementById("carrier").disabled = true;
-//                document.getElementById("battleship").disabled = true;
-//                document.getElementById("destroyer").disabled = true;
-//                document.getElementById("patrol").disabled = true;
-//                document.getElementById("submarine").disabled = true;
-//            }
-//        },
+        
+                disableAllbuttons() {
+                    //after the place ship button is pressed, no ships could be chosen.
+        //            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+                    if (this.ships.length ==5 && this.allShipLocation.length == 0) {
+                        document.getElementById("carrier").disabled = true;
+                        document.getElementById("battleship").disabled = true;
+                        document.getElementById("destroyer").disabled = true;
+                        document.getElementById("patrol").disabled = true;
+                        document.getElementById("submarine").disabled = true;
+                    }
+                },
 
 
         reLocateShip(location) {
@@ -665,32 +664,35 @@ var eachGameData = new Vue({
             })
         },
 
-        hoverSalvoOnGrid(location) {
-            //            let hoverLocation = location.currentTarget.getAttribute("data-className");
+        defineSalvo(location) {
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
             this.placingSalvoLocation = location
             console.log(location)
             if (this.isAbletoPlaceSalvo(location) == false) {
-                document.getElementById("salvoTable").querySelector(`.${this.placingSalvoLocation}`).classList.add("salvo3")
+                document.getElementById("salvoTable").querySelector(`.${hoverLocation}`).classList.add("salvo3")
             } else {
-                document.getElementById("salvoTable").querySelector(`.${this.placingSalvoLocation}`).classList.add("error_hover")
+                document.getElementById("salvoTable").querySelector(`.${hoverLocation}`).classList.add("error_hover")
             }
 
         },
 
         removeSalvoHover(location) {
-            document.getElementById("salvoTable").querySelector(`.${this.placingSalvoLocation}`).classList.remove("salvo3")
-            document.getElementById("salvoTable").querySelector(`.${this.placingSalvoLocation}`).classList.remove("error_hover")
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
+            document.getElementById("salvoTable").querySelector(`.${hoverLocation}`).classList.remove("salvo3")
+            document.getElementById("salvoTable").querySelector(`.${hoverLocation}`).classList.remove("error_hover")
         },
 
         placeSalvoOnGrid(location) {
+            this.changeTurn();
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
             this.sendAllsalvos.turn = this.turn
-            this.sendAllsalvos.locations = this.placingSalvoLocation
+            this.sendAllsalvos.locations = hoverLocation
             console.log(this.salvos)
             console.log(this.turn)
-            console.log(this.placingSalvoLocation)
+            console.log(hoverLocation)
             let noOverlap = true;
-            this.salvos.forEach(salvo => {
-                if (salvo.locations.includes(this.placingSalvoLocation)) {
+            this.allSalvos.forEach(salvo => {
+                if (salvo.includes(hoverLocation)) {
                     alert("Warning!! could not place here.")
                     noOverlap = false
                 }
@@ -702,8 +704,12 @@ var eachGameData = new Vue({
                 //                        console.log( document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`))
                 document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
                 document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
-                console.log(this.placingSalvoLocation)
-                this.sendAllsalvos.push(this.placingSalvoLocation)
+                console.log(hoverLocation)
+                
+                if(!this.isAbletoPlaceSalvo(location)) {
+                     this.sendAllsalvos.push(hoverLocation)
+                }
+               
 
             } else if (noOverlap) {
 
@@ -711,15 +717,31 @@ var eachGameData = new Vue({
             }
             //            }
         },
+        
+        changeTurn(){
+//                        this.turn = this.salvos.length + 1;
+        let currentPlayerTotalTurn = this.salvos.filter(salvo=>salvo.gamePlayerId==this.gamePlayerId);
+        this.turn = currentPlayerTotalTurn .length + 1;
+        },
 
-        isAbletoPlaceSalvo() {
-            // let hoverLocation = location.currentTarget.getAttribute("data-className");
+        isAbletoPlaceSalvo(location) {
+             let hoverLocation = location.currentTarget.getAttribute("data-className");
+            this.allSalvos = []
+            for (var i = 0; i < this.salvos.length; i++) {
+                if (this.salvos[i].gamePlayerId == this.gamePlayerId) {
+                    for (var j=0 ; j < this.salvos[i].locations.length; j++) {
+                        this.allSalvos.push(this.salvos[i].locations[j])
+                    }
+                    //                    this.allSalvos.filter()
+                }
+            }
 
-            this.allSalvos = [].concat.apply([], this.salvos.map(oneSalvo => oneSalvo.locations))
+            //            this.allSalvos = [].concat.apply([], this.salvos.map(oneSalvo => oneSalvo.locations))
             if (this.allSalvos.length == 0) {
                 return false
             } else {
-                if (this.allSalvos.includes(this.placingSalvoLocation)) {
+                //nomore placingSalvoLocation 
+                if (this.allSalvos.includes(hoverLocation) || this.sendAllsalvos.includes(hoverLocation) ) {
                     return true
                 }
                 return false
