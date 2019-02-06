@@ -172,9 +172,10 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> getSalvoLocation(@PathVariable Long gamePlayerId, Authentication auth, @RequestBody Salvo salvo) {
+    public ResponseEntity<Map<String, Object>> getSalvoLocation(Set<GamePlayer> gamePlayers,@PathVariable Long gamePlayerId, Authentication auth, @RequestBody Salvo salvo) {
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId);
         Player player = playerRepository.findByUserName(auth.getName());
+        GamePlayer opponent = getOpponent(gamePlayer);
 //
         if (auth.getName().isEmpty()) {
             return new ResponseEntity<>(responseEntity("loginStatus", "please login"), HttpStatus.UNAUTHORIZED);
@@ -191,7 +192,9 @@ public class SalvoController {
         if (ifSalvoIsPlaced(gamePlayer, salvo)) {
             return new ResponseEntity<>(responseEntity("error", "Sorry, could not place salvos."), HttpStatus.FORBIDDEN);
         }
-
+        if (opponent.getShips().size() != 5){
+            return new 
+        }
 
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
@@ -399,7 +402,6 @@ public class SalvoController {
                     oneHit.put("totalHits", ship.getHit());
                     if (ship.getLocations().size() == ship.getHit()) {
                         ship.setSunk(true);
-//                        checkTotalSunk();
                         oneHit.put("sunk", ship.getSunk());
                         ship.setCountSunk(ship.getCountSunk() + 1);
                         oneHit.put("countOneSunk", ship.getCountSunk());
