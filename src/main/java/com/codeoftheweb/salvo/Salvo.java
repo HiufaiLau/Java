@@ -28,11 +28,11 @@ public class Salvo {
         this.salvoLocations = salvoLocations;
     }
 
-    public long getSalvoId() {
+    public long getId() {
         return id;
     }
 
-    public void setSalvoId(long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

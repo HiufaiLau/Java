@@ -238,6 +238,10 @@ var eachGameData = new Vue({
         placeSalvo() {
             if (this.sendAllsalvos.length == 5) {
 
+                alert(JSON.stringify({
+                            turn: this.turn,
+                            salvoLocations: this.sendAllsalvos
+                        }))
                 fetch("/api/games/players/" + this.gamePlayerId + "/salvos", {
                         method: 'POST',
                         credentials: 'include',
@@ -262,7 +266,7 @@ var eachGameData = new Vue({
 
                     }).then(data => {
 
-                        window.location.reload();
+//                        window.location.reload();
                         console.log(data)
 
                     })
