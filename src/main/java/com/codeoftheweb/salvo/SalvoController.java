@@ -29,7 +29,7 @@ public class SalvoController {
     @Autowired
     private ScoreRepository scoreRepository;
 
-
+    private Boolean methodCall = false;
     @RequestMapping(path = "/players", method = RequestMethod.POST)
 //    @OrderBy("Id asc")
     public ResponseEntity<Map<String, Object>> createPlayer(String email, String password) {
@@ -199,6 +199,14 @@ public class SalvoController {
 
         if (opponent.getSalvoes().size() < gamePlayer.getSalvoes().size()) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Sorry, please wait for the opponent to place salvos"), HttpStatus.FORBIDDEN);
+        }
+//        System.out.println("before " + getHitResults(gamePlayer));
+//        if(getHitResults(gamePlayer).size()>0 && getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true)){
+//            System.out.println("after " + getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver"));
+//            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
+//        }
+        if (methodCall==true){
+            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
         }
 
 
@@ -424,21 +432,35 @@ public class SalvoController {
         Collections.sort(salvoList, compareSalvo);
 
         List<String> sunkShipList = new ArrayList<>();
-        List<HashMap<String, Object>> hitList = salvoList.stream().map(salvo ->
-                new LinkedHashMap<String, Object>() {{
-                    put("turn", salvo.getTurn());
-                    put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
+        List<HashMap<String, Object>> hitList = new ArrayList<>();
 
+        if(!salvoList.isEmpty()){
+            salvoList.forEach(salvo -> {
+                HashMap<String, Object> hitMap = new LinkedHashMap<>();
+                hitMap.put("turn", salvo.getTurn());
+                hitMap.put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
+//                    put("sunkShips",sunkShipList);
 
-                    if (sunkShipList.size() == 5) {
-                        put("gameIsOver", true);
-                    } else {
-                        put("gameIsOver", false);
-                    }
+                if (sunkShipList.size() == 5) {
+                    hitMap.put("gameIsOver", GameOver());
+                } else {
+                    hitMap.put("gameIsOver", GameIsNotOver());
+                }
 
-                }}
-        ).collect(Collectors.toList());
+                hitList.add(hitMap);
+
+            });
+        }
         return hitList;
+    }
+
+    private Boolean GameOver (){
+        methodCall = true;
+        return true;
+    }
+    private Boolean GameIsNotOver (){
+        methodCall = false;
+        return false;
     }
 
     //
@@ -474,9 +496,6 @@ public class SalvoController {
         return hitInfo;
     }
 
-    private List<String> sunkShips (List<String> sunkShipList,GamePlayer gamePlayer){
-
-    }
 
     private List<HashMap<String, Object>> getHitData(GamePlayer gamePlayer) {
         List<HashMap<String, Object>> hits = new ArrayList<>();
