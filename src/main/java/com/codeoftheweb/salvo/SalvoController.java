@@ -515,7 +515,8 @@ public class SalvoController {
         if (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
             System.out.println(getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver"));
             if ((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true &&
-                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true) {
+                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true ) {
+
                 System.out.println("game is tie");
                 return "tie";
             } else if((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true ||
@@ -536,7 +537,7 @@ public class SalvoController {
         if (getOpponent(gamePlayer) != null) {
             Score score = new Score();
             if (checkIfGameIsOver(gamePlayer) == "tie"&& checkIfGameIsOver(getOpponent(gamePlayer)) =="tie") {
-                if (checkIfScoreAdded(gamePlayer)) {
+                if (checkIfScoreAdded(gamePlayer)&&checkIfScoreAdded(getOpponent(gamePlayer))) {
                     score.setScore(0.5);
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
