@@ -201,6 +201,7 @@ public class SalvoController {
         if (opponent.getSalvoes().size() < gamePlayer.getSalvoes().size()) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Sorry, please wait for the opponent to place salvos"), HttpStatus.FORBIDDEN);
         }
+
 //        System.out.println("before " + getHitResults(gamePlayer));
 //        if(getHitResults(gamePlayer).size()>0 && getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true)){
 //            System.out.println("after " + getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver"));
@@ -510,35 +511,56 @@ public class SalvoController {
         return turns;
     }
 
-    private boolean checkIfGameIsOver(GamePlayer gamePlayer) {
+    private Object checkIfGameIsOver(GamePlayer gamePlayer) {
         if (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
-            if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver").equals(true)) {
+            System.out.println(getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver"));
+            if ((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true &&
+                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true) {
+                System.out.println("game is tie");
+                return "tie";
+            } else if((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true ||
+                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true){
+                System.out.println("game is over");
                 return true;
-            } else {
+            }else{
+                System.out.println("game is not over");
                 return false;
             }
         } else {
+            System.out.println("i am not checking if the game is over yet");
             return false;
         }
     }
 
     private String getWinner(GamePlayer gamePlayer) {
         if (getOpponent(gamePlayer) != null) {
-
-            if (checkIfGameIsOver(gamePlayer) && checkIfGameIsOver(getOpponent(gamePlayer))) {
-                Score score = new Score(new Date(), 0.5);
-                gamePlayer.getPlayer().addScore(score);
-                scoreRepository.save(score);
-                return "tied";
-            } else if (checkIfGameIsOver(gamePlayer)) {
-                Score score1 = new Score(new Date(), 1.0);
-                gamePlayer.getPlayer().addScore(score1);
-                scoreRepository.save(score1);
+            Score score = new Score();
+            if (checkIfGameIsOver(gamePlayer) == "tie"&& checkIfGameIsOver(getOpponent(gamePlayer)) =="tie") {
+                if (checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(0.5);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                return "tie";
+            } else if ((boolean) checkIfGameIsOver(gamePlayer)) {
+                if (checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(1.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
                 return gamePlayer.getPlayer().getEmail();
-            } else if (checkIfGameIsOver(getOpponent(gamePlayer))) {
-                Score score2 = new Score(new Date(), 0.0);
-                gamePlayer.getPlayer().addScore(score2);
-                scoreRepository.save(score2);
+            } else if ((boolean) checkIfGameIsOver(getOpponent(gamePlayer))) {
+                if (checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(0.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
                 return getOpponent(gamePlayer).getPlayer().getEmail();
             } else {
                 return null;
@@ -547,6 +569,20 @@ public class SalvoController {
             return null;
         }
     }
+
+    private boolean checkIfScoreAdded(GamePlayer gamePlayer) {
+        if (gamePlayer.getGame().getScores().size() == 0) {
+            return true;
+        } else {
+            List<Score> scoreList = gamePlayer.getPlayer().getScores().stream().filter(score -> score.getGame() == gamePlayer.getGame()).collect(Collectors.toList());
+            if (scoreList.size() > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
 
     private Integer checkLastTurn(GamePlayer gamePlayer) {
         if (gamePlayer.getSalvoes().size() > 0) {
@@ -562,5 +598,7 @@ public class SalvoController {
         } else {
             return null;
         }
+
     }
+
 }
