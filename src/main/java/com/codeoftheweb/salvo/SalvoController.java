@@ -207,9 +207,9 @@ public class SalvoController {
 //            System.out.println("after " + getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver"));
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
-        if (methodCall == true && getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() == 5
-                && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
-            return new ResponseEntity<>(responseEntity("gameStatus", "Gameover !!!"), HttpStatus.FORBIDDEN);
+//
+        if (methodCall == true && getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() ==5  && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+            return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
         }
 
 
@@ -335,23 +335,23 @@ public class SalvoController {
 //                .sum();
 //    }
 
-    private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
-
-        return new LinkedHashMap<String, Object>() {{
-            put("id", p.getPlayerId());
-            put("player", p.getEmail());
-//            put("finsihed date",p.getScores());
-            put("score", p.getScores());
-        }};
-    }
-
-    public Date getFinishDate(Game game) {
-        return game.getScores()
-                .stream()
-                .findFirst()
-                .map(score -> score.getFinishDate())
-                .orElse(null);
-    }
+//    private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
+//
+//        return new LinkedHashMap<String, Object>() {{
+//            put("id", p.getPlayerId());
+//            put("player", p.getEmail());
+////            put("finsihed date",p.getScores());
+//            put("score", p.getScores());
+//        }};
+//    }
+//
+//    public Date getFinishDate(Game game) {
+//        return game.getScores()
+//                .stream()
+//                .findFirst()
+//                .map(score -> score.getFinishDate())
+//                .orElse(null);
+//    }
 
     @RequestMapping("/game_view/{gamePlayerId}")
     private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
@@ -417,9 +417,9 @@ public class SalvoController {
 //                    put("sunkShips",sunkShipList);
 
                 if (sunkShipList.size() == 5) {
-                    hitMap.put("yourGameIsOver", gameOver());
+                    hitMap.put("gameIsOver", gameOver());
                 } else {
-                    hitMap.put("yourGameIsOver", gameIsNotOver());
+                    hitMap.put("gameIsOver", gameIsNotOver());
                 }
 
                 hitList.add(hitMap);
@@ -514,7 +514,7 @@ public class SalvoController {
 
     private Object checkIfGameIsOver(GamePlayer gamePlayer) {
         if (gameOver() && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
-            if (getHitResults(getOpponent(gamePlayer)).size()==5&& getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
+            if (getHitResults(getOpponent(gamePlayer)).size()==5 && getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
                 return "tie";
             }
             if ( getHitResults(getOpponent(gamePlayer)).size()==5 || getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
