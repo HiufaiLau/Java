@@ -454,8 +454,8 @@ public class SalvoController {
                     if (ship.getLocations().size() == ship.getHit()) {
                         ship.setSunk(true);
                         oneHit.put("sunk", ship.getSunk());
-//                        ship.setCountSunk(ship.getCountSunk() + 1);
-//                        oneHit.put("countOneSunk", ship.getCountSunk());
+                        ship.setCountSunk(ship.getCountSunk() + 1);
+                        oneHit.put("countOneSunk", ship.getCountSunk());
                         if (ship.getSunk()==true) {
                             sunkShipList.add(ship.getType());
                             oneHit.put("sunkShips", sunkShipList);
