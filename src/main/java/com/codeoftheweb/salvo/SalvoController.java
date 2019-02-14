@@ -417,9 +417,9 @@ public class SalvoController {
 //                    put("sunkShips",sunkShipList);
 
                 if (sunkShipList.size() == 5) {
-                    hitMap.put("myGameIsOver", gameOver());
+                    hitMap.put("gameIsOver", gameOver());
                 } else {
-                    hitMap.put("myGameIsOver", gameIsNotOver());
+                    hitMap.put("gameIsOver", gameIsNotOver());
                 }
 
                 hitList.add(hitMap);
@@ -453,10 +453,11 @@ public class SalvoController {
                     oneHit.put("totalHits", ship.getHit());
                     if (ship.getLocations().size() == ship.getHit()) {
                         ship.setSunk(true);
+//                        checkTotalSunk();
                         oneHit.put("sunk", ship.getSunk());
                         ship.setCountSunk(ship.getCountSunk() + 1);
                         oneHit.put("countOneSunk", ship.getCountSunk());
-                        if (ship.getSunk()==true) {
+                        if (ship.getCountSunk() == 1) {
                             sunkShipList.add(ship.getType());
                             oneHit.put("sunkShips", sunkShipList);
                         }
@@ -531,7 +532,7 @@ public class SalvoController {
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-        if (getOpponent(gamePlayer) != null && gameOver()&& checkLastTurn(gamePlayer)==checkLastTurn(getOpponent(gamePlayer))) {
+        if (getOpponent(gamePlayer) != null && gameOver()) {
             Score score = new Score();
             if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
                 if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
