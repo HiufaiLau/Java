@@ -374,7 +374,9 @@ public class SalvoController {
     }
 
     private Boolean gameOver() {
+
         gameOverCall = true;
+        
         return true;
     }
 
@@ -480,7 +482,7 @@ public class SalvoController {
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-        if (gameOverCall==true) {
+        if (getOpponent(gamePlayer)!=null) {
             Score score = new Score();
             if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
                 if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
