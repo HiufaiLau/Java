@@ -208,7 +208,7 @@ public class SalvoController {
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
 //
-        if (gameOverCall == true && checkLastTurn(gamePlayer) !=null &&  checkLastTurn(getOpponent(gamePlayer))!=null && checkLastTurn(gamePlayer)==checkLastTurn(getOpponent(gamePlayer))) {
+        if (gameOverCall == true && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
         }
 
@@ -423,13 +423,13 @@ public class SalvoController {
         List<HashMap<String, Object>> hits = new ArrayList<>();
 
         HashMap<String, Object> localPlayer = new LinkedHashMap<>();
-            localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
-            localPlayer.put("hit", getHitResults(gamePlayer));
+        localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
+        localPlayer.put("hit", getHitResults(gamePlayer));
         hits.add(0, localPlayer);
 
         HashMap<String, Object> opponentPlayer = new LinkedHashMap<>();
-            opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
-            opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
+        opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
+        opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
         hits.add(1, opponentPlayer);
 
         return hits;
@@ -461,11 +461,11 @@ public class SalvoController {
     }
 
     private Object checkIfGameIsOver(GamePlayer gamePlayer) {
-        if (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
-            if (gameOverCall==true && getHitResults(getOpponent(gamePlayer)).size()==5 && getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
+        if (checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+            if (getHitResults(getOpponent(gamePlayer)).size() == 5 && getHitResults(gamePlayer).size() == 5) {
                 return "tie";
             }
-            if (gameOverCall==true && (getHitResults(getOpponent(gamePlayer)).size()==5 || getHitResults(gamePlayer).size()==5) && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+            if (getHitResults(getOpponent(gamePlayer)).size() == 5 || getHitResults(gamePlayer).size() == 5) {
 
                 System.out.println("game is over");
                 return true;
@@ -480,7 +480,7 @@ public class SalvoController {
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-        if (getOpponent(gamePlayer) != null && gameOver()) {
+        if (gameOverCall==true) {
             Score score = new Score();
             if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
                 if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
