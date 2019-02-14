@@ -149,18 +149,19 @@ var eachGameData = new Vue({
                 })
                 .then(response => response.json())
                 .then(data => {
+                console.log(data)
                     this.gameViewData = data;
                     this.ships = this.gameViewData.ships
                     this.salvos = this.gameViewData.salvos
-                    console.log(this.salvos)
-                    console.log(this.ships)
+//                    console.log(this.salvos)
+//                    console.log(this.ships)
 
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
                     this.showPlayers()
                     this.hitData = this.gameViewData.hits
-                    console.log(this.hitData)
+//                    console.log(this.hitData)
                     this.hitData.forEach(gp => {
                         if (gp.gamePlayerId == this.gamePlayerId) {
                             this.opponentPlayerHit = gp.hit
@@ -236,7 +237,7 @@ var eachGameData = new Vue({
         },
 
         placeSalvo() {
-            if (this.sendAllsalvos.length == 5) {
+            if (this.sendAllsalvos.length == 5 && this.turn) {
 
 //                alert(JSON.stringify({
 //                            turn: this.turn,
