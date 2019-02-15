@@ -57,16 +57,21 @@ public class SalvoApplication {
             Game game4 = new Game(date3);
 
 
-            List<String> location1 = Arrays.asList("E3", "E4", "E5", "E6", "E7");
-            List<String> location2 = Arrays.asList("A9", "B9", "C9", "D9");
+            List<String> location1 = Arrays.asList("J1", "J2", "J3", "J4", "J5");
+            List<String> location2 = Arrays.asList("I1", "I2", "I3", "I4");
             List<String> location3 = Arrays.asList("H1", "H2", "H3");
-            List<String> location4 = Arrays.asList("I6", "I7", "I8");
-            List<String> location5 = Arrays.asList("H4", "H5");
-            List<String> location6 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
-            List<String> location7 = Arrays.asList("B6", "B7", "B8", "B9");
-            List<String> location8 = Arrays.asList("D5", "D6", "D7");
-            List<String> location9 = Arrays.asList("G5", "G6");
-            List<String> location10 = Arrays.asList("E9", "F9", "G9");
+            List<String> location4 = Arrays.asList("G1", "G2", "G3");
+            List<String> location5 = Arrays.asList("F1", "F2");
+            List<String> location6 = Arrays.asList("J1", "J2", "J3", "J4", "J5");
+            List<String> location7 = Arrays.asList("I1", "I2", "I3", "I4");
+            List<String> location8 = Arrays.asList("H1", "H2", "H3");
+            List<String> location9 = Arrays.asList("G1", "G2", "G3");
+            List<String> location10 = Arrays.asList("F1", "F2");
+//            List<String> location6 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
+//            List<String> location7 = Arrays.asList("B6", "B7", "B8", "B9");
+//            List<String> location8 = Arrays.asList("D5", "D6", "D7");
+//            List<String> location9 = Arrays.asList("G5", "G6");
+//            List<String> location10 = Arrays.asList("E9", "F9", "G9");
 
 
             Ship ship1 = new Ship("carrier", location1);
@@ -77,23 +82,31 @@ public class SalvoApplication {
             Ship ship6 = new Ship("carrier", location6);
             Ship ship7 = new Ship("battleship", location7);
             Ship ship8 = new Ship("destroyer", location8);
-            Ship ship9 = new Ship("patrol", location9);
-            Ship ship10 = new Ship("submarine", location10);
+            Ship ship9 = new Ship("submarine", location9);
+            Ship ship10 = new Ship("patrol", location10);
 
 
-            List<String> salvoLocation1 = Arrays.asList("E9", "F9", "G9","I4","I5");
-            List<String> salvoLocation2 = Arrays.asList("H4", "H5");
-            List<String> salvoLocation3 = Arrays.asList("A4", "E4", "F7","A5","B5");
-            List<String> salvoLocation4 = Arrays.asList("I4", "A9", "D3");
-            List<String> salvoLocation5 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
-            List<String> salvoLocation6 = Arrays.asList("I2", "H2", "G2", "F2", "E2");
+            List<String> salvoLocation1 = Arrays.asList("J1", "J2", "J3", "J4", "J5");
+            List<String> salvoLocation2 = Arrays.asList("I1", "I2", "I3", "I4","I5");
+            List<String> salvoLocation3 = Arrays.asList("H1", "H2", "H3","H4","H5");
+            List<String> salvoLocation4 = Arrays.asList("G1", "G2", "G3","G4","G5");
+//            List<String> salvoLocation5 = Arrays.asList("F1");
+            List<String> salvoLocation6 = Arrays.asList("J1", "J2", "J3", "J4", "J5");
+            List<String> salvoLocation7 = Arrays.asList("I1", "I2", "I3", "I4","I5");
+            List<String> salvoLocation8 = Arrays.asList("H1", "H2", "H3","H4","H5");
+            List<String> salvoLocation9 = Arrays.asList("G1", "G2", "G3","G4","G5");
+//            List<String> salvoLocation10 = Arrays.asList("F1");
 
             Salvo salvo1 = new Salvo(1, salvoLocation1);
-            Salvo salvo2 = new Salvo(1, salvoLocation2);
-            Salvo salvo3 = new Salvo(2, salvoLocation3);
-            Salvo salvo4 = new Salvo(2, salvoLocation4);
-            Salvo salvo5 = new Salvo(3, salvoLocation5);
-            Salvo salvo6 = new Salvo(3, salvoLocation6);
+            Salvo salvo2 = new Salvo(2, salvoLocation2);
+            Salvo salvo3 = new Salvo(3, salvoLocation3);
+            Salvo salvo4 = new Salvo(4, salvoLocation4);
+//            Salvo salvo5 = new Salvo(5, salvoLocation5);
+            Salvo salvo6 = new Salvo(1, salvoLocation6);
+            Salvo salvo7 = new Salvo(2, salvoLocation7);
+            Salvo salvo8 = new Salvo(3, salvoLocation8);
+            Salvo salvo9 = new Salvo(4, salvoLocation9);
+//            Salvo salvo10 = new Salvo(10, salvoLocation10);
 
             Date creationDate1 = Date.from(date.toInstant().plusSeconds(3600));
             Date creationDate2 = Date.from(date.toInstant().plusSeconds(7200));
@@ -142,11 +155,19 @@ public class SalvoApplication {
             gamePlayer2.addShip(ship10);
 
             gamePlayer.addSalvo(salvo1);
-            gamePlayer2.addSalvo(salvo2);
+            gamePlayer2.addSalvo(salvo6);
+            gamePlayer.addSalvo(salvo2);
+            gamePlayer2.addSalvo(salvo7);
             gamePlayer.addSalvo(salvo3);
-            gamePlayer2.addSalvo(salvo4);
-            gamePlayer.addSalvo(salvo5);
-            gamePlayer.addSalvo(salvo6);
+            gamePlayer2.addSalvo(salvo8);
+            gamePlayer.addSalvo(salvo4);
+            gamePlayer2.addSalvo(salvo9);
+
+
+
+
+//            gamePlayer.addSalvo(salvo5);
+//            gamePlayer2.addSalvo(salvo10);
 
             Date finishDate = Date.from(date.toInstant().plusSeconds(1800));
             Date finishDate1 = Date.from(date1.toInstant().plusSeconds(1800));
@@ -163,16 +184,16 @@ public class SalvoApplication {
             Score score10 = new Score(finishDate, 1.0);
 
             //game1
-            player1.addScore(score5);
-            game1.addScore(score5);
-            player1.addScore(score4);
-            game3.addScore(score4);
+//            player1.addScore(score5);
+//            game1.addScore(score5);
+//            player1.addScore(score4);
+//            game3.addScore(score4);
 
             //game2
-            player2.addScore(score2);
-            game1.addScore(score2);
-            player2.addScore(score9);
-            game4.addScore(score9);
+//            player2.addScore(score2);
+//            game1.addScore(score2);
+//            player2.addScore(score9);
+//            game4.addScore(score9);
 
             //game3
 //            player3.addScore(score3);
@@ -227,17 +248,20 @@ public class SalvoApplication {
             salvoRepository.save(salvo2);
             salvoRepository.save(salvo3);
             salvoRepository.save(salvo4);
-            salvoRepository.save(salvo5);
+            salvoRepository.save(salvo6);
+            salvoRepository.save(salvo7);
+            salvoRepository.save(salvo8);
+            salvoRepository.save(salvo9);
 
-            scoreRepository.save(score1);
-            scoreRepository.save(score2);
-//            scoreRepository.save(score3);
-            scoreRepository.save(score4);
-            scoreRepository.save(score5);
-//            scoreRepository.save(score6);
-//            scoreRepository.save(score7);
-            scoreRepository.save(score8);
-            scoreRepository.save(score9);
+//            scoreRepository.save(score1);
+//            scoreRepository.save(score2);
+////            scoreRepository.save(score3);
+//            scoreRepository.save(score4);
+//            scoreRepository.save(score5);
+////            scoreRepository.save(score6);
+////            scoreRepository.save(score7);
+//            scoreRepository.save(score8);
+//            scoreRepository.save(score9);
 //            scoreRepository.save(score10);
 
         };

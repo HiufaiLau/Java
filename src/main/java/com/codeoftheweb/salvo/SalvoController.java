@@ -29,7 +29,7 @@ public class SalvoController {
     @Autowired
     private ScoreRepository scoreRepository;
 
-    private Boolean gameOverCall = false;
+    private Boolean methodCall = false;
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
 //    @OrderBy("Id asc")
@@ -208,7 +208,7 @@ public class SalvoController {
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
 //
-        if (gameOverCall == true && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+        if (methodCall == true && getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() ==5  && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
         }
 
@@ -294,6 +294,65 @@ public class SalvoController {
                 ).collect(toList());
     }
 
+//    private Map<String, Object> getScores(GamePlayer gp, Player p) {
+//
+//        List<Score> scores = scoreRepository.findAll()
+//                .stream()
+//                .filter(score -> score.getPlayer().equals(gp.getPlayer()))
+//                .collect(toList());
+//
+//        if (scores.size() == 0) return null;
+//        Double WON_SCORE = 1.0;
+//        Double TIE_SCORE = 0.5;
+//        Double LOST_SCORE = 0.0;
+//
+//        return new LinkedHashMap<String, Object>() {{
+//            put("name", gp.getPlayer().getEmail());
+//            put("total", getTotalScore(scores));
+//            put("won", countScore(scores, WON_SCORE));
+//            put("lost", countScore(scores, LOST_SCORE));
+//            put("tied", countScore(scores, TIE_SCORE));
+//        }};
+//
+//    }
+
+    //    private String findWinner (GamePlayer gp){
+//        if(getOpponent(gp)!= null){
+//            if(gameOver() && gp.getPlayer().getPlayerId() || gameOver() && getOpponent().getPlayer().getPlayerId())
+//        }
+//    }
+//    private Long countScore(List<Score> allScores, Double scores) {
+//        return allScores
+//                .stream()
+//                .filter(score -> scores.equals(score.getScore()))
+//                .count();
+//    }
+//
+//    private Double getTotalScore(List<Score> scores) {
+//        return scores
+//                .stream()
+//                .mapToDouble(Score::getScore)
+//                .sum();
+//    }
+
+//    private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
+//
+//        return new LinkedHashMap<String, Object>() {{
+//            put("id", p.getPlayerId());
+//            put("player", p.getEmail());
+////            put("finsihed date",p.getScores());
+//            put("score", p.getScores());
+//        }};
+//    }
+//
+//    public Date getFinishDate(Game game) {
+//        return game.getScores()
+//                .stream()
+//                .findFirst()
+//                .map(score -> score.getFinishDate())
+//                .orElse(null);
+//    }
+
     @RequestMapping("/game_view/{gamePlayerId}")
     private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
         GamePlayer gp = gamePlayerRepository.findOne(gamePlayerId);
@@ -335,8 +394,8 @@ public class SalvoController {
         return opponentMap.get("opponentPlayer");
     }
 
-    private List<HashMap<String, Object>> getHitResults(GamePlayer gamePlayer) {
 
+    private List<HashMap<String, Object>> getHitResults(GamePlayer gamePlayer) {
         List<Salvo> salvoList = gamePlayer.getSalvoes().stream().collect(toList());
         Comparator<Salvo> compareSalvo = new Comparator<Salvo>() {
             @Override
@@ -348,17 +407,14 @@ public class SalvoController {
         Collections.sort(salvoList, compareSalvo);
 
         List<String> sunkShipList = new ArrayList<>();
-
         List<HashMap<String, Object>> hitList = new ArrayList<>();
 
         if (!salvoList.isEmpty()) {
             salvoList.forEach(salvo -> {
-
                 HashMap<String, Object> hitMap = new LinkedHashMap<>();
                 hitMap.put("turn", salvo.getTurn());
                 hitMap.put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
 //                    put("sunkShips",sunkShipList);
-//                System.out.println(sunkShipList);
 
                 if (sunkShipList.size() == 5) {
                     hitMap.put("gameIsOver", gameOver());
@@ -369,22 +425,17 @@ public class SalvoController {
                 hitList.add(hitMap);
 
             });
-//            HashMap<String, Object> helperMap = new HashMap<String, Object>();
-//            helperMap.put("sunks", sunkShipList);
-//            hitList.add(helperMap);
         }
         return hitList;
     }
 
     private Boolean gameOver() {
-
-        gameOverCall = true;
-
+        methodCall = true;
         return true;
     }
 
     private Boolean gameIsNotOver() {
-        gameOverCall = false;
+        methodCall = false;
         return false;
     }
 
@@ -419,25 +470,20 @@ public class SalvoController {
                 }
             }
         });
-        System.out.println(hitInfo);
         return hitInfo;
     }
 
 
     private List<HashMap<String, Object>> getHitData(GamePlayer gamePlayer) {
-
         List<HashMap<String, Object>> hits = new ArrayList<>();
-
         HashMap<String, Object> localPlayer = new LinkedHashMap<>();
         localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
         localPlayer.put("hit", getHitResults(gamePlayer));
         hits.add(0, localPlayer);
-
         HashMap<String, Object> opponentPlayer = new LinkedHashMap<>();
         opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
         opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
         hits.add(1, opponentPlayer);
-
         return hits;
     }
 
@@ -466,91 +512,73 @@ public class SalvoController {
         return turns;
     }
 
-    private long checkIfGameIsOver(GamePlayer gamePlayer) {
-//        private Object checkIfGameIsOver(GamePlayer gamePlayer) {
-//        boolean anyGameOver = getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true);
+    private Object checkIfGameIsOver(GamePlayer gamePlayer) {
+        if (gameOver() && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
+            if (getHitResults(getOpponent(gamePlayer)).size()==5 && getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
+                return "tie";
+            }
+            if ( getHitResults(getOpponent(gamePlayer)).size()==5 || getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
 
-
-        if (checkLastTurn(gamePlayer) != checkLastTurn(getOpponent(gamePlayer))) {
-            System.out.println("turns are not equal");
-//            return false; //0
-            return 0;
-        }
-
-        if (getHitResults(getOpponent(gamePlayer)).size() == 5 && getHitResults(gamePlayer).size() == 5) {
-            System.out.println("game is over - tie");
-//            return "tie"; //-1
-            return -1;
-        } else if (getHitResults(getOpponent(gamePlayer)).size() == 5) {
-//            System.out.println("game is over - winner " + getOpponent(gamePlayer).getGamePlayerId());
-            return getOpponent(gamePlayer).getGamePlayerId();
-        } else if (getHitResults(gamePlayer).size() == 5){
-//        } else if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).size() == 5){
-            System.out.println("game is over - winner " + gamePlayer.getGamePlayerId());
-            return gamePlayer.getGamePlayerId();
+                System.out.println("game is over");
+                return true;
+            } else {
+                System.out.println("game is not over");
+                return false;
+            }
         } else {
-            System.out.println("game is not over yet");
-            return 0;
+            System.out.println("i am not checking if the game is over yet");
+            return false;
         }
-
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-
-        if (getOpponent(gamePlayer) == null) {
-            return null;
-        }
-
-        Score score = new Score();
-        if (checkIfGameIsOver(gamePlayer) == -1 && checkIfGameIsOver(getOpponent(gamePlayer)) == -1) {
-
-            if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
-                score.setScore(0.5);
-                score.setFinishDate(new Date());
-                gamePlayer.getGame().addScore(score);
-                gamePlayer.getPlayer().addScore(score);
-                scoreRepository.save(score);
+        if (getOpponent(gamePlayer) != null && gameOver()) {
+            Score score = new Score();
+            if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
+                if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
+                    score.setScore(0.5);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                return "tie";
+            } else if ((boolean) checkIfGameIsOver(gamePlayer) == true) {
+                if (checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(1.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                return gamePlayer.getPlayer().getEmail();
+            } else if ((boolean) checkIfGameIsOver(getOpponent(gamePlayer)) == true) {
+                if (!checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(0.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                return getOpponent(gamePlayer).getPlayer().getEmail();
+            } else {
+                return null;
             }
-            System.out.println("Get winner - gpWon");
-            return "tie";
-        } else if (checkIfGameIsOver(gamePlayer) > 0) {
-            if (checkIfScoreAdded(gamePlayer)) {
-                score.setScore(1.0);
-                score.setFinishDate(new Date());
-                gamePlayer.getGame().addScore(score);
-                gamePlayer.getPlayer().addScore(score);
-                scoreRepository.save(score);
-            }
-            System.out.println("Get winner - gpWon");
-            return gamePlayer.getPlayer().getEmail();
-
-        } else if (checkIfGameIsOver(getOpponent(gamePlayer)) > 0) {
-            if (checkIfScoreAdded(gamePlayer)) {
-                score.setScore(0.0);
-                score.setFinishDate(new Date());
-                gamePlayer.getGame().addScore(score);
-                gamePlayer.getPlayer().addScore(score);
-                scoreRepository.save(score);
-            }
-            System.out.println("Get winner - oppWon");
-            return getOpponent(gamePlayer).getPlayer().getEmail();
         } else {
             return null;
         }
-
     }
 
     private boolean checkIfScoreAdded(GamePlayer gamePlayer) {
         if (gamePlayer.getGame().getScores().size() == 0) {
             return true;
         } else {
-            return false;
-//            List<Score> scoreList = gamePlayer.getPlayer().getScores().stream().filter(score -> score.getGame() == gamePlayer.getGame()).collect(Collectors.toList());
-//            if (scoreList.size() > 0) {
-//                return false;
-//            } else {
-//                return true;
-//            }
+            List<Score> scoreList = gamePlayer.getPlayer().getScores().stream().filter(score -> score.getGame() == gamePlayer.getGame()).collect(Collectors.toList());
+            if (scoreList.size() > 0) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
