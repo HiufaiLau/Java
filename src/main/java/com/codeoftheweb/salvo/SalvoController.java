@@ -208,7 +208,7 @@ public class SalvoController {
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
 //
-        if (methodCall == true && getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() ==5  && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+        if (methodCall == true && (getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() == 5) && (checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer)))) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
         }
 
@@ -512,27 +512,29 @@ public class SalvoController {
         return turns;
     }
 
-    private Object checkIfGameIsOver(GamePlayer gamePlayer) {
-        if (gameOver() && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
-            if (getHitResults(getOpponent(gamePlayer)).size()==5 && getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
+
+    private String checkIfGameIsOver(GamePlayer gamePlayer) {
+    
+        if (getHitResults(gamePlayer).size()>0 && (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null )) {
+            if ((getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size()-1).get("gameIsOver").equals(true)&& getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true)) && (checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer)))) {
                 return "tie";
             }
-            if ( getHitResults(getOpponent(gamePlayer)).size()==5 || getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+            if ((getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size()-1).get("gameIsOver").equals(true)|| getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true)) && (checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer)))) {
 
                 System.out.println("game is over");
-                return true;
+                return "win";
             } else {
                 System.out.println("game is not over");
-                return false;
+                return "not finish";
             }
         } else {
             System.out.println("i am not checking if the game is over yet");
-            return false;
+            return "not checking game is over";
         }
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-        if (getOpponent(gamePlayer) != null && gameOver()) {
+        if (getOpponent(gamePlayer) != null) {
             Score score = new Score();
             if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
                 if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
@@ -540,10 +542,12 @@ public class SalvoController {
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
                     gamePlayer.getPlayer().addScore(score);
+                    getOpponent(gamePlayer).getGame().addScore(score);
+                    getOpponent(gamePlayer).getPlayer().addScore(score);
                     scoreRepository.save(score);
                 }
                 return "tie";
-            } else if ((boolean) checkIfGameIsOver(gamePlayer) == true) {
+            } else if (checkIfGameIsOver(gamePlayer) == "win") {
                 if (checkIfScoreAdded(gamePlayer)) {
                     score.setScore(1.0);
                     score.setFinishDate(new Date());
@@ -552,7 +556,7 @@ public class SalvoController {
                     scoreRepository.save(score);
                 }
                 return gamePlayer.getPlayer().getEmail();
-            } else if ((boolean) checkIfGameIsOver(getOpponent(gamePlayer)) == true) {
+            } else if (checkIfGameIsOver(getOpponent(gamePlayer)) == "win") {
                 if (!checkIfScoreAdded(gamePlayer)) {
                     score.setScore(0.0);
                     score.setFinishDate(new Date());
