@@ -294,64 +294,6 @@ public class SalvoController {
                 ).collect(toList());
     }
 
-//    private Map<String, Object> getScores(GamePlayer gp, Player p) {
-//
-//        List<Score> scores = scoreRepository.findAll()
-//                .stream()
-//                .filter(score -> score.getPlayer().equals(gp.getPlayer()))
-//                .collect(toList());
-//
-//        if (scores.size() == 0) return null;
-//        Double WON_SCORE = 1.0;
-//        Double TIE_SCORE = 0.5;
-//        Double LOST_SCORE = 0.0;
-//
-//        return new LinkedHashMap<String, Object>() {{
-//            put("name", gp.getPlayer().getEmail());
-//            put("total", getTotalScore(scores));
-//            put("won", countScore(scores, WON_SCORE));
-//            put("lost", countScore(scores, LOST_SCORE));
-//            put("tied", countScore(scores, TIE_SCORE));
-//        }};
-//
-//    }
-
-    //    private String findWinner (GamePlayer gp){
-//        if(getOpponent(gp)!= null){
-//            if(gameOver() && gp.getPlayer().getPlayerId() || gameOver() && getOpponent().getPlayer().getPlayerId())
-//        }
-//    }
-//    private Long countScore(List<Score> allScores, Double scores) {
-//        return allScores
-//                .stream()
-//                .filter(score -> scores.equals(score.getScore()))
-//                .count();
-//    }
-//
-//    private Double getTotalScore(List<Score> scores) {
-//        return scores
-//                .stream()
-//                .mapToDouble(Score::getScore)
-//                .sum();
-//    }
-
-//    private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
-//
-//        return new LinkedHashMap<String, Object>() {{
-//            put("id", p.getPlayerId());
-//            put("player", p.getEmail());
-////            put("finsihed date",p.getScores());
-//            put("score", p.getScores());
-//        }};
-//    }
-//
-//    public Date getFinishDate(Game game) {
-//        return game.getScores()
-//                .stream()
-//                .findFirst()
-//                .map(score -> score.getFinishDate())
-//                .orElse(null);
-//    }
 
     @RequestMapping("/game_view/{gamePlayerId}")
     private Map<String, Object> getOneGame(@PathVariable long gamePlayerId, Authentication auth) {
@@ -597,5 +539,65 @@ public class SalvoController {
         }
 
     }
+
+
+//    private Map<String, Object> getScores(GamePlayer gp, Player p) {
+//
+//        List<Score> scores = scoreRepository.findAll()
+//                .stream()
+//                .filter(score -> score.getPlayer().equals(gp.getPlayer()))
+//                .collect(toList());
+//
+//        if (scores.size() == 0) return null;
+//        Double WON_SCORE = 1.0;
+//        Double TIE_SCORE = 0.5;
+//        Double LOST_SCORE = 0.0;
+//
+//        return new LinkedHashMap<String, Object>() {{
+//            put("name", gp.getPlayer().getEmail());
+//            put("total", getTotalScore(scores));
+//            put("won", countScore(scores, WON_SCORE));
+//            put("lost", countScore(scores, LOST_SCORE));
+//            put("tied", countScore(scores, TIE_SCORE));
+//        }};
+//
+//    }
+
+    //    private String findWinner (GamePlayer gp){
+//        if(getOpponent(gp)!= null){
+//            if(gameOver() && gp.getPlayer().getPlayerId() || gameOver() && getOpponent().getPlayer().getPlayerId())
+//        }
+//    }
+//    private Long countScore(List<Score> allScores, Double scores) {
+//        return allScores
+//                .stream()
+//                .filter(score -> scores.equals(score.getScore()))
+//                .count();
+//    }
+//
+//    private Double getTotalScore(List<Score> scores) {
+//        return scores
+//                .stream()
+//                .mapToDouble(Score::getScore)
+//                .sum();
+//    }
+
+//    private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
+//
+//        return new LinkedHashMap<String, Object>() {{
+//            put("id", p.getPlayerId());
+//            put("player", p.getEmail());
+////            put("finsihed date",p.getScores());
+//            put("score", p.getScores());
+//        }};
+//    }
+//
+//    public Date getFinishDate(Game game) {
+//        return game.getScores()
+//                .stream()
+//                .findFirst()
+//                .map(score -> score.getFinishDate())
+//                .orElse(null);
+//    }
 
 }
