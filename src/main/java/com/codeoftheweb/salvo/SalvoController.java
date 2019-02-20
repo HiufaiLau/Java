@@ -417,10 +417,13 @@ public class SalvoController {
         localPlayer.put("gamePlayerId", gamePlayer.getGamePlayerId());
         localPlayer.put("hit", getHitResults(gamePlayer));
         hits.add(0, localPlayer);
+
         HashMap<String, Object> opponentPlayer = new LinkedHashMap<>();
-        opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
-        opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
-        hits.add(1, opponentPlayer);
+        if(getOpponent(gamePlayer)!= null) {
+            opponentPlayer.put("gamePlayerId", getOpponent(gamePlayer).getGamePlayerId());
+            opponentPlayer.put("hit", getHitResults(getOpponent(gamePlayer)));
+            hits.add(1, opponentPlayer);
+        }
         return hits;
     }
 
