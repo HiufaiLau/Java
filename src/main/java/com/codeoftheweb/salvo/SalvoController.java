@@ -357,7 +357,7 @@ public class SalvoController {
                 hitMap.put("turn", salvo.getTurn());
                 hitMap.put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
                 hitMap.put("sunkShips", sunkShipList);
-                hitMap.put("gameIsOver", gameOver(sunkShipList));
+                hitMap.put("ifILost", gameOver(sunkShipList));
                 hitList.add(hitMap);
             });
         }
@@ -450,16 +450,17 @@ public class SalvoController {
     }
 
     private String checkIfGameIsOver(GamePlayer gamePlayer) {
+        System.out.println(getHitResults(gamePlayer));
         System.out.println(getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("sunkShips"));
         if (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
 
-            if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver").equals(true) && getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver").equals(true)) {
+            if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("ifILost").equals(true) && getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver").equals(true)) {
                 return "tie";
-            } else if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver").equals(true)) {
+            } else if (getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("ifILost").equals(true)) {
 
                 System.out.println("lost");
                 return "lost";
-            } else if(getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver").equals(true)){
+            } else if(getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("ifILost").equals(true)){
                 System.out.println("win");
                 return "win";
             } else {
