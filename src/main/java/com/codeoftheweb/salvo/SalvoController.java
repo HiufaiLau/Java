@@ -415,14 +415,14 @@ public class SalvoController {
                 hitMap.put("turn", salvo.getTurn());
                 hitMap.put("hits", getOneHit(salvo.getSalvoLocations(), gamePlayer, sunkShipList));
 
-                hitMap.put("sunkShips", sunkShipList);
+
 
                 if (sunkShipList.size() == 5) {
                     hitMap.put("gameIsOver", gameOver());
                 } else {
                     hitMap.put("gameIsOver", gameIsNotOver());
                 }
-
+                hitMap.put("sunkShips", sunkShipList);
                 hitList.add(hitMap);
 
             });
@@ -514,7 +514,9 @@ public class SalvoController {
     }
 
     private Object checkIfGameIsOver(GamePlayer gamePlayer) {
+        System.out.println((getHitResults(gamePlayer).size()-2).get);
         if (methodCall == true && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
+
             if (getHitResults(getOpponent(gamePlayer)).size() == 5 && getHitResults(gamePlayer).size() == 5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
                 return "tie";
             }
