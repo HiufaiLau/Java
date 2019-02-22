@@ -202,17 +202,16 @@ public class SalvoController {
             return new ResponseEntity<>(responseEntity("gameStatus", "Sorry, please wait for the opponent to place salvos"), HttpStatus.FORBIDDEN);
         }
 
+        if(checkIfGameIsOver(gamePlayer) || checkIfGameIsOver(getOpponent(gamePlayer))){
+            return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
+        }
+
+
 //        System.out.println("before " + getHitResults(gamePlayer));
 //        if(getHitResults(gamePlayer).size()>0 && getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver").equals(true)){
 //            System.out.println("after " + getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver"));
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
-//
-        if (checkIfGameIsOver(gamePlayer).equals("tie")  || checkIfGameIsOver(gamePlayer).equals("win") || checkIfGameIsOver(gamePlayer).equals("lost")){
-            return new ResponseEntity<>(responseEntity("gameStatus", "Game over !!!"), HttpStatus.FORBIDDEN);
-        }
-
-
 //        if (opponent != null && opponent.getShips().size() != 5) {
 //            return new ResponseEntity<>(responseEntity("error", "Please wait for the opponent to place ships."), HttpStatus.FORBIDDEN);
 //        }
@@ -337,7 +336,7 @@ public class SalvoController {
     }
 
     private List<Map<String, Object>> getHitResults(GamePlayer gamePlayer) {
-        List<Salvo> salvoList = gamePlayer.getSalvos().stream().collect(Collectors.toList());
+        List<Salvo> salvoList = gamePlayer.getSalvoes().stream().collect(Collectors.toList());
         Comparator<Salvo> compareSalvo = new Comparator<Salvo>() {
             @Override
             public int compare(Salvo o1, Salvo o2) {
@@ -401,12 +400,12 @@ public class SalvoController {
             getOpponent(gamePlayer).getShips().stream().forEach(ship -> {
 //                System.out.println("gpig" + getOpponent(gamePlayer).getGamePlayerId() + " ship " + ship.getShipType() + " / " + ship.getDamage());
                 for (int i = 0; i < salvoLocations.size(); i++) {
-                    if (ship.getlocations().contains(salvoLocations.get(i))) {
+                    if (ship.getLocations().contains(salvoLocations.get(i))) {
                         Map<String, Object> tempMap = new LinkedHashMap<>();
-                        tempMap.put("hitShip", ship.getShipType());
+                        tempMap.put("hitShip", ship.getType());
                         tempMap.put("hitPlace", salvoLocations.get(i));
 
-                        totalDamages.replace(ship.getShipType(), totalDamages.get(ship.getShipType()) + 1);
+                        totalDamages.replace(ship.getType(), totalDamages.get(ship.getType()) + 1);
 
                         result.add(tempMap);
                     }
@@ -417,7 +416,7 @@ public class SalvoController {
     }
 
 
-    private List<Map<String, Object>> getResults(GamePlayer gamePlayer) {
+    private List<Map<String, Object>> getHitData(GamePlayer gamePlayer) {
         List<Map<String, Object>> resultData = new ArrayList<>();
         Map<String, Object> myMap = new LinkedHashMap<>();
         myMap.put("gamePlayerId", gamePlayer.getGamePlayerId());
@@ -434,8 +433,8 @@ public class SalvoController {
     }
 
     private Integer checkLastTurn(GamePlayer gamePlayer) {
-        if(gamePlayer.getSalvos().size() > 0) {
-            List<Integer> turnList = gamePlayer.getSalvos().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
+        if(gamePlayer.getSalvoes().size() > 0) {
+            List<Integer> turnList = gamePlayer.getSalvoes().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
             Comparator<Integer> compareTurn = new Comparator<Integer>() {
                 @Override
                 public int compare(Integer o1, Integer o2) {
@@ -451,12 +450,12 @@ public class SalvoController {
 
     private Map<String, Integer> getTurns(GamePlayer gamePlayer) {
         Map<String, Integer> turns = new LinkedHashMap<>();
-        if(gamePlayer.getSalvos().size() > 0) {
+        if(gamePlayer.getSalvoes().size() > 0) {
             turns.put("myLastTurn", checkLastTurn(gamePlayer));
         } else {
             turns.put("myLastTurn", null);
         }
-        if(getOpponent(gamePlayer) != null && getOpponent(gamePlayer).getSalvos().size() > 0) {
+        if(getOpponent(gamePlayer) != null && getOpponent(gamePlayer).getSalvoes().size() > 0) {
             turns.put("opponentLastTurn", checkLastTurn(getOpponent(gamePlayer)));
         } else {
             turns.put("opponentLastTurn", null);
@@ -485,7 +484,7 @@ public class SalvoController {
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
                     gamePlayer.getPlayer().addScore(score);
-                    scoreRepo.save(score);
+                    scoreRepository.save(score);
                 }
                 return "tied";
             } else if (checkIfGameIsOver(gamePlayer)) {
@@ -494,7 +493,7 @@ public class SalvoController {
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
                     gamePlayer.getPlayer().addScore(score);
-                    scoreRepo.save(score);
+                    scoreRepository.save(score);
                 }
                 return gamePlayer.getPlayer().getEmail();
             } else if (checkIfGameIsOver(getOpponent(gamePlayer))) {
@@ -503,7 +502,7 @@ public class SalvoController {
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
                     gamePlayer.getPlayer().addScore(score);
-                    scoreRepo.save(score);
+                    scoreRepository.save(score);
                 }
                 return getOpponent(gamePlayer).getPlayer().getEmail();
             } else {
@@ -529,94 +528,8 @@ public class SalvoController {
     }
 
 
-
-    @RequestMapping(value = "/players", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> createUser(@RequestParam("email") String email, @RequestParam("password") String password) {
-        Player player = playerRepo.findByUserName(email);
-        if (email.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>(responseentity("error", "No user given"), HttpStatus.FORBIDDEN);
-        } else if (player != null) {
-            return new ResponseEntity<>(responseentity("error", "Email in use"), HttpStatus.FORBIDDEN);
-        } else {
-            playerRepo.save(new Player(email, password));
-            return new ResponseEntity<>(responseentity("success", "User added"), HttpStatus.CREATED);
-        }
-    }
-
-
-    @RequestMapping(value = "/games/{gameId}/players", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable Long gameId, Authentication auth) {
-        Game game = gameRepo.findOne(gameId);
-        Player player = playerRepo.findByUserName(auth.getName());
-        if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>(responseentity("error", "No user given"), HttpStatus.UNAUTHORIZED);
-        } else if (game == null) {
-            return new ResponseEntity<>(responseentity("error", "No such game"), HttpStatus.UNAUTHORIZED);
-        } else if (game.getGamePlayers().size() > 1) {
-            return new ResponseEntity<>(responseentity("error", "Game is full"), HttpStatus.FORBIDDEN);
-        } else if (game.getPlayers().contains(player)) {
-            return new ResponseEntity<>(responseentity("error", "User already joined"), HttpStatus.FORBIDDEN);
-        } else {
-            Date date = new Date();
-            GamePlayer gamePlayer = new GamePlayer(date);
-            gamePlayerRepo.save(gamePlayer);
-            game.addGamePlayer(gamePlayer);
-            player.addGamePlayer(gamePlayer);
-            gameRepo.save(game);
-            playerRepo.save(player);
-
-            return new ResponseEntity<>(responseentity("success", "Player added"), HttpStatus.CREATED);
-        }
-    }
-
-    @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> getShips(@PathVariable Long gamePlayerId, Authentication auth, @RequestBody ArrayList<Ship> shipList) {
-        GamePlayer gamePlayer = gamePlayerRepo.findOne(gamePlayerId);
-        if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>(responseentity("error", "No user given"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer == null) {
-            return new ResponseEntity<>(responseentity("error", "No such game player"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer.getPlayer().getEmail() != auth.getName()) {
-            return new ResponseEntity<>(responseentity("error", "Not Correct player"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer.getShips().size() != 0) {
-            return new ResponseEntity<>(responseentity("error", "Ships placed"), HttpStatus.FORBIDDEN);
-        } else {
-            shipList.forEach(ship -> {
-                gamePlayer.addShip(ship);
-                shipRepo.save(ship);
-            });
-//            gamePlayerRepo.save(gamePlayer); i don't have to save but update the information of gp because he is already existing
-            return new ResponseEntity<>(responseentity("success", "Ship added"), HttpStatus.CREATED);
-
-        }
-    }
-
-    @RequestMapping(value = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> getSalvos(@PathVariable Long gamePlayerId, Authentication auth,
-                                                         @RequestBody Salvo salvoLocations) {
-        GamePlayer gamePlayer = gamePlayerRepo.findOne(gamePlayerId);
-        if (auth.getName().isEmpty()) {
-            return new ResponseEntity<>(responseentity("error", "No user given"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer == null) {
-            return new ResponseEntity<>(responseentity("error", "No such game player"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer.getPlayer().getEmail() != auth.getName()) {
-            return new ResponseEntity<>(responseentity("error", "Not Correct player"), HttpStatus.UNAUTHORIZED);
-        } else if (gamePlayer.getSalvos().size() != 0 && checkSalvoTurn(gamePlayer, salvoLocations)) {
-            return new ResponseEntity<>(responseentity("error", "salvos are already placed in this turn"), HttpStatus.FORBIDDEN);
-        } else if ((checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) > checkLastTurn(getOpponent(gamePlayer)))
-                || checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) == null) {
-            return new ResponseEntity<>(responseentity("error", "Opponent player's turn"), HttpStatus.NOT_ACCEPTABLE);
-        } else if(checkIfGameIsOver(gamePlayer) || checkIfGameIsOver(getOpponent(gamePlayer))) {
-            return new ResponseEntity<>(responseentity("error", "Game finished"), HttpStatus.NOT_ACCEPTABLE);
-        } else {
-            gamePlayer.addSalvo(salvoLocations);
-            salvoRepo.save(salvoLocations);
-            return new ResponseEntity<>(responseentity("success", "Salvo added"), HttpStatus.CREATED);
-        }
-    }
-
     private boolean checkSalvoTurn(GamePlayer gamePlayer, Salvo salvoLocations) {
-        List<Integer> myTurnList = gamePlayer.getSalvos().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
+        List<Integer> myTurnList = gamePlayer.getSalvoes().stream().map(salvo -> salvo.getTurn()).collect(Collectors.toList());
         if(myTurnList.contains(salvoLocations.getTurn())) {
             return true;
         } else {
