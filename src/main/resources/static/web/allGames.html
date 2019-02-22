@@ -102,36 +102,10 @@
                                 </div>
 
                             </td>
-
-                            <!-- && gamePlayer.length < 2-->
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <!--
-<div v-for="(game, index) in gameData.listOfGames" :key="index">
-    <p>Game{{game.gameId}}:</p>
-    <p>gameID: {{game.gameId}}</p>
-    <p>CreationDate: {{game.CreationDate}}</p>
-    <p>GamePlayers:</p>
-
-    <div v-for="(gamePlayer, index) in game.GamePlayers" :key="index">
-        <div v-if="gameData.isLogin != null && gameData.isLogin.playerID == gamePlayer.Player.playerID">
-            <button v-on:click="createNewGame">Back to Game</button>
-        </div>
-        <div v-if="gameData.isLogin != null && gamePlayer.leng < 2 && gameData.isLogin.playerID != gamePlayer.Player.playerID">
-            <div v-else>
-                <button v-on:click="joinGame(game.gameId)">Join</button>
-            </div>
-
-            <p>GameplayerID: {{gamePlayer.GamePlayerID}}</p>
-            <p>Player:</p>
-            <p>Email:{{gamePlayer.Player.email}}</p>
-            <p>PlayerID: {{gamePlayer.Player.playerID}}</p>
-        </div>
-        <br>
-    </div>
--->
             <hr>
             <div class="container mt-6">
                 <table id="scoresTable" class="table table-striped table-dark ">

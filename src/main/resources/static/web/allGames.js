@@ -14,7 +14,7 @@ var allData = new Vue({
         createPassword: "",
         response: [],
         signIn: true,
-        top25score: [],
+//        top25score: [],
         won: 0,
         lost: 0,
         tied: 0,
