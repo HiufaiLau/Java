@@ -207,8 +207,7 @@ public class SalvoController {
 //            System.out.println("after " + getHitResults(gamePlayer).get(getHitResults(gamePlayer).size()-1).get("gameIsOver"));
 //            return new ResponseEntity<>(responseEntity("gameStatus","Gameover !!!"),HttpStatus.FORBIDDEN);
 //        }
-        if (methodCall == true && getHitResults(gamePlayer).size() == 5 || getHitResults(getOpponent(gamePlayer)).size() == 5
-                && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+        if (methodCall == true) {
             return new ResponseEntity<>(responseEntity("gameStatus", "Gameover !!!"), HttpStatus.FORBIDDEN);
         }
 
@@ -294,46 +293,46 @@ public class SalvoController {
                 ).collect(toList());
     }
 
-//    private Map<String, Object> getScores(GamePlayer gp, Player p) {
-//
-//        List<Score> scores = scoreRepository.findAll()
-//                .stream()
-//                .filter(score -> score.getPlayer().equals(gp.getPlayer()))
-//                .collect(toList());
-//
-//        if (scores.size() == 0) return null;
-//        Double WON_SCORE = 1.0;
-//        Double TIE_SCORE = 0.5;
-//        Double LOST_SCORE = 0.0;
-//
-//        return new LinkedHashMap<String, Object>() {{
-//            put("name", gp.getPlayer().getEmail());
-//            put("total", getTotalScore(scores));
-//            put("won", countScore(scores, WON_SCORE));
-//            put("lost", countScore(scores, LOST_SCORE));
-//            put("tied", countScore(scores, TIE_SCORE));
-//        }};
-//
-//    }
+    private Map<String, Object> getScores(GamePlayer gp, Player p) {
+
+        List<Score> scores = scoreRepository.findAll()
+                .stream()
+                .filter(score -> score.getPlayer().equals(gp.getPlayer()))
+                .collect(toList());
+
+        if (scores.size() == 0) return null;
+        Double WON_SCORE = 1.0;
+        Double TIE_SCORE = 0.5;
+        Double LOST_SCORE = 0.0;
+
+        return new LinkedHashMap<String, Object>() {{
+            put("name", gp.getPlayer().getEmail());
+            put("total", getTotalScore(scores));
+            put("won", countScore(scores, WON_SCORE));
+            put("lost", countScore(scores, LOST_SCORE));
+            put("tied", countScore(scores, TIE_SCORE));
+        }};
+
+    }
 
     //    private String findWinner (GamePlayer gp){
 //        if(getOpponent(gp)!= null){
 //            if(gameOver() && gp.getPlayer().getPlayerId() || gameOver() && getOpponent().getPlayer().getPlayerId())
 //        }
 //    }
-//    private Long countScore(List<Score> allScores, Double scores) {
-//        return allScores
-//                .stream()
-//                .filter(score -> scores.equals(score.getScore()))
-//                .count();
-//    }
-//
-//    private Double getTotalScore(List<Score> scores) {
-//        return scores
-//                .stream()
-//                .mapToDouble(Score::getScore)
-//                .sum();
-//    }
+    private Long countScore(List<Score> allScores, Double scores) {
+        return allScores
+                .stream()
+                .filter(score -> scores.equals(score.getScore()))
+                .count();
+    }
+
+    private Double getTotalScore(List<Score> scores) {
+        return scores
+                .stream()
+                .mapToDouble(Score::getScore)
+                .sum();
+    }
 
     private Map<String, Object> showAllScores(Player p, GamePlayer gamePlayer) {
 
@@ -417,9 +416,9 @@ public class SalvoController {
 //                    put("sunkShips",sunkShipList);
 
                 if (sunkShipList.size() == 5) {
-                    hitMap.put("yourGameIsOver", gameOver());
+                    hitMap.put("gameIsOver", gameOver());
                 } else {
-                    hitMap.put("yourGameIsOver", gameIsNotOver());
+                    hitMap.put("gameIsOver", gameIsNotOver());
                 }
 
                 hitList.add(hitMap);
@@ -513,15 +512,17 @@ public class SalvoController {
     }
 
     private Object checkIfGameIsOver(GamePlayer gamePlayer) {
-        if (gameOver() && checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null) {
-            if (getHitResults(getOpponent(gamePlayer)).size()==5&& getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))){
+        if (checkLastTurn(gamePlayer) != null && checkLastTurn(getOpponent(gamePlayer)) != null && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
+            System.out.println(getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver"));
+            if ((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true &&
+                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true) {
+                System.out.println("game is tie");
                 return "tie";
-            }
-            if ( getHitResults(getOpponent(gamePlayer)).size()==5 || getHitResults(gamePlayer).size()==5 && checkLastTurn(gamePlayer) == checkLastTurn(getOpponent(gamePlayer))) {
-
+            } else if((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") ==true ||
+                    (boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") ==true){
                 System.out.println("game is over");
                 return true;
-            } else {
+            }else{
                 System.out.println("game is not over");
                 return false;
             }
@@ -532,10 +533,10 @@ public class SalvoController {
     }
 
     private String getWinner(GamePlayer gamePlayer) {
-        if (getOpponent(gamePlayer) != null && gameOver()) {
+        if (getOpponent(gamePlayer) != null) {
             Score score = new Score();
-            if (checkIfGameIsOver(gamePlayer) == "tie" && checkIfGameIsOver(getOpponent(gamePlayer)) == "tie") {
-                if (checkIfScoreAdded(gamePlayer) && checkIfScoreAdded(getOpponent(gamePlayer))) {
+            if (checkIfGameIsOver(gamePlayer) == "tie"&& checkIfGameIsOver(getOpponent(gamePlayer)) =="tie") {
+                if (checkIfScoreAdded(gamePlayer)) {
                     score.setScore(0.5);
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
@@ -543,7 +544,7 @@ public class SalvoController {
                     scoreRepository.save(score);
                 }
                 return "tie";
-            } else if ((boolean) checkIfGameIsOver(gamePlayer) == true) {
+            } else if ((boolean) checkIfGameIsOver(gamePlayer)) {
                 if (checkIfScoreAdded(gamePlayer)) {
                     score.setScore(1.0);
                     score.setFinishDate(new Date());
@@ -552,8 +553,8 @@ public class SalvoController {
                     scoreRepository.save(score);
                 }
                 return gamePlayer.getPlayer().getEmail();
-            } else if ((boolean) checkIfGameIsOver(getOpponent(gamePlayer)) == true) {
-                if (!checkIfScoreAdded(gamePlayer)) {
+            } else if ((boolean) checkIfGameIsOver(getOpponent(gamePlayer))) {
+                if (checkIfScoreAdded(gamePlayer)) {
                     score.setScore(0.0);
                     score.setFinishDate(new Date());
                     gamePlayer.getGame().addScore(score);
