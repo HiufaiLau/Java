@@ -90,7 +90,7 @@
                             <th scope="col">Turn</th>
                             <th scope="col">Shiptype</th>
                             <th scope="col">Hit Location</th>
-                            <!--                            <th scope="col">Hits</th>-->
+                            <th scope="col">Hits</th>
                             <th scope="col">Sunk</th>
                         </thead>
                         <tbody v-for="(allHit, index) in localPlayerHit" :key="index">
@@ -98,7 +98,7 @@
                                 <td>{{allHit.turn}}</td>
                                 <td>{{oneHit.hitShipType}}</td>
                                 <td>{{oneHit.hitLocation}}</td>
-                                <!--                                <td>{{oneHit.totalHits}}</td>-->
+                                <td>{{oneHit.totalHits}}</td>
                                 <td>{{oneHit.countOneSunk}}</td>
                             </tr>
                         </tbody>
