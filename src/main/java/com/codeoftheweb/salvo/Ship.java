@@ -5,7 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Ship {
@@ -27,6 +29,12 @@ public class Ship {
 
     @ElementCollection
     private List<String> locations = new ArrayList<>();
+
+    @ElementCollection
+    @Column(name = "shipHit")
+    private Set<String> hits = new HashSet<>();
+
+
 
     public Ship() {
     }
@@ -107,5 +115,12 @@ public class Ship {
         this.countSunk = countSunk;
     }
 
-}
+    public Set<String> getHits() {
+        return hits;
+    }
 
+    public void setHits(Set<String> hits) {
+        this.hits = hits;
+    }
+
+}
