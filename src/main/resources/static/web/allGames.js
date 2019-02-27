@@ -281,7 +281,7 @@ var allData = new Vue({
                     this.gameScoreData[i].scores.map(score => {
                         if (score == 1) {
                             won++
-                        } else if (score >= 0.5) {
+                        } else if (score == 0.5) {
                             tied++
                         } else if (score == 0) {
                             lost++
