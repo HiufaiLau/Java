@@ -268,7 +268,7 @@ var allData = new Vue({
             for (var i = 0; i < this.gameScoreData.length; i++) {
                 this.gameScoreData[i]["totalScore"] =
                     this.gameScoreData[i].scores
-                    .reduce((a, b) => a + b, 0) || "Not Finish";
+                    .reduce((a, b) => a + b, 0) || "No Score";
             }
         },
 

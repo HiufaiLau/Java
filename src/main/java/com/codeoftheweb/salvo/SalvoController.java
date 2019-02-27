@@ -490,15 +490,37 @@ public class SalvoController {
                 scoreRepository.save(score);
                 return "tie";
             } else if((boolean) getHitResults(getOpponent(gamePlayer)).get(getHitResults(getOpponent(gamePlayer)).size() - 1).get("gameIsOver") == true){
-                score.setScore(1.0);
-                score.setFinishDate(new Date());
-                gamePlayer.getGame().addScore(score);
-                gamePlayer.getPlayer().addScore(score);
-                scoreRepository.save(score);
+                if (checkIfScoreAdded(gamePlayer)==true) {
+                    score.setScore(1.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                if(!checkIfScoreAdded(getOpponent(gamePlayer))){
+                    score.setScore(0.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getPlayer().addScore(score);
+                    gamePlayer.getGame().addScore(score);
+                    scoreRepository.save(score);
+                }
                 return gamePlayer.getPlayer().getEmail();
             }else if((boolean) getHitResults(gamePlayer).get(getHitResults(gamePlayer).size() - 1).get("gameIsOver") == true) {
                 System.out.println("game is over");
-                System.out.println();
+                if (!checkIfScoreAdded(gamePlayer)) {
+                    score.setScore(0.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getGame().addScore(score);
+                    gamePlayer.getPlayer().addScore(score);
+                    scoreRepository.save(score);
+                }
+                if(checkIfScoreAdded(getOpponent(gamePlayer))){
+                    score.setScore(1.0);
+                    score.setFinishDate(new Date());
+                    gamePlayer.getPlayer().addScore(score);
+                    gamePlayer.getGame().addScore(score);
+                    scoreRepository.save(score);
+                }
                 return getOpponent(gamePlayer).getPlayer().getEmail();
             }
             else {
