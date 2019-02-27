@@ -14,15 +14,15 @@
         <div v-if="isLoading">!!!!!!</div>
         <div v-else>
             <div class="login" v-if="gameData.isLogin == null">
-                <div class="input-group col-6 mb-2 mr-sm-2" >
+                <div class="input-group col-6 mb-2 mr-sm-2">
                     <!--
   <div class="input-group-prepend">
   </div>
 -->
-<!--                    <label for="email">Username</label>-->
+                    <!--                    <label for="email">Username</label>-->
                     <input type="text" class="form-control col-5" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="email" class="col-2" style="margin-right:3%">
-<!--                    <label for="pass">Password</label>-->
-                    <input type="text" class="form-control col-5" placeholder="password..." aria-label="" aria-describedby="basic-addon1" v-model="password" style="margin-right: 2%" >
+                    <!--                    <label for="pass">Password</label>-->
+                    <input type="text" class="form-control col-5" placeholder="password..." aria-label="" aria-describedby="basic-addon1" v-model="password" style="margin-right: 2%">
                     <button type="submit" value="Login" v-on:click="loginForm" class="btn btn-secondary" class="col-2">Login</button>
                 </div>
                 <!--
@@ -53,9 +53,9 @@
 
                     <button v-on:click="hideSignin" type="button" class="btn btn-secondary">Register</button>
                     <form name="signin-form" id="signin-form" @submit.prevent="getPlayer">
-<!--                        <label for="email">Username</label>-->
+                        <!--                        <label for="email">Username</label>-->
                         <input id="email" type="email" name="email" class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createEmail">
-<!--                        <label for="pass">Password</label>-->
+                        <!--                        <label for="pass">Password</label>-->
                         <input id="pass" type="password" name="password" placeholder="password..." class="form-control col-2" placeholder="email...@" aria-label="" aria-describedby="basic-addon1" v-model="createPassword">
                         <button type="submit" v-on:click="alert" type="button" class="btn btn-secondary">Sign up</button>
                     </form>
@@ -65,10 +65,10 @@
 
 
             <div class="logout" v-else>
-                <button type="submit" value="LogOut" v-on:click="logOut" type="button" class="btn btn-secondary">Logout</button>
+                <a href="http://localhost:8080/web/allGames.html"><button type="submit" value="LogOut" v-on:click="logOut" type="button" class="btn btn-secondary">Logout</button></a>
                 <h4>Welcome {{gameData.isLogin.email}} !!</h4>
                 <button v-on:click="createNewGame" type="button" class="btn btn-secondary">New Game</button>
-                
+
                 <p>{{email}}</p>
                 <p>{{password}}</p>
             </div>

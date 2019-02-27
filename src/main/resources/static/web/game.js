@@ -12,18 +12,9 @@ var eachGameData = new Vue({
         shipOrientation: null,
         shipLength: null,
         checkShip: [],
-        //        isAbleToPlace: true,
-        //        shipArray: [
-        //            {
-        //                "type": "",
-        //                "locations": []
-        //            }
-        //        ],
         placingShipLocation: [],
         errorLocation: [],
-        //        checkShipList: [],
         ships: [],
-
         opponentShips: [
             {
                 "type": "carrier",
@@ -73,65 +64,16 @@ var eachGameData = new Vue({
         date: [],
         allShipLocation: [],
         oneShip: {},
-
-        //        salvoLocations: [],
         sendAllsalvos: [],
         salvos: [],
         turn: 1,
         placingSalvoLocation: [],
         allSalvos: [],
-        //        getHit: [
-        //            {
-        //                "gamePlayerId": 4,
-        //
-        //                "hit": [
-        //                    {
-        //                        "turn": 1,
-        //                        "shiptype": "carrier",
-        //                        "hitLocations": ["G3", "G4", "G5", "G6"],
-        //                        "hits": 4,
-        //                        "sunk": 0,
-        //                    },
-        //                    
-        //                    {
-        //                        "turn": 2,
-        //                        "shiptype": "battleship",
-        //                        "hitLocations": ["H4", "H5", "H6", "H7"],
-        //                        "hits": 4,
-        //                        "sunk": 1,
-        //                    }
-        //                ]
-        //            },
-        //
-        //
-        //            {
-        //                "gamePlayerId": 3,
-        //
-        //                "hit": [
-        //                    {
-        //                        "turn": 1,
-        //                        "shiptype": "carrier",
-        //                        "hitLocations": ["G3"],
-        //                        "hits": 1,
-        //                        "sunk": 0,
-        //                    },
-        //                    {
-        //                        "turn": 2,
-        //                        "shiptype": "carrier",
-        //                        "hitLocations": ["G4"],
-        //                        "hits": 1,
-        //                        "sunk": 0,
-        //                    }
-        //                ]
-        //            },
-        //
-        //
-        //        ],;
         hitData: [],
         localPlayerHit: [],
         opponentPlayerHit: [],
-        showTheWinner:[],
-        findWinnerStatus:"",
+        winner: [],
+        findWinnerStatus: "",
 
     },
 
@@ -175,8 +117,14 @@ var eachGameData = new Vue({
                     console.log(this.opponentPlayerHit)
                     console.log(this.localPlayerHit)
                     //                    console.log(this.localPlayerHit)
-                    //                    console.log(this.getHit[1].gamePlayerId)
-
+                    this.displayTurnNumber();
+                    this.winner = this.gameViewData.winner
+                    if (this.winner != null) {
+                        console.log(this.winner)
+                        this.getWinner();
+                    };
+                    //                    console.log(this.getHit[0].gamePlayerId)
+                    //                    this.winner();
                     eachGameData.dateConvert();
                     this.isLoading = false;
                 })
@@ -273,7 +221,7 @@ var eachGameData = new Vue({
 
                     }).then(data => {
                         alert("Please wait for the opponent to attack!!")
-//                        window.location.reload();
+                        //                        window.location.reload();
                         //                        this.reLoadThePage
 
                         console.log(data)
@@ -777,18 +725,32 @@ var eachGameData = new Vue({
         dateConvert() {
             this.gameViewData.created = new Date(this.gameViewData.created).toLocaleString()
         },
-        
-         getWinner() {
-            console.log(this.opponentPlayer);
-            if(this.winner != "tie"){
-                if(this.winner == this.gamePlayerId){
-                   this.showWhoWin = "You won!" 
-                }else{
-                    this.showWhoWin = "You lost..."
+
+        displayTurnNumber() {
+            let allTurn = []
+            for (var i = 0; i < this.salvos.length; i++) {
+                if (this.salvos[i].gamePlayerId == this.gamePlayerId) {
+                    allTurn.push(this.salvos[i].turn)
                 }
-            }else{
-                this.showWhoWin = "It's a tie."
+                this.turn = allTurn.length
             }
+
+        },
+
+        getWinner() {
+            console.log(this.opponentPlayer);
+
+            if (this.winner != "tied") {
+                if (this.winner == this.localPlayer) {
+                    this.findWinnerStatus = "WoooHooo...You won!"
+                } else {
+                    this.findWinnerStatus = "Sorry, You lost !!!"
+                }
+            } else {
+                this.findWinnerStatus = "It is a tie."
+            }
+
+
         },
 
         reLoadThePage() {
