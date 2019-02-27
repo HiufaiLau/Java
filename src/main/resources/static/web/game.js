@@ -693,11 +693,8 @@ var eachGameData = new Vue({
                     for (var j = 0; j < this.salvos[i].locations.length; j++) {
                         this.allSalvos.push(this.salvos[i].locations[j])
                     }
-                    //                    this.allSalvos.filter()
                 }
             }
-
-            //            this.allSalvos = [].concat.apply([], this.salvos.map(oneSalvo => oneSalvo.locations))
             if (this.allSalvos.length == 0) {
                 return false
             } else {
