@@ -130,6 +130,8 @@ var eachGameData = new Vue({
         hitData: [],
         localPlayerHit: [],
         opponentPlayerHit: [],
+        showTheWinner:[],
+        findWinnerStatus:"",
 
     },
 
@@ -149,19 +151,19 @@ var eachGameData = new Vue({
                 })
                 .then(response => response.json())
                 .then(data => {
-                console.log(data)
+                    console.log(data)
                     this.gameViewData = data;
                     this.ships = this.gameViewData.ships
                     this.salvos = this.gameViewData.salvos
-//                    console.log(this.salvos)
-//                    console.log(this.ships)
+                    //                    console.log(this.salvos)
+                    //                    console.log(this.ships)
 
                     this.showTheShips("shipTable")
                     this.showLocalPalyerSalvos("salvoTable")
                     this.showOpponentSalvos("shipTable")
                     this.showPlayers()
                     this.hitData = this.gameViewData.hits
-//                    console.log(this.hitData)
+                    //                    console.log(this.hitData)
                     this.hitData.forEach(gp => {
                         if (gp.gamePlayerId == this.gamePlayerId) {
                             this.opponentPlayerHit = gp.hit
@@ -216,6 +218,9 @@ var eachGameData = new Vue({
                 })
                 .then(response => {
                     console.log(response)
+                    if (response.status == 201) {
+                        alert("please attack!!!")
+                    }
                     if (response.status == 403) {
                         alert("ship is alredy placed")
                     }
@@ -239,11 +244,11 @@ var eachGameData = new Vue({
         placeSalvo() {
             if (this.sendAllsalvos.length == 5 && this.turn) {
 
-//                alert(JSON.stringify({
-//                            turn: this.turn,
-//                            salvoLocations: this.sendAllsalvos
-//                        }))
-                
+                //                alert(JSON.stringify({
+                //                            turn: this.turn,
+                //                            salvoLocations: this.sendAllsalvos
+                //                        }))
+
                 fetch("/api/games/players/" + this.gamePlayerId + "/salvos", {
                         method: 'POST',
                         credentials: 'include',
@@ -259,7 +264,7 @@ var eachGameData = new Vue({
                     .then(response => {
                         console.log(response)
                         if (response.status == 403) {
-                            //                        alert("ship is alredy placed")
+                            alert("salvo is alredy placed")
                         }
                         if (response.status == 401) {
                             alert("You are not logged in")
@@ -267,8 +272,10 @@ var eachGameData = new Vue({
                         return response.json()
 
                     }).then(data => {
-
+                        alert("Please wait for the opponent to attack!!")
 //                        window.location.reload();
+                        //                        this.reLoadThePage
+
                         console.log(data)
 
                     })
@@ -333,8 +340,8 @@ var eachGameData = new Vue({
                     .classList.add('ships')
                 //                console.log(loc)
             })
-//            this.turn = this.salvos.length + 1
-                        this.disableAllbuttons()
+            //            this.turn = this.salvos.length + 1
+            this.disableAllbuttons()
 
         },
 
@@ -581,18 +588,18 @@ var eachGameData = new Vue({
 
 
         },
-        
-                disableAllbuttons() {
-                    //after the place ship button is pressed, no ships could be chosen.
-        //            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
-                    if (this.ships.length ==5 && this.allShipLocation.length == 0) {
-                        document.getElementById("carrier").disabled = true;
-                        document.getElementById("battleship").disabled = true;
-                        document.getElementById("destroyer").disabled = true;
-                        document.getElementById("patrol").disabled = true;
-                        document.getElementById("submarine").disabled = true;
-                    }
-                },
+
+        disableAllbuttons() {
+            //after the place ship button is pressed, no ships could be chosen.
+            //            if (this.ships.length < 6 && this.allShipLocation.length == 0) {
+            if (this.ships.length == 5 && this.allShipLocation.length == 0) {
+                document.getElementById("carrier").disabled = true;
+                document.getElementById("battleship").disabled = true;
+                document.getElementById("destroyer").disabled = true;
+                document.getElementById("patrol").disabled = true;
+                document.getElementById("submarine").disabled = true;
+            }
+        },
 
 
         reLocateShip(location) {
@@ -711,11 +718,11 @@ var eachGameData = new Vue({
                 document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).classList.add("salvo2")
                 document.getElementById("salvoTable").querySelector(`.${location.toElement.attributes[0].nodeValue}`).innerHTML = this.sendAllsalvos.turn;
                 console.log(hoverLocation)
-                
-                if(!this.isAbletoPlaceSalvo(location)) {
-                     this.sendAllsalvos.push(hoverLocation)
+
+                if (!this.isAbletoPlaceSalvo(location)) {
+                    this.sendAllsalvos.push(hoverLocation)
                 }
-               
+
 
             } else if (noOverlap) {
 
@@ -723,19 +730,19 @@ var eachGameData = new Vue({
             }
             //            }
         },
-        
-        changeTurn(){
-//                        this.turn = this.salvos.length + 1;
-        let currentPlayerTotalTurn = this.salvos.filter(salvo=>salvo.gamePlayerId==this.gamePlayerId);
-        this.turn = currentPlayerTotalTurn .length + 1;
+
+        changeTurn() {
+            //                        this.turn = this.salvos.length + 1;
+            let currentPlayerTotalTurn = this.salvos.filter(salvo => salvo.gamePlayerId == this.gamePlayerId);
+            this.turn = currentPlayerTotalTurn.length + 1;
         },
 
         isAbletoPlaceSalvo(location) {
-             let hoverLocation = location.currentTarget.getAttribute("data-className");
+            let hoverLocation = location.currentTarget.getAttribute("data-className");
             this.allSalvos = []
             for (var i = 0; i < this.salvos.length; i++) {
                 if (this.salvos[i].gamePlayerId == this.gamePlayerId) {
-                    for (var j=0 ; j < this.salvos[i].locations.length; j++) {
+                    for (var j = 0; j < this.salvos[i].locations.length; j++) {
                         this.allSalvos.push(this.salvos[i].locations[j])
                     }
                     //                    this.allSalvos.filter()
@@ -747,7 +754,7 @@ var eachGameData = new Vue({
                 return false
             } else {
                 //nomore placingSalvoLocation 
-                if (this.allSalvos.includes(hoverLocation) || this.sendAllsalvos.includes(hoverLocation) ) {
+                if (this.allSalvos.includes(hoverLocation) || this.sendAllsalvos.includes(hoverLocation)) {
                     return true
                 }
                 return false
@@ -769,6 +776,25 @@ var eachGameData = new Vue({
 
         dateConvert() {
             this.gameViewData.created = new Date(this.gameViewData.created).toLocaleString()
+        },
+        
+         getWinner() {
+            console.log(this.opponentPlayer);
+            if(this.winner != "tie"){
+                if(this.winner == this.gamePlayerId){
+                   this.showWhoWin = "You won!" 
+                }else{
+                    this.showWhoWin = "You lost..."
+                }
+            }else{
+                this.showWhoWin = "It's a tie."
+            }
+        },
+
+        reLoadThePage() {
+            setTimeout(function () {
+                window.location.reload()
+            }, 10000)
         }
     }
 })
